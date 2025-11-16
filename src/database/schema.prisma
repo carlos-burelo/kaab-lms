@@ -1,0 +1,1310 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(nanoid())
+  email         String    @unique
+  password      String?
+  emailVerified DateTime?
+  role          UserRole  @default(STUDENT)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // 1:1 Relations
+  profile           UserProfile?
+  gamification      UserGamification?
+  preferences       UserPreferences?
+  instructorProfile InstructorProfile? // 1:1 relation for instructors
+
+  // 1:N & M:N Relations
+  enrollments           Enrollment[]
+  reviews               Review[]
+  purchases             Purchase[]
+  subscriptions         Subscription[]
+  paymentMethods        PaymentMethod[]
+  invoices              Invoice[]
+  userBadges            UserBadge[]
+  userAchievements      UserAchievement[]
+  userRewards           UserReward[]
+  userMissions          UserMission[]
+  certificates          Certificate[]
+  xpRecords             UserXpRecord[]
+  quizAttempts          UserQuizAttempt[]
+  assignmentSubmissions AssignmentSubmission[]
+  lessonProgress        UserLessonProgress[]
+  threadsCreated        DiscussionThread[]
+  discussionPosts       DiscussionPost[]
+  conversationsStarted  Conversation[]         @relation("ConversationInitiator")
+  conversationsReceived Conversation[]         @relation("ConversationReceiver")
+  messagesSent          Message[]
+  notifications         Notification[]
+  personalTasks         PersonalTask[]
+  calendarEvents        CalendarEvent[]
+  filesUploaded         File[]
+  auditLogs             AuditLog[]
+  payments              Payment[]
+  announcementViews     UserAnnouncementView[] // Added for tracking ad/announcement views
+
+  @@index([email])
+  @@index([role])
+}
+
+model UserProfile {
+  id           String    @id @default(nanoid())
+  userId       String    @unique
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String?
+  imageUrl     String?   @db.Text
+  bio          String?   @db.Text
+  socialLinks  Json?
+  lastActivity DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model UserGamification {
+  id        String   @id @default(nanoid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  xp        Int      @default(0)
+  level     Int      @default(1)
+  coins     Int      @default(0)
+  streak    Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserPreferences {
+  id          String   @id @default(nanoid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  preferences Json? // e.g., { "theme": "dark", "language": "en" }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// =======================================================
+// Model for Instructor Profiles (1:1)
+// =======================================================
+model InstructorProfile {
+  id             String         @id @default(nanoid())
+  userId         String         @unique
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  publicBio      String?        @db.Text
+  qualifications Json? // e.g., certifications, work experience
+  payoutDetails  Json? // Sensitive info, consider encryption or external storage
+  coursesTaught  Course[]       @relation("InstructorCourses")
+  learningPaths  LearningPath[] @relation("InstructorLearningPaths")
+  averageRating  Float          @default(0)
+  totalStudents  Int            @default(0)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([userId])
+}
+
+model Course {
+  id                  String               @id @default(nanoid())
+  slug                String               @unique
+  instructorId        String
+  instructor          InstructorProfile    @relation("InstructorCourses", fields: [instructorId], references: [userId], onDelete: Cascade)
+  title               String               @db.Text
+  description         String?              @db.Text
+  imageId             String?
+  image               File?                @relation("CourseImage", fields: [imageId], references: [id], onDelete: SetNull)
+  price               Decimal?             @db.Decimal(10, 2)
+  discountPrice       Decimal?             @db.Decimal(10, 2)
+  rating              Float                @default(0)
+  totalReviews        Int                  @default(0)
+  level               CourseLevel?
+  durationMinutes     Int?
+  requirements        Json?
+  objectives          Json?
+  isPublished         Boolean              @default(false)
+  isFeatured          Boolean              @default(false)
+  publishedAt         DateTime?
+  categoryId          String?
+  category            Category?            @relation(fields: [categoryId], references: [id])
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  tags                Tag[]
+  modules             Module[]
+  enrollments         Enrollment[]
+  purchases           Purchase[]
+  reviews             Review[]
+  discussionThreads   DiscussionThread[]
+  learningPathCourses CourseLearningPath[]
+  certificates        Certificate[]
+  announcements       Announcement[]       @relation("CourseAnnouncements") // Added for course-specific announcements
+
+  @@index([categoryId])
+  @@index([instructorId])
+  @@index([isPublished])
+  @@fulltext([title, description])
+}
+
+model Category {
+  id            String     @id @default(nanoid())
+  name          String     @unique
+  slug          String     @unique
+  description   String?    @db.Text
+  imageId       String?
+  image         File?      @relation("CategoryIamge", fields: [imageId], references: [id], onDelete: SetNull)
+  parentId      String?
+  parent        Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subCategories Category[] @relation("SubCategories")
+  position      Int        @default(0)
+  isActive      Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  courses       Course[]
+
+  @@index([parentId])
+  @@index([slug])
+}
+
+model Tag {
+  id      String   @id @default(nanoid())
+  name    String   @unique
+  slug    String   @unique
+  courses Course[]
+}
+
+model Module {
+  id          String   @id @default(nanoid())
+  title       String
+  description String?  @db.Text
+  position    Int
+  isPublished Boolean  @default(false)
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([courseId])
+}
+
+model Lesson {
+  id              String               @id @default(nanoid())
+  title           String
+  description     String?              @db.Text
+  position        Int
+  durationMinutes Int?
+  isFree          Boolean              @default(false)
+  isPublished     Boolean              @default(false)
+  moduleId        String
+  module          Module               @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  contents        LessonContent[]
+  quiz            Quiz?
+  assignments     Assignment[]
+  attachments     LessonAttachment[]
+  userProgress    UserLessonProgress[]
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@index([moduleId])
+  @@fulltext([title, description])
+}
+
+model LessonContent {
+  id        String      @id @default(nanoid())
+  lessonId  String
+  lesson    Lesson      @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  type      ContentType
+  position  Int
+  title     String?
+  content   String      @db.Text
+  fileId    String?
+  file      File?       @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  metadata  Json?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([lessonId])
+  @@index([fileId])
+}
+
+model LessonAttachment {
+  id        String   @id @default(nanoid())
+  lessonId  String
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  fileId    String
+  file      File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([lessonId])
+  @@index([fileId])
+}
+
+model Enrollment {
+  id               String    @id @default(nanoid())
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId         String
+  course           Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress         Float     @default(0)
+  lastLessonId     String?
+  lastAccessed     DateTime?
+  totalTimeMinutes Int       @default(0)
+  isCompleted      Boolean   @default(false)
+  completedAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+  @@index([userId])
+}
+
+model UserLessonProgress {
+  id           String   @id @default(nanoid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId     String
+  lesson       Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  isCompleted  Boolean  @default(false)
+  timeMinutes  Int      @default(0)
+  lastPosition Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([userId, lessonId])
+  @@index([lessonId])
+  @@index([userId])
+}
+
+model Quiz {
+  id               String            @id @default(nanoid())
+  title            String
+  description      String?           @db.Text
+  instructions     String?           @db.Text
+  durationMinutes  Int?
+  passingScore     Float             @default(60)
+  maxAttempts      Int?
+  showAnswers      Boolean           @default(true)
+  shuffleQuestions Boolean           @default(false)
+  lessonId         String            @unique
+  lesson           Lesson            @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  questions        Question[]
+  attempts         UserQuizAttempt[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model Question {
+  id          String         @id @default(nanoid())
+  text        String         @db.Text
+  explanation String?        @db.Text
+  type        QuestionType   @default(MULTIPLE_CHOICE)
+  points      Float          @default(1)
+  position    Int
+  fileId      String?
+  file        File?          @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  quizId      String
+  quiz        Quiz           @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options     AnswerOption[]
+  userAnswers UserAnswer[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([quizId])
+  @@index([fileId])
+}
+
+model AnswerOption {
+  id          String       @id @default(nanoid())
+  text        String       @db.Text
+  isCorrect   Boolean      @default(false)
+  position    Int          @default(0)
+  questionId  String
+  question    Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  userAnswers UserAnswer[]
+
+  @@index([questionId])
+}
+
+model UserQuizAttempt {
+  id            String       @id @default(nanoid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId        String
+  quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  score         Float        @default(0)
+  maxScore      Float
+  passed        Boolean      @default(false)
+  attemptNumber Int
+  userAnswers   UserAnswer[]
+  startedAt     DateTime     @default(now())
+  completedAt   DateTime?
+
+  @@index([userId])
+  @@index([quizId])
+}
+
+model UserAnswer {
+  id               String          @id @default(nanoid())
+  attemptId        String
+  attempt          UserQuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId       String
+  question         Question        @relation(fields: [questionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  selectedOptionId String?
+  selectedOption   AnswerOption?   @relation(fields: [selectedOptionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  answerText       String?         @db.Text
+  isCorrect        Boolean
+  points           Float           @default(0)
+  createdAt        DateTime        @default(now())
+
+  @@unique([attemptId, questionId])
+  @@index([attemptId])
+  @@index([questionId])
+}
+
+model Assignment {
+  id             String                 @id @default(nanoid())
+  title          String
+  description    String?                @db.Text
+  instructions   String?                @db.Text
+  maxPoints      Float                  @default(100)
+  dueDate        DateTime?
+  allowLate      Boolean                @default(false)
+  fileRequired   Boolean                @default(false)
+  allowedFormats Json?
+  lessonId       String
+  lesson         Lesson                 @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  submissions    AssignmentSubmission[]
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+
+  @@index([lessonId])
+  @@index([dueDate])
+}
+
+model AssignmentSubmission {
+  id            String           @id @default(nanoid())
+  userId        String
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignmentId  String
+  assignment    Assignment       @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  content       String?          @db.Text
+  fileId        String?
+  file          File?            @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  grade         Float?
+  feedback      String?          @db.Text
+  status        SubmissionStatus @default(SUBMITTED)
+  attemptNumber Int              @default(1)
+  submittedAt   DateTime         @default(now())
+  gradedAt      DateTime?
+  updatedAt     DateTime         @updatedAt
+
+  @@unique([userId, assignmentId, attemptNumber])
+  @@index([assignmentId])
+  @@index([userId])
+  @@index([status])
+  @@index([fileId])
+}
+
+model DiscussionThread {
+  id          String           @id @default(nanoid())
+  title       String
+  slug        String
+  description String?          @db.Text
+  userId      String
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId    String
+  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  isClosed    Boolean          @default(false)
+  isPinned    Boolean          @default(false)
+  views       Int              @default(0)
+  posts       DiscussionPost[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([courseId])
+  @@index([userId])
+  @@index([slug])
+}
+
+model DiscussionPost {
+  id        String           @id @default(nanoid())
+  content   String           @db.Text
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  threadId  String
+  thread    DiscussionThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    DiscussionPost?  @relation("NestedReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies   DiscussionPost[] @relation("NestedReplies")
+  isReply   Boolean          @default(false)
+  likes     Int              @default(0)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@index([threadId])
+  @@index([userId])
+  @@index([parentId])
+  @@fulltext([content])
+}
+
+model Review {
+  id        String   @id @default(nanoid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String?  @db.Text
+  isPublic  Boolean  @default(true)
+  likes     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+  @@index([userId])
+}
+
+// =======================================================
+// Models for Learning Path Designer (N8N-like interface)
+// =======================================================
+
+model LearningPathNode {
+  id              String        @id @default(nanoid())
+  learningPathId  String
+  learningPath    LearningPath  @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+  nodeType        NodeType      // COURSE, DECISION, SYNC, START, END
+  title           String
+  description     String?       @db.Text
+  position        Json // { x: number, y: number }
+  data            Json // Contains node-specific data (courseId, condition logic, etc.)
+  isOptional      Boolean       @default(false)
+  incomingEdges   LearningPathEdge[] @relation("SourceNode")
+  outgoingEdges   LearningPathEdge[] @relation("TargetNode")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([learningPathId])
+}
+
+model LearningPathEdge {
+  id              String        @id @default(nanoid())
+  learningPathId  String
+  learningPath    LearningPath  @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+  sourceNodeId    String
+  sourceNode      LearningPathNode @relation("SourceNode", fields: [sourceNodeId], references: [id], onDelete: Cascade)
+  targetNodeId    String
+  targetNode      LearningPathNode @relation("TargetNode", fields: [targetNodeId], references: [id], onDelete: Cascade)
+  label           String? // For decision paths (e.g., "Passed", "Failed")
+  condition       String? // Logic condition for decision edges
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([sourceNodeId, targetNodeId, label])
+  @@index([learningPathId])
+  @@index([sourceNodeId])
+  @@index([targetNodeId])
+}
+
+model LearningPath {
+  id                    String               @id @default(nanoid())
+  title                 String
+  slug                  String               @unique
+  description           String               @db.Text
+  imageId               String?
+  image                 File?                @relation("LearningPathImage", fields: [imageId], references: [id], onDelete: SetNull)
+  estimatedDurationDays Int?
+  level                 CourseLevel?
+  isPublished           Boolean              @default(false)
+  instructorId          String
+  instructor            InstructorProfile    @relation("InstructorLearningPaths", fields: [instructorId], references: [userId], onDelete: Cascade)
+  courses               CourseLearningPath[]
+  nodes                 LearningPathNode[]
+  edges                 LearningPathEdge[]
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+
+  @@index([slug])
+  @@index([instructorId])
+}
+
+model CourseLearningPath {
+  learningPathId String
+  learningPath   LearningPath @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+  courseId       String
+  course         Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  position       Int
+  isOptional     Boolean      @default(false)
+
+  @@id([learningPathId, courseId])
+  @@index([learningPathId])
+  @@index([courseId])
+}
+
+model Purchase {
+  id                 String   @id @default(nanoid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId           String
+  course             Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  paymentId          String   @unique
+  payment            Payment  @relation(fields: [paymentId], references: [id])
+  price              Decimal  @db.Decimal(10, 2)
+  originalPrice      Decimal? @db.Decimal(10, 2)
+  discountCode       String?
+  discountPercentage Float?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+  @@index([userId])
+  @@index([paymentId])
+}
+
+model SubscriptionPlan {
+  id            String         @id @default(nanoid())
+  name          String
+  slug          String         @unique
+  description   String?        @db.Text
+  price         Decimal        @db.Decimal(10, 2)
+  interval      PlanInterval
+  features      Json
+  isActive      Boolean        @default(true)
+  isPopular     Boolean        @default(false)
+  courseLimits  Int?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  subscriptions Subscription[]
+
+  @@index([slug])
+}
+
+model Subscription {
+  id                String             @id @default(nanoid())
+  userId            String
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId            String
+  plan              SubscriptionPlan   @relation(fields: [planId], references: [id])
+  status            SubscriptionStatus
+  startDate         DateTime           @default(now())
+  endDate           DateTime?
+  nextPaymentDate   DateTime?
+  autoRenew         Boolean            @default(true)
+  paymentMethodId   String?
+  paymentMethod     PaymentMethod?     @relation(fields: [paymentMethodId], references: [id], onDelete: SetNull)
+  payments          Payment[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  canceledAt        DateTime?
+  cancelationReason String?            @db.Text
+
+  @@index([userId])
+  @@index([planId])
+  @@index([status])
+  @@index([paymentMethodId])
+}
+
+model PaymentMethod {
+  id             String            @id @default(nanoid())
+  userId         String
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type           PaymentMethodType
+  provider       String
+  last4Digits    String?
+  cardHolderName String?
+  expirationDate String?
+  providerToken  String?           @db.Text
+  isDefault      Boolean           @default(false)
+  isActive       Boolean           @default(true)
+  metadata       Json?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  payments       Payment[]
+  subscriptions  Subscription[]
+
+  @@index([userId])
+}
+
+model Payment {
+  id              String         @id @default(nanoid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount          Decimal        @db.Decimal(10, 2)
+  fee             Decimal?       @db.Decimal(10, 2)
+  netAmount       Decimal        @db.Decimal(10, 2)
+  currency        String         @default("MXN")
+  status          PaymentStatus
+  type            PaymentType
+  paymentMethodId String?
+  paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id], onDelete: SetNull)
+  paymentProvider String?
+  transactionId   String?        @unique
+  metadata        Json?
+  description     String?        @db.Text
+  invoiceId       String?        @unique
+  invoice         Invoice?       @relation(fields: [invoiceId], references: [id])
+  subscriptionId  String?
+  subscription    Subscription?  @relation(fields: [subscriptionId], references: [id])
+  purchase        Purchase?
+  createdAt       DateTime       @default(now())
+  processedAt     DateTime?
+  updatedAt       DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([paymentMethodId])
+  @@index([subscriptionId])
+  @@index([transactionId])
+  @@index([invoiceId])
+}
+
+model Invoice {
+  id          String        @id @default(nanoid())
+  number      String        @unique
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName String
+  taxId       String // RFC
+  address     Json
+  subtotal    Decimal       @db.Decimal(10, 2)
+  taxes       Decimal       @db.Decimal(10, 2)
+  total       Decimal       @db.Decimal(10, 2)
+  currency    String        @default("MXN")
+  items       InvoiceItem[] // Relation to InvoiceItem
+  fileId      String?
+  file        File?         @relation("InvoiceFile", fields: [fileId], references: [id], onDelete: SetNull)
+  payment     Payment?
+  issuedAt    DateTime      @default(now())
+  createdAt   DateTime      @default(now())
+
+  @@index([userId])
+  @@index([number])
+  @@index([fileId])
+}
+
+model InvoiceItem {
+  id          String   @id @default(nanoid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  description String   @db.Text
+  quantity    Int
+  unitPrice   Decimal  @db.Decimal(10, 2)
+  total       Decimal  @db.Decimal(10, 2)
+  productId   String? // e.g., Course ID or SubscriptionPlan ID
+  productType String? // e.g., 'COURSE', 'SUBSCRIPTION'
+  createdAt   DateTime @default(now())
+
+  @@index([invoiceId])
+  @@index([productId, productType])
+}
+
+model UserXpRecord {
+  id          String                @id @default(nanoid())
+  userId      String
+  user        User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  points      Int
+  sourceType  AchievementSourceType
+  sourceId    String
+  description String?
+  createdAt   DateTime              @default(now())
+
+  @@index([userId])
+  @@index([sourceType])
+}
+
+model Badge {
+  id          String      @id @default(nanoid())
+  name        String      @unique
+  slug        String      @unique
+  description String      @db.Text
+  imageId     String
+  image       File        @relation("BadgeImage", fields: [imageId], references: [id])
+  criteria    Json
+  rarity      BadgeRarity @default(COMMON)
+  points      Int         @default(0)
+  isActive    Boolean     @default(true)
+  users       UserBadge[]
+  createdAt   DateTime    @default(now())
+
+  @@index([slug])
+}
+
+model UserBadge {
+  id         String   @id @default(nanoid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId    String
+  badge      Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  progress   Float    @default(100)
+  obtainedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@index([badgeId])
+}
+
+model Achievement {
+  id            String            @id @default(nanoid())
+  name          String            @unique
+  slug          String            @unique
+  description   String            @db.Text
+  imageId       String
+  image         File              @relation("AchievementImage", fields: [imageId], references: [id])
+  type          AchievementType
+  criteria      Json
+  rewardXp      Int               @default(0)
+  rewardCoins   Int               @default(0)
+  isSequential  Boolean           @default(false)
+  sequenceOrder Int?
+  isActive      Boolean           @default(true)
+  users         UserAchievement[]
+  createdAt     DateTime          @default(now())
+
+  @@index([slug])
+  @@index([type])
+}
+
+model UserAchievement {
+  id            String      @id @default(nanoid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  progress      Float       @default(0)
+  completed     Boolean     @default(false)
+  obtainedAt    DateTime?
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+  @@index([achievementId])
+}
+
+model Mission {
+  id           String            @id @default(nanoid())
+  name         String
+  description  String            @db.Text
+  imageId      String?
+  image        File?             @relation("MissionImage", fields: [imageId], references: [id], onDelete: SetNull)
+  type         MissionType
+  difficulty   MissionDifficulty
+  objectives   Json
+  rewardXp     Int               @default(0)
+  rewardCoins  Int               @default(0)
+  rewards      MissionReward[] // Using M-M join table
+  startDate    DateTime
+  endDate      DateTime
+  isRepeatable Boolean           @default(false)
+  isActive     Boolean           @default(true)
+  users        UserMission[]
+  createdAt    DateTime          @default(now())
+
+  @@index([startDate, endDate])
+  @@index([type])
+}
+
+model MissionReward {
+  missionId String
+  mission   Mission @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  rewardId  String
+  reward    Reward  @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  quantity  Int     @default(1)
+
+  @@id([missionId, rewardId])
+  @@index([missionId])
+  @@index([rewardId])
+}
+
+model UserMission {
+  id            String    @id @default(nanoid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  missionId     String
+  mission       Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  progress      Json
+  completed     Boolean   @default(false)
+  rewardClaimed Boolean   @default(false)
+  startedAt     DateTime  @default(now())
+  completedAt   DateTime?
+
+  @@unique([userId, missionId, startedAt])
+  @@index([userId])
+  @@index([missionId])
+}
+
+model Reward {
+  id          String          @id @default(nanoid())
+  name        String
+  description String          @db.Text
+  imageId     String
+  image       File            @relation("RewardImage", fields: [imageId], references: [id])
+  type        RewardType
+  rarity      BadgeRarity
+  coinCost    Int             @default(0)
+  stock       Int?
+  isAvailable Boolean         @default(true)
+  metadata    Json?
+  createdAt   DateTime        @default(now())
+  users       UserReward[]
+  missions    MissionReward[] // M-M inverse relation
+
+  @@index([type])
+}
+
+model UserReward {
+  id         String   @id @default(nanoid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rewardId   String
+  reward     Reward   @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  quantity   Int      @default(1)
+  isEquipped Boolean  @default(false)
+  obtainedAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([rewardId])
+}
+
+model CertificateTemplate {
+  id           String        @id @default(nanoid())
+  name         String
+  description  String?       @db.Text
+  fileId       String // e.g., The PDF or HTML template file
+  file         File          @relation("TemplateFile", fields: [fileId], references: [id])
+  thumbnailId  String? // New property for thumbnail
+  thumbnail    File?         @relation("TemplateThumbnail", fields: [thumbnailId], references: [id], onDelete: SetNull)
+  variables    Json
+  isActive     Boolean       @default(true)
+  certificates Certificate[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([fileId])
+  @@index([thumbnailId])
+}
+
+model Certificate {
+  id         String              @id @default(nanoid())
+  code       String              @unique
+  userId     String
+  user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId   String
+  course     Course              @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  templateId String
+  template   CertificateTemplate @relation(fields: [templateId], references: [id])
+  fileId     String? // The generated PDF file
+  file       File?               @relation("CertificateFile", fields: [fileId], references: [id], onDelete: SetNull)
+  customData Json?
+  issuedAt   DateTime            @default(now())
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+  @@index([code])
+  @@index([fileId])
+}
+
+model Conversation {
+  id              String    @id @default(nanoid())
+  initiatorId     String
+  initiator       User      @relation("ConversationInitiator", fields: [initiatorId], references: [id], onDelete: Cascade)
+  receiverId      String
+  receiver        User      @relation("ConversationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  lastMessage     String?   @db.Text
+  lastMessageAt   DateTime?
+  unreadInitiator Int       @default(0)
+  unreadReceiver  Int       @default(0)
+  messages        Message[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([initiatorId, receiverId])
+  @@index([initiatorId])
+  @@index([receiverId])
+}
+
+model Message {
+  id             String       @id @default(nanoid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  content        String       @db.Text
+  fileId         String?
+  file           File?        @relation("MessageFile", fields: [fileId], references: [id], onDelete: SetNull)
+  isRead         Boolean      @default(false)
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([fileId])
+}
+
+model Notification {
+  id        String           @id @default(nanoid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  title     String
+  message   String           @db.Text
+  link      String?          @db.Text
+  data      Json?
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([isRead])
+}
+
+// =======================================================
+// New Models for Announcements / Organic Ads
+// =======================================================
+model Announcement {
+  id         String                @id @default(nanoid())
+  title      String
+  content    String                @db.Text
+  ctaLink    String?               @db.Text // Call-to-action link
+  ctaText    String? // Call-to-action text (e.g., "Learn More")
+  imageId    String?
+  image      File?                 @relation("AnnouncementImage", fields: [imageId], references: [id], onDelete: SetNull)
+  placement  AnnouncementPlacement // Where this ad should appear
+  startDate  DateTime // When it starts being active
+  endDate    DateTime // When it stops being active
+  priority   Int                   @default(0) // For ordering multiple announcements
+  isActive   Boolean               @default(true) // Manual on/off switch
+  viewCount  Int                   @default(0)
+  clickCount Int                   @default(0)
+
+  // Targeting fields
+  targetRole     UserRole? // Target a specific role (null for all)
+  targetCourseId String? // Target a specific course (null for global)
+  targetCourse   Course?   @relation("CourseAnnouncements", fields: [targetCourseId], references: [id], onDelete: SetNull)
+
+  // Tracking
+  userViews UserAnnouncementView[] // Track who has seen this
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([startDate, endDate, isActive])
+  @@index([placement])
+  @@index([targetCourseId])
+  @@index([targetRole])
+}
+
+model UserAnnouncementView {
+  id             String       @id @default(nanoid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  announcementId String
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  viewedAt       DateTime     @default(now())
+  isDismissed    Boolean      @default(false) // If the user closed the ad/modal
+
+  @@unique([userId, announcementId])
+  @@index([userId])
+  @@index([announcementId])
+}
+
+model PersonalTask {
+  id          String             @id @default(nanoid())
+  userId      String
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?            @db.Text
+  status      PersonalTaskStatus @default(PENDING)
+  priority    TaskPriority       @default(MEDIUM)
+  dueDate     DateTime?
+  tags        Json?
+  completedAt DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([priority])
+  @@index([dueDate])
+}
+
+model CalendarEvent {
+  id          String    @id @default(nanoid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?   @db.Text
+  startDate   DateTime
+  endDate     DateTime
+  allDay      Boolean   @default(false)
+  location    String?
+  color       String?
+  reminders   Json?
+  type        EventType @default(PERSONAL)
+  metadata    Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([startDate, endDate])
+  @@index([type])
+}
+
+model File {
+  id                String   @id @default(nanoid())
+  name              String
+  originalName      String
+  path              String   @unique
+  url               String   @db.Text
+  type              String
+  mimeType          String
+  sizeInBytes       BigInt
+  width             Int?
+  height            Int?
+  durationInSeconds Int?
+  folder            String?
+  tags              Json?
+  isPublic          Boolean  @default(false)
+  userId            String?
+  user              User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Inverse Relations
+  courseImages          Course[]               @relation("CourseImage")
+  categoryImages        Category[]             @relation("CategoryIamge")
+  learningPathImages    LearningPath[]         @relation("LearningPathImage")
+  lessonContents        LessonContent[]
+  lessonAttachments     LessonAttachment[]
+  questions             Question[]
+  assignmentSubmissions AssignmentSubmission[]
+  badgeImages           Badge[]                @relation("BadgeImage")
+  achievementImages     Achievement[]          @relation("AchievementImage")
+  missionImages         Mission[]              @relation("MissionImage")
+  rewardImages          Reward[]               @relation("RewardImage")
+  certificateTemplates  CertificateTemplate[]  @relation("TemplateFile")
+  templateThumbnails    CertificateTemplate[]  @relation("TemplateThumbnail")
+  certificates          Certificate[]          @relation("CertificateFile")
+  messages              Message[]              @relation("MessageFile")
+  invoices              Invoice[]              @relation("InvoiceFile")
+  announcementImages    Announcement[]         @relation("AnnouncementImage") // Added relation
+
+  @@index([userId])
+  @@index([type])
+  @@index([folder])
+  @@fulltext([name, originalName])
+}
+
+model AuditLog {
+  id           String   @id @default(nanoid())
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action       String
+  entity       String
+  entityId     String
+  previousData Json?
+  newData      Json?
+  ip           String?
+  userAgent    String?  @db.Text
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@index([entity, entityId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+enum UserRole {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum ContentType {
+  TEXT
+  VIDEO_URL
+  VIDEO_EMBED
+  IMAGE
+  AUDIO
+  CODE
+  DOCUMENT
+  LINK
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  SINGLE_CHOICE
+  TRUE_FALSE
+  SHORT_ANSWER
+  LONG_ANSWER
+  ORDERING
+  MATCHING
+}
+
+enum SubmissionStatus {
+  SUBMITTED
+  IN_REVIEW
+  GRADED
+  REJECTED
+  NEEDS_REVISION
+}
+
+enum AchievementSourceType {
+  LESSON_COMPLETED
+  QUIZ_PASSED
+  COURSE_COMPLETED
+  ASSIGNMENT_SUBMITTED
+  BADGE_EARNED
+  ACHIEVEMENT_COMPLETED
+  MISSION_COMPLETED
+  STREAK_REACHED
+  LEVEL_UP
+  MANUAL_AWARD
+}
+
+enum BadgeRarity {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+enum AchievementType {
+  COURSE
+  LEARNING
+  SOCIAL
+  TIME
+  SPECIAL
+}
+
+enum MissionType {
+  DAILY
+  WEEKLY
+  MONTHLY
+  SPECIAL
+  EVENT
+}
+
+enum MissionDifficulty {
+  EASY
+  NORMAL
+  HARD
+  EXPERT
+}
+
+enum RewardType {
+  AVATAR
+  THEME
+  PROFILE_FRAME
+  TITLE
+  EFFECT
+  COSMETIC_ITEM
+}
+
+enum PlanInterval {
+  MONTHLY
+  QUARTERLY
+  SEMI_ANNUAL
+  YEARLY
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAUSED
+  EXPIRED
+  TRIAL
+}
+
+enum PaymentMethodType {
+  CREDIT_CARD
+  DEBIT_CARD
+  PAYPAL
+  BANK_TRANSFER
+  OXXO
+  SPEI
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELED
+}
+
+enum PaymentType {
+  COURSE_PURCHASE
+  SUBSCRIPTION
+  RENEWAL
+  REFUND
+}
+
+enum NotificationType {
+  SYSTEM
+  COURSE
+  MESSAGE
+  ACHIEVEMENT
+  BADGE
+  MISSION
+  PAYMENT
+  REMINDER
+  SOCIAL
+}
+
+// New Enum for Announcement Placements
+enum AnnouncementPlacement {
+  DASHBOARD_BANNER
+  COURSE_BANNER
+  GLOBAL_MODAL
+  INLINE_FEED
+  LOGIN_PAGE
+}
+
+enum PersonalTaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum EventType {
+  PERSONAL
+  COURSE
+  MEETING
+  SUBMISSION
+  EXAM
+  OTHER
+}
+
+enum NodeType {
+  START
+  END
+  COURSE
+  DECISION
+  SYNC
+}

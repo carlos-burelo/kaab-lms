@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(dir:*)",
+      "Bash(pnpm build:*)",
+      "Bash(ls:*)",
+      "Bash(1)",
+      "Bash(find:*)",
+      "Bash(nul)",
+      "Bash(powershell -Command \"Get-ChildItem -Path ''src\\app\\(plataforma)\\instructor'' -Recurse -Force | Select-Object FullName | ForEach-Object { $_FullName }\")",
+      "Bash(pnpm add:*)",
+      "Bash(head:*)",
+      "Bash(findstr:*)",
+      "Bash(cat:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run lint:*)",
+      "Bash(/tmp/build2.txt)",
+      "Bash(timeout 180 pnpm build:*)",
+      "Bash(timeout 200 pnpm build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

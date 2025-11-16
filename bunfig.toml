@@ -1,0 +1,41 @@
+# Bunfig configuration for KAAB LMS
+# https://bun.sh/docs/runtime/bunfig
+
+[test]
+# Test configuration
+root = "./tests"
+preload = []
+
+[install]
+# Installation configuration
+# Yarn-compatible lockfile
+lockfile = "bun.lockb"
+
+[build]
+# Build configuration
+root = "./src"
+outdir = "./dist"
+minify = true
+sourcemap = "linked"
+
+# Target runtime
+target = "browser"
+
+# Optimize built-in modules
+optimize = ["react", "react-dom"]
+
+[define]
+# Environment variables for build time
+"process.env.NODE_ENV" = "\"production\""
+
+[object]
+# Configure object behavior
+format = "esm"
+
+[fetch]
+# Fetch configuration
+# TLS verification
+tls = true
+
+# Connection timeout (seconds)
+timeout = 30

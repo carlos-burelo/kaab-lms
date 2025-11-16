@@ -1,0 +1,86 @@
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { CourseContent } from '@/components/course/CourseContent'
+import { CourseAttachmentZone } from '@/components/course/viewer/CourseAttachmentZone'
+import { CourseDiscussionZone } from '@/components/course/viewer/CourseDiscussionZone'
+import { CourseLessonNavigator } from '@/components/course/viewer/CourseLessonNavigator'
+import { CourseLessonsZone } from '@/components/course/viewer/CourseLessonsZone'
+import { TabsList } from '@/components/extensions/tab-list'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Tabs, TabsContent } from '@/components/ui/tabs'
+import { courseRepository } from '@/database/repositories'
+
+interface LeccionPageProps {
+  params: Promise<{
+    ID_CURSO: string
+    ID_LECCION: string
+  }>
+}
+
+export default async function Lession({ params }: LeccionPageProps) {
+  const { ID_LECCION: leccionId } = await params
+
+  const leccion = await courseRepository.getLesson(leccionId)
+
+  if (!leccion) {
+    notFound()
+  }
+
+  // Get the course with all modules and lessons
+  const curso = await courseRepository.getById(leccion.module.courseId)
+
+  if (!curso) {
+    notFound()
+  }
+
+  const SLUG = curso.slug
+  const TITLE = curso.title
+  const COURSE_URL = `/estudiante/cursos/${SLUG}`
+
+  return (
+    <div className='flex bg-background text-foreground'>
+      <ScrollArea className='flex-1 flex flex-col overflow-y-auto h-content-available'>
+        <header className='flex items-center justify-between border-b p-2 border-muted sticky top-0 bg-background z-10'>
+          <div className='flex items-center gap-4'>
+            <Link href={COURSE_URL} className='font-semibold text-sm truncate hover:underline'>
+              {TITLE}
+            </Link>
+          </div>
+        </header>
+
+        <div className='gap-2 grid p-2'>
+          {leccion.contents?.map((item: any) => (
+            <CourseContent key={item.id} {...item} />
+          ))}
+        </div>
+
+        <CourseLessonNavigator courseSlug={curso.slug} modules={curso.modules || []} currentLessonId={leccion.id} />
+      </ScrollArea>
+
+      <aside className='w-96 hidden lg:flex flex-col border-l border-muted overflow-y-auto'>
+        <Tabs defaultValue='content' className='grid sticky top-content-available h-content-available content-start'>
+          <div className='flex items-center justify-between border-b border-muted'>
+            <TabsList
+              items={[
+                { value: 'content', label: 'Contenido' },
+                { value: 'discussion', label: 'Foro' },
+                { value: 'file', label: 'Adjuntos' }
+              ]}
+            />
+          </div>
+          <TabsContent value='content' className='flex-1 overflow-y-auto p-0'>
+            <CourseLessonsZone modules={curso.modules || []} lesson={leccion} courseSlug={curso.slug} />
+          </TabsContent>
+
+          <TabsContent value='discussion' className='flex-1 p-6 text-center'>
+            <CourseDiscussionZone />
+          </TabsContent>
+
+          <TabsContent value='file' className='flex-1 p-6 space-y-3'>
+            <CourseAttachmentZone leccion={leccion} />
+          </TabsContent>
+        </Tabs>
+      </aside>
+    </div>
+  )
+}
