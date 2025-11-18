@@ -9,6 +9,11 @@ import { TabsList } from '@/components/extensions/tab-list'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { courseRepository } from '@/database/repositories'
+import { getQuizByLessonId, getQuizQuestionsForStudent } from '@/actions/quiz.actions'
+import { QuizViewer } from '@/components/quiz/student/QuizViewer'
+import { getSession } from '@/lib/auth'
+import { prisma } from '@/database/client'
+import { AssignmentSubmission } from '@/components/assignments/AssignmentSubmission'
 
 interface LeccionPageProps {
   params: Promise<{
@@ -33,6 +38,34 @@ export default async function Lession({ params }: LeccionPageProps) {
     notFound()
   }
 
+  // Get session for quiz
+  const session = await getSession()
+  const userId = session?.id || ''
+
+  // Get quiz if exists
+  const quizResult = await getQuizByLessonId(leccionId)
+  let quizData = null
+
+  if (quizResult.success && quizResult.data && userId) {
+    const questionsResult = await getQuizQuestionsForStudent(quizResult.data.id)
+    if (questionsResult.success) {
+      quizData = questionsResult.data
+    }
+  }
+
+  // Get assignment if exists
+  const assignment = await prisma.assignment.findFirst({
+    where: { lessonId: leccionId },
+    include: {
+      submissions: {
+        where: { userId },
+        include: { files: true }
+      }
+    }
+  })
+
+  const studentSubmission = assignment?.submissions?.[0] || null
+
   const SLUG = curso.slug
   const TITLE = curso.title
   const COURSE_URL = `/estudiante/cursos/${SLUG}`
@@ -52,6 +85,26 @@ export default async function Lession({ params }: LeccionPageProps) {
           {leccion.contents?.map((item: any) => (
             <CourseContent key={item.id} {...item} />
           ))}
+
+          {quizData && (
+            <div className='mt-6'>
+              <QuizViewer
+                quiz={quizData.quiz}
+                questions={quizData.questions}
+                userId={userId}
+              />
+            </div>
+          )}
+
+          {assignment && (
+            <div className='mt-6'>
+              <AssignmentSubmission
+                assignment={assignment}
+                courseId={curso.id}
+                studentSubmission={studentSubmission}
+              />
+            </div>
+          )}
         </div>
 
         <CourseLessonNavigator courseSlug={curso.slug} modules={curso.modules || []} currentLessonId={leccion.id} />
@@ -72,8 +125,8 @@ export default async function Lession({ params }: LeccionPageProps) {
             <CourseLessonsZone modules={curso.modules || []} lesson={leccion} courseSlug={curso.slug} />
           </TabsContent>
 
-          <TabsContent value='discussion' className='flex-1 p-6 text-center'>
-            <CourseDiscussionZone />
+          <TabsContent value='discussion' className='flex-1 p-0'>
+            <CourseDiscussionZone courseId={curso.id} />
           </TabsContent>
 
           <TabsContent value='file' className='flex-1 p-6 space-y-3'>
