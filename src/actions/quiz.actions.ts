@@ -1,16 +1,55 @@
 'use server'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
-import { courseRepository, quizRepository } from '@/database/repositories'
+import { courseRepository } from '@/database/repositories'
 import { getSession } from '@/lib/auth'
+import { QuizRepository } from '@/modules/quiz/infrastructure/quiz.repository'
+import {
+  CreateQuizUseCase,
+  UpdateQuizUseCase,
+  GetQuizUseCase,
+  DeleteQuizUseCase,
+  CreateQuestionUseCase,
+  UpdateQuestionUseCase,
+  DeleteQuestionUseCase,
+  CreateAnswerOptionUseCase,
+  UpdateAnswerOptionUseCase,
+  DeleteAnswerOptionUseCase,
+  GetQuizQuestionsForStudentUseCase,
+  StartQuizAttemptUseCase,
+  SaveQuizAnswerUseCase,
+  CompleteQuizAttemptUseCase,
+  GetUserQuizAttemptsUseCase,
+} from '@/modules/quiz/application/use-cases'
 
 /**
  * Quiz Actions
  * Server actions para operaciones de quizzes
  *
  * ARQUITECTURA:
- * Client (startTransition) -> Server Action (validación, autorización) -> Repository (BD)
+ * Client (startTransition) -> Server Action (validación, autorización) -> Use Case -> Repository (BD)
  */
+
+// ============================================================================
+// INITIALIZE USE CASES
+// ============================================================================
+
+const quizRepository = new QuizRepository()
+const createQuizUseCase = new CreateQuizUseCase(quizRepository)
+const updateQuizUseCase = new UpdateQuizUseCase(quizRepository)
+const getQuizUseCase = new GetQuizUseCase(quizRepository)
+const deleteQuizUseCase = new DeleteQuizUseCase(quizRepository)
+const createQuestionUseCase = new CreateQuestionUseCase()
+const updateQuestionUseCase = new UpdateQuestionUseCase()
+const deleteQuestionUseCase = new DeleteQuestionUseCase()
+const createAnswerOptionUseCase = new CreateAnswerOptionUseCase()
+const updateAnswerOptionUseCase = new UpdateAnswerOptionUseCase()
+const deleteAnswerOptionUseCase = new DeleteAnswerOptionUseCase()
+const getQuizQuestionsForStudentUseCase = new GetQuizQuestionsForStudentUseCase()
+const startQuizAttemptUseCase = new StartQuizAttemptUseCase()
+const saveQuizAnswerUseCase = new SaveQuizAnswerUseCase()
+const completeQuizAttemptUseCase = new CompleteQuizAttemptUseCase()
+const getUserQuizAttemptsUseCase = new GetUserQuizAttemptsUseCase()
 
 // ============================================================================
 // SCHEMAS - VALIDACIÓN
@@ -69,10 +108,15 @@ type ActionResponse<T = any> = {
  */
 export async function getQuizById(quizId: string): Promise<ActionResponse> {
   try {
-    const quiz = await quizRepository.getById(quizId)
+    const result = await getQuizUseCase.execute({ quizId })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
+
     return {
       success: true,
-      data: quiz
+      data: result.value
     }
   } catch (error) {
     return {
@@ -87,10 +131,15 @@ export async function getQuizById(quizId: string): Promise<ActionResponse> {
  */
 export async function getQuizByLessonId(lessonId: string): Promise<ActionResponse> {
   try {
-    const quiz = await quizRepository.getByLessonId(lessonId)
+    const result = await quizRepository.findByLesson(lessonId)
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
+
     return {
       success: true,
-      data: quiz
+      data: result.value
     }
   } catch (error) {
     return {
@@ -132,13 +181,20 @@ export async function createQuiz(formData: FormData): Promise<ActionResponse> {
       }
     }
 
-    const quiz = await quizRepository.create(parsed.data)
+    const result = await createQuizUseCase.execute({
+      dto: parsed.data,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     revalidatePath('/instructor/cursos')
 
     return {
       success: true,
-      data: quiz
+      data: result.value
     }
   } catch (error) {
     return {
@@ -173,13 +229,20 @@ export async function updateQuiz(formData: FormData): Promise<ActionResponse> {
 
     const { id, ...updateData } = parsed.data
 
-    const quiz = await quizRepository.update(id, updateData)
+    const result = await updateQuizUseCase.execute({
+      dto: { id, ...updateData },
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     revalidatePath('/instructor/cursos')
 
     return {
       success: true,
-      data: quiz
+      data: result.value
     }
   } catch (error) {
     return {
@@ -202,15 +265,14 @@ export async function deleteQuiz(quizId: string): Promise<ActionResponse> {
       }
     }
 
-    const quiz = await quizRepository.getById(quizId)
-    if (!quiz) {
-      return {
-        success: false,
-        error: 'Quiz not found'
-      }
-    }
+    const result = await deleteQuizUseCase.execute({
+      quizId,
+      currentUserId: session.id,
+    })
 
-    await quizRepository.delete(quizId)
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     revalidatePath('/instructor/cursos')
 
@@ -245,11 +307,26 @@ export async function createQuestion(formData: FormData): Promise<ActionResponse
       }
     }
 
-    const question = await quizRepository.createQuestion(parsed.data)
+    const session = await getSession()
+    if (!session?.id) {
+      return {
+        success: false,
+        error: 'User not authenticated'
+      }
+    }
+
+    const result = await createQuestionUseCase.execute({
+      ...parsed.data,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     return {
       success: true,
-      data: question
+      data: result.value
     }
   } catch (error) {
     return {
@@ -266,11 +343,27 @@ export async function updateQuestion(questionId: string, formData: FormData): Pr
   try {
     const obj = Object.fromEntries(formData.entries())
 
-    const question = await quizRepository.updateQuestion(questionId, obj)
+    const session = await getSession()
+    if (!session?.id) {
+      return {
+        success: false,
+        error: 'User not authenticated'
+      }
+    }
+
+    const result = await updateQuestionUseCase.execute({
+      questionId,
+      data: obj,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     return {
       success: true,
-      data: question
+      data: result.value
     }
   } catch (error) {
     return {
@@ -285,7 +378,22 @@ export async function updateQuestion(questionId: string, formData: FormData): Pr
  */
 export async function deleteQuestion(questionId: string): Promise<ActionResponse> {
   try {
-    await quizRepository.deleteQuestion(questionId)
+    const session = await getSession()
+    if (!session?.id) {
+      return {
+        success: false,
+        error: 'User not authenticated'
+      }
+    }
+
+    const result = await deleteQuestionUseCase.execute({
+      questionId,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     return {
       success: true,
@@ -318,11 +426,26 @@ export async function createAnswerOption(formData: FormData): Promise<ActionResp
       }
     }
 
-    const option = await quizRepository.createAnswerOption(parsed.data)
+    const session = await getSession()
+    if (!session?.id) {
+      return {
+        success: false,
+        error: 'User not authenticated'
+      }
+    }
+
+    const result = await createAnswerOptionUseCase.execute({
+      ...parsed.data,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     return {
       success: true,
-      data: option
+      data: result.value
     }
   } catch (error) {
     return {
@@ -339,11 +462,27 @@ export async function updateAnswerOption(optionId: string, formData: FormData): 
   try {
     const obj = Object.fromEntries(formData.entries())
 
-    const option = await quizRepository.updateAnswerOption(optionId, obj)
+    const session = await getSession()
+    if (!session?.id) {
+      return {
+        success: false,
+        error: 'User not authenticated'
+      }
+    }
+
+    const result = await updateAnswerOptionUseCase.execute({
+      optionId,
+      data: obj,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     return {
       success: true,
-      data: option
+      data: result.value
     }
   } catch (error) {
     return {
@@ -358,7 +497,22 @@ export async function updateAnswerOption(optionId: string, formData: FormData): 
  */
 export async function deleteAnswerOption(optionId: string): Promise<ActionResponse> {
   try {
-    await quizRepository.deleteAnswerOption(optionId)
+    const session = await getSession()
+    if (!session?.id) {
+      return {
+        success: false,
+        error: 'User not authenticated'
+      }
+    }
+
+    const result = await deleteAnswerOptionUseCase.execute({
+      optionId,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     return {
       success: true,
@@ -381,29 +535,26 @@ export async function deleteAnswerOption(optionId: string): Promise<ActionRespon
  */
 export async function getQuizQuestionsForStudent(quizId: string): Promise<ActionResponse> {
   try {
-    const quiz = await quizRepository.getById(quizId)
-    if (!quiz) {
+    const session = await getSession()
+    if (!session?.id) {
       return {
         success: false,
-        error: 'Quiz not found'
+        error: 'User not authenticated'
       }
     }
 
-    const questions = await quizRepository.getQuestionsForStudent(quizId, quiz.shuffleQuestions)
+    const result = await getQuizQuestionsForStudentUseCase.execute({
+      quizId,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     return {
       success: true,
-      data: {
-        quiz: {
-          id: quiz.id,
-          title: quiz.title,
-          description: quiz.description,
-          instructions: quiz.instructions,
-          durationMinutes: quiz.durationMinutes,
-          showAnswers: quiz.showAnswers
-        },
-        questions
-      }
+      data: result.value
     }
   } catch (error) {
     return {
@@ -418,32 +569,18 @@ export async function getQuizQuestionsForStudent(quizId: string): Promise<Action
  */
 export async function startQuizAttempt(userId: string, quizId: string): Promise<ActionResponse> {
   try {
-    const quiz = await quizRepository.getById(quizId)
-    if (!quiz) {
-      return {
-        success: false,
-        error: 'Quiz not found'
-      }
+    const result = await startQuizAttemptUseCase.execute({
+      userId,
+      quizId,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
     }
-
-    // Check max attempts
-    if (quiz.maxAttempts) {
-      const attemptCount = await quizRepository.getUserAttemptCount(userId, quizId)
-      if (attemptCount >= quiz.maxAttempts) {
-        return {
-          success: false,
-          error: `Maximum attempts (${quiz.maxAttempts}) reached`
-        }
-      }
-    }
-
-    const nextAttemptNumber = (await quizRepository.getUserAttemptCount(userId, quizId)) + 1
-
-    const attempt = await quizRepository.createAttempt(userId, quizId, nextAttemptNumber)
 
     return {
       success: true,
-      data: attempt
+      data: result.value
     }
   } catch (error) {
     return {
@@ -460,11 +597,29 @@ export async function saveQuizAnswer(formData: FormData): Promise<ActionResponse
   try {
     const obj = Object.fromEntries(formData.entries())
 
-    const answer = await quizRepository.saveAnswer(obj)
+    const session = await getSession()
+    if (!session?.id) {
+      return {
+        success: false,
+        error: 'User not authenticated'
+      }
+    }
+
+    const result = await saveQuizAnswerUseCase.execute({
+      attemptId: obj.attemptId as string,
+      questionId: obj.questionId as string,
+      selectedOptionId: obj.selectedOptionId as string | undefined,
+      answerText: obj.answerText as string | undefined,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     return {
       success: true,
-      data: answer
+      data: result.value
     }
   } catch (error) {
     return {
@@ -479,11 +634,28 @@ export async function saveQuizAnswer(formData: FormData): Promise<ActionResponse
  */
 export async function completeQuizAttempt(attemptId: string, score: number, passed: boolean): Promise<ActionResponse> {
   try {
-    const attempt = await quizRepository.completeAttempt(attemptId, score, passed)
+    const session = await getSession()
+    if (!session?.id) {
+      return {
+        success: false,
+        error: 'User not authenticated'
+      }
+    }
+
+    const result = await completeQuizAttemptUseCase.execute({
+      attemptId,
+      score,
+      passed,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     return {
       success: true,
-      data: attempt
+      data: result.value
     }
   } catch (error) {
     return {
@@ -498,11 +670,18 @@ export async function completeQuizAttempt(attemptId: string, score: number, pass
  */
 export async function getUserQuizAttempts(userId: string, quizId: string): Promise<ActionResponse> {
   try {
-    const attempts = await quizRepository.getUserAttempts(userId, quizId)
+    const result = await getUserQuizAttemptsUseCase.execute({
+      userId,
+      quizId,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     return {
       success: true,
-      data: attempts
+      data: result.value
     }
   } catch (error) {
     return {
