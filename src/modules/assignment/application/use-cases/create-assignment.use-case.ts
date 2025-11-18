@@ -29,9 +29,12 @@ export class CreateAssignmentUseCase extends BaseUseCase<
     const assignmentResult = Assignment.create({
       title: dto.title,
       description: dto.description,
+      instructions: dto.instructions,
       lessonId: dto.lessonId,
       dueDate: dto.dueDate,
       maxScore: dto.maxScore,
+      allowLateSubmission: dto.allowLateSubmission,
+      latePenaltyPercent: dto.latePenaltyPercent,
     });
 
     if (assignmentResult.isFailure) {
