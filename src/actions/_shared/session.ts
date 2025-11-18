@@ -1,12 +1,11 @@
-import { getServerSession as getNextAuthSession } from "next-auth"
-import { authOptions } from "@/lib/auth-config"
+import { auth, type AuthUser } from "@/lib/auth"
 import type { Session } from "next-auth"
 
 /**
- * Obtiene la sesión del servidor usando NextAuth
+ * Obtiene la sesión del servidor usando NextAuth v5
  */
 export async function getServerSession(): Promise<Session | null> {
-  return await getNextAuthSession(authOptions)
+  return await auth()
 }
 
 /**
@@ -23,19 +22,27 @@ export async function requireSession(): Promise<Session> {
 }
 
 /**
+ * Obtiene el usuario autenticado
+ */
+export async function getCurrentUser(): Promise<AuthUser> {
+  const session = await requireSession()
+  return session.user as AuthUser
+}
+
+/**
  * Obtiene el ID del usuario actual
  */
 export async function getCurrentUserId(): Promise<string> {
-  const session = await requireSession()
-  return session.user.id
+  const user = await getCurrentUser()
+  return user.id
 }
 
 /**
  * Obtiene el rol del usuario actual
  */
 export async function getCurrentUserRole(): Promise<string> {
-  const session = await requireSession()
-  return session.user.role
+  const user = await getCurrentUser()
+  return user.role
 }
 
 /**
@@ -48,7 +55,8 @@ export async function hasRole(role: string): Promise<boolean> {
     return false
   }
 
-  return session.user.role === role
+  const user = session.user as AuthUser
+  return user.role === role
 }
 
 /**
@@ -61,7 +69,8 @@ export async function hasAnyRole(roles: string[]): Promise<boolean> {
     return false
   }
 
-  return roles.includes(session.user.role)
+  const user = session.user as AuthUser
+  return roles.includes(user.role)
 }
 
 /**

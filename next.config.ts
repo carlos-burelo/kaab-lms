@@ -17,7 +17,8 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '1gb'
     },
-    turbopackFileSystemCacheForDev: true
+    turbopackFileSystemCacheForDev: true,
+    turbopackUseSystemTlsCerts: true
   },
   reactCompiler: true
 }

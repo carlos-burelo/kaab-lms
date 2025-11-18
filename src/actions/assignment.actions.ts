@@ -155,15 +155,10 @@ export async function updateAssignment(data: z.infer<typeof UpdateAssignmentSche
     const result = await updateAssignmentUseCase.execute({
       dto: {
         id: validated.assignmentId,
-        lessonId: validated.lessonId,
-        courseId: validated.courseId,
         title: validated.title,
         description: validated.description,
-        instructions: validated.instructions,
-        dueDate: new Date(validated.dueDate),
-        maxScore: Number.parseFloat(validated.maxScore),
-        allowLateSubmission: validated.allowLateSubmission,
-        latePenaltyPercent: validated.latePenaltyPercent ? Number.parseFloat(validated.latePenaltyPercent) : null,
+        dueDate: validated.dueDate ? new Date(validated.dueDate) : undefined,
+        maxScore: validated.maxScore ? Number.parseFloat(validated.maxScore) : undefined,
       },
       currentUserId: session.id,
     })
@@ -186,8 +181,10 @@ export async function updateAssignment(data: z.infer<typeof UpdateAssignmentSche
 
 export async function getAssignmentById(assignmentId: string) {
   try {
+    const session = await getSession()
     const result = await getAssignmentUseCase.execute({
       assignmentId,
+      currentUserId: session.id,
     })
 
     if (result.isFailure) {
@@ -261,8 +258,9 @@ export async function submitAssignment(data: z.infer<typeof SubmitAssignmentSche
     const result = await submitAssignmentUseCase.execute({
       dto: {
         assignmentId: validated.assignmentId,
-        content: validated.submissionText,
-        fileId: validated.fileIds?.[0],
+        courseId: validated.courseId,
+        submissionText: validated.submissionText,
+        fileIds: validated.fileIds || [],
       },
       currentUserId: session.id,
     })

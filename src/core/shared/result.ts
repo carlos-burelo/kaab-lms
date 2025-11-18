@@ -187,3 +187,13 @@ export class Result<T, E = Error> {
  * Type alias for async results
  */
 export type AsyncResult<T, E = Error> = Promise<Result<T, E>>;
+
+/**
+ * Helper function to create a successful result
+ */
+export const ok = <T, E = Error>(value: T): Result<T, E> => Result.ok<T, E>(value);
+
+/**
+ * Helper function to create a failed result
+ */
+export const err = <T, E = Error>(error: E): Result<T, E> => Result.fail<T, E>(error);

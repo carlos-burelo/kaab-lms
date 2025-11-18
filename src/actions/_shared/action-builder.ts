@@ -60,9 +60,9 @@ export const createAction = <TInput, TOutput>(
     try {
       // 1. Validar autenticación si es requerida
       if (config.requireAuth !== false) {
-        const session = await getServerSession()
+        const user = await getServerSession()
 
-        if (!session || !session.user) {
+        if (!user) {
           return {
             success: false,
             error: "No autorizado. Debes iniciar sesión."
@@ -71,7 +71,7 @@ export const createAction = <TInput, TOutput>(
 
         // 2. Validar roles permitidos
         if (config.allowedRoles && config.allowedRoles.length > 0) {
-          if (!config.allowedRoles.includes(session.user.role)) {
+          if (!config.allowedRoles.includes(user.role)) {
             return {
               success: false,
               error: "No tienes permisos para realizar esta acción."
@@ -83,7 +83,7 @@ export const createAction = <TInput, TOutput>(
         if (config.schema) {
           const validation = config.schema.safeParse(input)
           if (!validation.success) {
-            const firstError = validation.error.errors[0]
+            const firstError = validation.error.issues[0]
             return {
               success: false,
               error: firstError.message
@@ -93,28 +93,28 @@ export const createAction = <TInput, TOutput>(
 
         // 4. Construir contexto
         const context: ActionContext = {
-          userId: session.user.id,
-          userRole: session.user.role,
-          session
+          userId: user.id,
+          userRole: user.role,
+          session: { user } as Session
         }
 
         // 5. Ejecutar use case
         const result = await config.execute(input, context)
 
         // 6. Convertir Result a ActionResult
-        return result.match(
-          (data) => ({ success: true, data }),
-          (error) => ({ success: false, error: error.message })
-        )
+        if (result.isSuccess) {
+          return { success: true, data: result.value }
+        }
+        return { success: false, error: result.error.message }
       }
 
       // Actions públicas (sin autenticación)
       const result = await config.execute(input, {} as ActionContext)
 
-      return result.match(
-        (data) => ({ success: true, data }),
-        (error) => ({ success: false, error: error.message })
-      )
+      if (result.isSuccess) {
+        return { success: true, data: result.value }
+      }
+      return { success: false, error: result.error.message }
 
     } catch (error) {
       // Log del error para debugging
