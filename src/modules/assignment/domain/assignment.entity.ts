@@ -14,9 +14,12 @@ import {
 export interface AssignmentProps extends EntityProps {
   title: string;
   description?: string;
+  instructions?: string;
   dueDate?: Date;
   maxScore: number;
   lessonId: string;
+  allowLateSubmission?: boolean;
+  latePenaltyPercent?: number | null;
 }
 
 export class Assignment extends AggregateRoot<AssignmentProps> {
@@ -26,6 +29,10 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
 
   get description(): string | undefined {
     return this._props.description;
+  }
+
+  get instructions(): string | undefined {
+    return this._props.instructions;
   }
 
   get dueDate(): Date | undefined {
@@ -38,6 +45,14 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
 
   get lessonId(): string {
     return this._props.lessonId;
+  }
+
+  get allowLateSubmission(): boolean {
+    return this._props.allowLateSubmission ?? false;
+  }
+
+  get latePenaltyPercent(): number | null | undefined {
+    return this._props.latePenaltyPercent;
   }
 
   private constructor(props: AssignmentProps, id?: string) {
@@ -157,7 +172,7 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
    * Check if user can submit assignment
    */
   canSubmit(): Result<void, BusinessRuleError> {
-    if (this.isOverdue()) {
+    if (this.isOverdue() && !this.allowLateSubmission) {
       return Result.fail(
         new BusinessRuleError('Cannot submit assignment after due date')
       );
@@ -238,9 +253,12 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
       id: this.id,
       title: this.title,
       description: this.description,
+      instructions: this.instructions,
       dueDate: this.dueDate,
       maxScore: this.maxScore,
       lessonId: this.lessonId,
+      allowLateSubmission: this.allowLateSubmission,
+      latePenaltyPercent: this.latePenaltyPercent,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
