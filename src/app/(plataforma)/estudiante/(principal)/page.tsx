@@ -1,28 +1,30 @@
 import { BadgeCheckIcon, CircleStarIcon, CoinsIcon } from 'lucide-react'
-import { studentRepository } from '@/database/repositories'
-import { getSession } from '@/lib/auth'
+import { getEnrolledCourses } from '@/actions/student/enrollment.actions'
+import { getGamificationProfile, getAchievements } from '@/actions/student/gamification.actions'
+import { getCertificates } from '@/actions/student/certificate.actions'
 import { CoursesInProgress } from './components/CoursesInProgress'
 import { NewEnrollment } from './components/NewEnrollment'
 import { StudentHintCard } from './components/StudentHintCard'
 
 export default async function Page() {
-  const session = await getSession()
-  if (!session?.id) {
+  // Llamar server actions en paralelo
+  const [enrolledResult, gamificationResult, achievementsResult, certificatesResult] = await Promise.all([
+    getEnrolledCourses({}),
+    getGamificationProfile({}),
+    getAchievements({}),
+    getCertificates({})
+  ])
+
+  // Manejar errores de autenticación
+  if (!enrolledResult.success) {
     return <div>No autorizado</div>
   }
 
-  const [enrolled, gamification, achievements, certificates] = await Promise.all([
-    studentRepository.getEnrolledCourses(session.id),
-    studentRepository.getGamificationProfile(session.id),
-    studentRepository.getAchievements(session.id),
-    studentRepository.getCertificates(session.id)
-  ])
-
   const data = {
-    enrollments: enrolled || [],
-    xp: gamification?.xp || 0,
-    insigniasUsuario: achievements || [],
-    certificados: certificates || []
+    enrollments: enrolledResult.data || [],
+    xp: gamificationResult.data?.xp || 0,
+    insigniasUsuario: achievementsResult.data || [],
+    certificados: certificatesResult.data || []
   }
 
   return (
