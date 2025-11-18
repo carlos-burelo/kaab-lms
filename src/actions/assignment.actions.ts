@@ -4,6 +4,31 @@ import { revalidatePath } from 'next/cache'
 import z from 'zod'
 import { instructorRepository, studentRepository } from '@/database/repositories'
 import { getSession } from '@/lib/auth'
+import { AssignmentRepository } from '@/modules/assignment/infrastructure/assignment.repository'
+import {
+  CreateAssignmentUseCase,
+  UpdateAssignmentUseCase,
+  GetAssignmentUseCase,
+  DeleteAssignmentUseCase,
+  SubmitAssignmentUseCase,
+  GradeAssignmentUseCase,
+  GetAssignmentSubmissionsUseCase,
+  GetStudentAssignmentSubmissionsUseCase,
+} from '@/modules/assignment/application/use-cases'
+
+// ============================================================================
+// INITIALIZE USE CASES
+// ============================================================================
+
+const assignmentRepository = new AssignmentRepository()
+const createAssignmentUseCase = new CreateAssignmentUseCase(assignmentRepository)
+const updateAssignmentUseCase = new UpdateAssignmentUseCase(assignmentRepository)
+const getAssignmentUseCase = new GetAssignmentUseCase(assignmentRepository)
+const deleteAssignmentUseCase = new DeleteAssignmentUseCase(assignmentRepository)
+const submitAssignmentUseCase = new SubmitAssignmentUseCase(assignmentRepository)
+const gradeAssignmentUseCase = new GradeAssignmentUseCase(assignmentRepository)
+const getAssignmentSubmissionsUseCase = new GetAssignmentSubmissionsUseCase(assignmentRepository)
+const getStudentAssignmentSubmissionsUseCase = new GetStudentAssignmentSubmissionsUseCase()
 
 // ============================================================================
 // SCHEMAS - VALIDACIÓN
@@ -75,19 +100,28 @@ export async function createAssignment(data: z.infer<typeof CreateAssignmentSche
       throw new Error('No tienes permiso para crear asignaciones en este curso')
     }
 
-    const assignment = await instructorRepository.createAssignment({
-      lessonId: validated.lessonId,
-      title: validated.title,
-      description: validated.description || null,
-      instructions: validated.instructions || null,
-      dueDate: new Date(validated.dueDate),
-      maxScore: Number.parseFloat(validated.maxScore),
-      allowLateSubmission: validated.allowLateSubmission,
-      latePenaltyPercent: validated.latePenaltyPercent ? Number.parseFloat(validated.latePenaltyPercent) : null
+    // Execute use case
+    const result = await createAssignmentUseCase.execute({
+      dto: {
+        lessonId: validated.lessonId,
+        courseId: validated.courseId,
+        title: validated.title,
+        description: validated.description,
+        instructions: validated.instructions,
+        dueDate: new Date(validated.dueDate),
+        maxScore: Number.parseFloat(validated.maxScore),
+        allowLateSubmission: validated.allowLateSubmission,
+        latePenaltyPercent: validated.latePenaltyPercent ? Number.parseFloat(validated.latePenaltyPercent) : null,
+      },
+      currentUserId: session.id,
     })
 
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
+
     revalidatePath(`/instructor/cursos/${validated.courseId}`)
-    return { success: true, data: assignment }
+    return { success: true, data: result.value }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Error al crear asignación'
     return { success: false, error: message }
@@ -117,18 +151,29 @@ export async function updateAssignment(data: z.infer<typeof UpdateAssignmentSche
       throw new Error('No tienes permiso para actualizar asignaciones en este curso')
     }
 
-    const assignment = await instructorRepository.updateAssignment(validated.assignmentId, {
-      title: validated.title,
-      description: validated.description || null,
-      instructions: validated.instructions || null,
-      dueDate: new Date(validated.dueDate),
-      maxScore: Number.parseFloat(validated.maxScore),
-      allowLateSubmission: validated.allowLateSubmission,
-      latePenaltyPercent: validated.latePenaltyPercent ? Number.parseFloat(validated.latePenaltyPercent) : null
+    // Execute use case
+    const result = await updateAssignmentUseCase.execute({
+      dto: {
+        id: validated.assignmentId,
+        lessonId: validated.lessonId,
+        courseId: validated.courseId,
+        title: validated.title,
+        description: validated.description,
+        instructions: validated.instructions,
+        dueDate: new Date(validated.dueDate),
+        maxScore: Number.parseFloat(validated.maxScore),
+        allowLateSubmission: validated.allowLateSubmission,
+        latePenaltyPercent: validated.latePenaltyPercent ? Number.parseFloat(validated.latePenaltyPercent) : null,
+      },
+      currentUserId: session.id,
     })
 
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
+
     revalidatePath(`/instructor/cursos/${validated.courseId}`)
-    return { success: true, data: assignment }
+    return { success: true, data: result.value }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Error al actualizar asignación'
     return { success: false, error: message }
@@ -141,11 +186,15 @@ export async function updateAssignment(data: z.infer<typeof UpdateAssignmentSche
 
 export async function getAssignmentById(assignmentId: string) {
   try {
-    const assignment = await instructorRepository.getAssignmentById(assignmentId)
-    if (!assignment) {
-      throw new Error('Asignación no encontrada')
+    const result = await getAssignmentUseCase.execute({
+      assignmentId,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
     }
-    return { success: true, data: assignment }
+
+    return { success: true, data: result.value }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Error al obtener asignación'
     return { success: false, error: message }
@@ -172,7 +221,14 @@ export async function deleteAssignment(assignmentId: string, courseId: string) {
       throw new Error('No tienes permiso para eliminar asignaciones en este curso')
     }
 
-    await instructorRepository.deleteAssignment(assignmentId)
+    const result = await deleteAssignmentUseCase.execute({
+      assignmentId,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     revalidatePath(`/instructor/cursos/${courseId}`)
     return { success: true }
@@ -201,15 +257,22 @@ export async function submitAssignment(data: z.infer<typeof SubmitAssignmentSche
       throw new Error('No estás inscrito en este curso')
     }
 
-    const submission = await studentRepository.submitAssignment({
-      assignmentId: validated.assignmentId,
-      userId: session.id,
-      submissionText: validated.submissionText || null,
-      fileIds: validated.fileIds
+    // Execute use case
+    const result = await submitAssignmentUseCase.execute({
+      dto: {
+        assignmentId: validated.assignmentId,
+        content: validated.submissionText,
+        fileId: validated.fileIds?.[0],
+      },
+      currentUserId: session.id,
     })
 
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
+
     revalidatePath(`/estudiante/cursos/${validated.courseId}`)
-    return { success: true, data: submission }
+    return { success: true, data: result.value }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Error al enviar asignación'
     return { success: false, error: message }
@@ -239,14 +302,21 @@ export async function gradeAssignment(submissionId: string, courseId: string, da
       throw new Error('No tienes permiso para calificar en este curso')
     }
 
-    const graded = await instructorRepository.gradeAssignmentSubmission(submissionId, {
-      score: Number.parseFloat(validated.score),
-      feedback: validated.feedback || null,
-      status: validated.status
+    const result = await gradeAssignmentUseCase.execute({
+      dto: {
+        submissionId,
+        score: Number.parseFloat(validated.score),
+        feedback: validated.feedback,
+      },
+      currentUserId: session.id,
     })
 
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
+
     revalidatePath(`/instructor/cursos/${courseId}`)
-    return { success: true, data: graded }
+    return { success: true, data: result.value }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Error al calificar asignación'
     return { success: false, error: message }
@@ -273,8 +343,16 @@ export async function getAssignmentSubmissions(assignmentId: string, courseId: s
       throw new Error('No tienes permiso para ver estas entregas')
     }
 
-    const submissions = await instructorRepository.getAssignmentSubmissions(assignmentId)
-    return { success: true, data: submissions }
+    const result = await getAssignmentSubmissionsUseCase.execute({
+      assignmentId,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
+
+    return { success: true, data: result.value }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Error al obtener entregas'
     return { success: false, error: message }
@@ -292,8 +370,16 @@ export async function getStudentAssignmentSubmissions(courseId: string) {
       throw new Error('No autenticado')
     }
 
-    const submissions = await studentRepository.getStudentAssignmentSubmissions(session.id, courseId)
-    return { success: true, data: submissions }
+    const result = await getStudentAssignmentSubmissionsUseCase.execute({
+      courseId,
+      currentUserId: session.id,
+    })
+
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
+
+    return { success: true, data: result.value }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Error al obtener entregas'
     return { success: false, error: message }
