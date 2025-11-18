@@ -1,45 +1,46 @@
 'use server'
 
-import { courseRepository } from '@/database/repositories'
 import { getSession } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import {
+  GetInstructorStatsUseCase,
+  GetCourseAnalyticsUseCase,
+  GetEnrollmentTrendUseCase,
+  GetRevenueDataUseCase,
+  InstructorStatsDTO,
+  CourseAnalyticsDTO,
+  EnrollmentTrendDTO,
+  RevenueDataDTO,
+} from '@/modules/instructor/application/use-cases'
 
 /**
  * INSTRUCTOR DASHBOARD ACTIONS
  * Obtiene datos agregados para el dashboard del instructor
+ *
+ * ARQUITECTURA:
+ * Client -> Server Action (validación, autorización) -> Use Case -> Repository (BD)
  */
 
-export interface InstructorStats {
-  totalCourses: number
-  publishedCourses: number
-  draftCourses: number
-  totalStudents: number
-  totalEnrollments: number
-  averageRating: number
-  totalReviews: number
-  activeStudentsThisMonth: number
-}
+// ============================================================================
+// INITIALIZE USE CASES
+// ============================================================================
 
-export interface CourseAnalytics {
-  courseId: string
-  title: string
-  enrollments: number
-  rating: number
-  totalReviews: number
-}
+const getInstructorStatsUseCase = new GetInstructorStatsUseCase()
+const getCourseAnalyticsUseCase = new GetCourseAnalyticsUseCase()
+const getEnrollmentTrendUseCase = new GetEnrollmentTrendUseCase()
+const getRevenueDataUseCase = new GetRevenueDataUseCase()
 
-export interface EnrollmentTrend {
-  date: string
-  enrollments: number
-  cumulative: number
-}
+// ============================================================================
+// TYPE DEFINITIONS (Re-export from use cases)
+// ============================================================================
 
-export interface RevenueData {
-  courseId: string
-  title: string
-  revenue: number
-  enrollments: number
-}
+export type InstructorStats = InstructorStatsDTO
+export type CourseAnalytics = CourseAnalyticsDTO
+export type EnrollmentTrend = EnrollmentTrendDTO
+export type RevenueData = RevenueDataDTO
+
+// ============================================================================
+// INSTRUCTOR STATS
+// ============================================================================
 
 /**
  * Obtiene estadísticas generales del instructor
@@ -51,67 +52,17 @@ export async function getInstructorStats(): Promise<{ success: boolean; data?: I
       return { success: false, error: 'No autenticado' }
     }
 
-    const courses = await courseRepository.getInstructorCourses(session.id)
-
-    if (!courses) {
-      return {
-        success: true,
-        data: {
-          totalCourses: 0,
-          publishedCourses: 0,
-          draftCourses: 0,
-          totalStudents: 0,
-          totalEnrollments: 0,
-          averageRating: 0,
-          totalReviews: 0,
-          activeStudentsThisMonth: 0
-        }
-      }
-    }
-
-    const publishedCourses = courses.filter((c) => c.isPublished)
-    const draftCourses = courses.filter((c) => !c.isPublished)
-
-    // Calcular total de estudiantes únicos
-    const allEnrollments = await prisma.enrollment.findMany({
-      where: {
-        course: {
-          instructorId: session.id
-        }
-      },
-      include: {
-        user: true
-      }
+    const result = await getInstructorStatsUseCase.execute({
+      instructorId: session.id,
     })
 
-    const uniqueStudents = new Set(allEnrollments.map((e) => e.userId)).size
-    const totalEnrollments = allEnrollments.length
-
-    // Estudiantes activos este mes
-    const thirtyDaysAgo = new Date()
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-
-    const activeThisMonth = new Set(
-      allEnrollments.filter((e) => e.lastAccessed && e.lastAccessed > thirtyDaysAgo).map((e) => e.userId)
-    ).size
-
-    // Calcular promedio de rating
-    const totalRating = courses.reduce((acc, c) => acc + c.rating, 0)
-    const totalReviewsCount = courses.reduce((acc, c) => acc + c.totalReviews, 0)
-    const averageRating = courses.length > 0 ? totalRating / courses.length : 0
+    if (result.isFailure) {
+      throw new Error(result.error.message)
+    }
 
     return {
       success: true,
-      data: {
-        totalCourses: courses.length,
-        publishedCourses: publishedCourses.length,
-        draftCourses: draftCourses.length,
-        totalStudents: uniqueStudents,
-        totalEnrollments,
-        averageRating: Math.round(averageRating * 100) / 100,
-        totalReviews: totalReviewsCount,
-        activeStudentsThisMonth: activeThisMonth
-      }
+      data: result.value
     }
   } catch (error) {
     return {
@@ -120,6 +71,10 @@ export async function getInstructorStats(): Promise<{ success: boolean; data?: I
     }
   }
 }
+
+// ============================================================================
+// COURSE ANALYTICS
+// ============================================================================
 
 /**
  * Obtiene análisis por curso
@@ -131,24 +86,15 @@ export async function getCourseAnalytics(): Promise<{ success: boolean; data?: C
       return { success: false, error: 'No autenticado' }
     }
 
-    const courses = await courseRepository.getInstructorCourses(session.id)
+    const result = await getCourseAnalyticsUseCase.execute({
+      instructorId: session.id,
+    })
 
-    if (!courses) {
-      return { success: true, data: [] }
+    if (result.isFailure) {
+      throw new Error(result.error.message)
     }
 
-    const analytics: CourseAnalytics[] = courses
-      .filter((c) => c.isPublished)
-      .map((course) => ({
-        courseId: course.id,
-        title: course.title,
-        enrollments: course._count?.enrollments || 0,
-        rating: course.rating,
-        totalReviews: course.totalReviews
-      }))
-      .sort((a, b) => b.enrollments - a.enrollments)
-
-    return { success: true, data: analytics }
+    return { success: true, data: result.value }
   } catch (error) {
     return {
       success: false,
@@ -156,6 +102,10 @@ export async function getCourseAnalytics(): Promise<{ success: boolean; data?: C
     }
   }
 }
+
+// ============================================================================
+// ENROLLMENT TRENDS
+// ============================================================================
 
 /**
  * Obtiene tendencia de inscripciones
@@ -171,50 +121,15 @@ export async function getEnrollmentTrend(): Promise<{
       return { success: false, error: 'No autenticado' }
     }
 
-    // Obtener inscripciones de los últimos 30 días
-    const thirtyDaysAgo = new Date()
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-
-    const enrollments = await prisma.enrollment.findMany({
-      where: {
-        course: {
-          instructorId: session.id
-        },
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
-      },
-      orderBy: {
-        createdAt: 'asc'
-      }
+    const result = await getEnrollmentTrendUseCase.execute({
+      instructorId: session.id,
     })
 
-    // Agrupar por fecha
-    const trendMap = new Map<string, number>()
-    let cumulative = 0
-
-    enrollments.forEach((enrollment) => {
-      const dateKey = enrollment.createdAt.toISOString().split('T')[0]
-      trendMap.set(dateKey, (trendMap.get(dateKey) || 0) + 1)
-    })
-
-    // Generar datos para todos los días (llenar vacíos)
-    const trend: EnrollmentTrend[] = []
-    for (let i = 29; i >= 0; i--) {
-      const date = new Date()
-      date.setDate(date.getDate() - i)
-      const dateKey = date.toISOString().split('T')[0]
-      const count = trendMap.get(dateKey) || 0
-      cumulative += count
-
-      trend.push({
-        date: dateKey,
-        enrollments: count,
-        cumulative
-      })
+    if (result.isFailure) {
+      throw new Error(result.error.message)
     }
 
-    return { success: true, data: trend }
+    return { success: true, data: result.value }
   } catch (error) {
     return {
       success: false,
@@ -222,6 +137,10 @@ export async function getEnrollmentTrend(): Promise<{
     }
   }
 }
+
+// ============================================================================
+// REVENUE DATA
+// ============================================================================
 
 /**
  * Obtiene datos de ingresos por curso (si tienen precio)
@@ -233,23 +152,15 @@ export async function getRevenueData(): Promise<{ success: boolean; data?: Reven
       return { success: false, error: 'No autenticado' }
     }
 
-    const courses = await courseRepository.getInstructorCourses(session.id)
+    const result = await getRevenueDataUseCase.execute({
+      instructorId: session.id,
+    })
 
-    if (!courses) {
-      return { success: true, data: [] }
+    if (result.isFailure) {
+      throw new Error(result.error.message)
     }
 
-    const revenueData: RevenueData[] = courses
-      .filter((c) => c.price !== null && c.price !== undefined && Number(c.price) > 0)
-      .map((course) => ({
-        courseId: course.id,
-        title: course.title,
-        revenue: course.price ? Number(course.price) * (course._count?.enrollments || 0) : 0,
-        enrollments: course._count?.enrollments || 0
-      }))
-      .sort((a, b) => b.revenue - a.revenue)
-
-    return { success: true, data: revenueData }
+    return { success: true, data: result.value }
   } catch (error) {
     return {
       success: false,
