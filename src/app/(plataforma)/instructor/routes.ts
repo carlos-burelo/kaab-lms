@@ -1,4 +1,18 @@
-import { AwardIcon, BarChart3, BookMarkedIcon, Calendar, FolderOpen, GitBranch, UsersIcon } from 'lucide-react'
+import {
+  AwardIcon,
+  BarChart3,
+  BookMarkedIcon,
+  Calendar,
+  FolderOpen,
+  GitBranch,
+  UsersIcon,
+  Megaphone,
+  MessageSquare,
+  Bell,
+  Star,
+  DollarSign,
+  User
+} from 'lucide-react'
 
 export default [
   {
@@ -13,19 +27,54 @@ export default [
     icon: GitBranch
   },
   {
+    title: 'Estudiantes',
+    url: '/instructor/estudiantes',
+    icon: UsersIcon
+  },
+  {
     title: 'Enrollments',
     url: '/instructor/enrollments',
     icon: BarChart3
   },
   {
+    title: 'Anuncios',
+    url: '/instructor/anuncios',
+    icon: Megaphone
+  },
+  {
+    title: 'Foros',
+    url: '/instructor/foros',
+    icon: MessageSquare
+  },
+  {
+    title: 'Mensajes',
+    url: '/instructor/mensajes',
+    icon: MessageSquare
+  },
+  {
+    title: 'Reviews',
+    url: '/instructor/reviews',
+    icon: Star
+  },
+  {
+    title: 'Ingresos',
+    url: '/instructor/ingresos',
+    icon: DollarSign
+  },
+  {
+    title: 'Notificaciones',
+    url: '/instructor/notificaciones',
+    icon: Bell
+  },
+  {
+    title: 'Perfil',
+    url: '/instructor/perfil',
+    icon: User
+  },
+  {
     title: 'Calendar',
     url: '/instructor/calendar',
     icon: Calendar
-  },
-  {
-    title: 'Estudiantes',
-    url: '/instructor/estudiantes',
-    icon: UsersIcon
   },
   {
     title: 'Assets',
