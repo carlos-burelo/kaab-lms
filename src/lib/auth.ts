@@ -57,7 +57,10 @@ export const getSession = cache(async () => {
   const session = await auth()
   if (!session || !session.user) {
     redirect('/sign-in')
-     
+
   }
   return session!.user as Required<AuthUser>
 })
+
+// Alias for backward compatibility
+export const getServerSession = getSession

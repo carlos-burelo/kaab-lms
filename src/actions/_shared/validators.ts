@@ -29,7 +29,7 @@ export const dateRangeSchema = z.object({
 // ============ Búsqueda ============
 export const searchSchema = z.object({
   query: z.string().min(1, "Consulta de búsqueda requerida"),
-  filters: z.record(z.any()).optional()
+  filters: z.record(z.string(), z.any()).optional()
 })
 
 // ============ Ordenamiento ============
@@ -154,7 +154,7 @@ export function validateFormData<T>(
     if (!result.success) {
       return {
         success: false,
-        error: result.error.errors[0].message
+        error: result.error.issues[0].message
       }
     }
 

@@ -1,19 +1,6 @@
 import type { Metadata } from 'next'
-import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
-
-const geistSans = IBM_Plex_Sans({
-  variable: '--font-geist-sans',
-  weight: ['400', '500', '600', '700'],
-  subsets: ['latin']
-})
-
-const geistMono = IBM_Plex_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-  weight: ['400', '500', '600']
-})
 
 export const metadata: Metadata = {
   title: '🐢 KaabLMS',
@@ -27,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='es' suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className='antialiased font-sans'>
         {children}
         <Toaster />
       </body>

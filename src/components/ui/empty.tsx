@@ -70,4 +70,35 @@ function EmptyContent({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-export { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, EmptyMedia }
+/**
+ * EmptyState - A composed component for displaying empty states
+ */
+interface EmptyStateProps {
+  icon?: React.ReactNode
+  title: string
+  description?: string
+  actionLabel?: string
+  actionHref?: string
+  className?: string
+}
+
+function EmptyState({ icon, title, description, actionLabel, actionHref, className }: EmptyStateProps) {
+  return (
+    <Empty className={className}>
+      <EmptyHeader>
+        {icon && <EmptyMedia variant='icon'>{icon}</EmptyMedia>}
+        <EmptyTitle>{title}</EmptyTitle>
+        {description && <EmptyDescription>{description}</EmptyDescription>}
+      </EmptyHeader>
+      {actionLabel && actionHref && (
+        <EmptyContent>
+          <a href={actionHref} className='inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90'>
+            {actionLabel}
+          </a>
+        </EmptyContent>
+      )}
+    </Empty>
+  )
+}
+
+export { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, EmptyMedia, EmptyState }
