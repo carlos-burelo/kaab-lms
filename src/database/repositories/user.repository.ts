@@ -870,6 +870,92 @@ export class UserRepository extends BaseRepository {
       return []
     }
   }
+
+  // ========================================================================
+  // TAREAS PERSONALES (PERSONAL TASKS)
+  // ========================================================================
+
+  /**
+   * Obtiene todas las tareas personales de un usuario
+   */
+  async getPersonalTasks(userId: string) {
+    try {
+      return await this.client.personalTask.findMany({
+        where: { userId },
+        orderBy: [{ priority: 'desc' }, { dueDate: 'asc' }]
+      })
+    } catch (error) {
+      this.handleError(error, 'UserRepository.getPersonalTasks')
+      return []
+    }
+  }
+
+  /**
+   * Obtiene una tarea personal por ID
+   */
+  async getPersonalTaskById(taskId: string) {
+    try {
+      return await this.client.personalTask.findUnique({
+        where: { id: taskId }
+      })
+    } catch (error) {
+      this.handleError(error, 'UserRepository.getPersonalTaskById')
+    }
+  }
+
+  /**
+   * Crea una nueva tarea personal
+   */
+  async createPersonalTask(data: {
+    userId: string
+    title: string
+    description?: string
+    priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+    dueDate?: Date
+    tags?: string[]
+  }) {
+    try {
+      return await this.client.personalTask.create({
+        data: {
+          userId: data.userId,
+          title: data.title,
+          description: data.description,
+          priority: data.priority || 'MEDIUM',
+          dueDate: data.dueDate,
+          tags: data.tags
+        }
+      })
+    } catch (error) {
+      this.handleError(error, 'UserRepository.createPersonalTask')
+    }
+  }
+
+  /**
+   * Actualiza una tarea personal
+   */
+  async updatePersonalTask(taskId: string, data: any) {
+    try {
+      return await this.client.personalTask.update({
+        where: { id: taskId },
+        data
+      })
+    } catch (error) {
+      this.handleError(error, 'UserRepository.updatePersonalTask')
+    }
+  }
+
+  /**
+   * Elimina una tarea personal
+   */
+  async deletePersonalTask(taskId: string) {
+    try {
+      return await this.client.personalTask.delete({
+        where: { id: taskId }
+      })
+    } catch (error) {
+      this.handleError(error, 'UserRepository.deletePersonalTask')
+    }
+  }
 }
 
 export const userRepository = new UserRepository()
