@@ -10,9 +10,12 @@ export interface AssignmentDTO {
   id: string;
   title: string;
   description?: string;
+  instructions?: string;
   dueDate?: Date;
   maxScore: number;
   lessonId: string;
+  allowLateSubmission?: boolean;
+  latePenaltyPercent?: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,9 +25,12 @@ class AssignmentMapper implements Mapper<Assignment, PrismaAssignment, Assignmen
     const props: AssignmentProps = {
       title: raw.title,
       description: raw.description || undefined,
+      instructions: raw.instructions || undefined,
       dueDate: raw.dueDate || undefined,
-      maxScore: Number(raw.maxScore),
+      maxScore: Number(raw.maxPoints),
       lessonId: raw.lessonId,
+      allowLateSubmission: raw.allowLate,
+      latePenaltyPercent: null, // Not in Prisma schema yet
       id: raw.id,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
@@ -44,9 +50,13 @@ class AssignmentMapper implements Mapper<Assignment, PrismaAssignment, Assignmen
       id: entity.id,
       title: entity.title,
       description: entity.description || null,
+      instructions: entity.instructions || null,
       dueDate: entity.dueDate || null,
-      maxScore: entity.maxScore,
+      maxPoints: entity.maxScore,
+      allowLate: entity.allowLateSubmission,
       lessonId: entity.lessonId,
+      fileRequired: false, // Default value, can be enhanced later
+      allowedFormats: null, // Can be enhanced later
     };
   }
 
@@ -55,9 +65,12 @@ class AssignmentMapper implements Mapper<Assignment, PrismaAssignment, Assignmen
       id: entity.id,
       title: entity.title,
       description: entity.description,
+      instructions: entity.instructions,
       dueDate: entity.dueDate,
       maxScore: entity.maxScore,
       lessonId: entity.lessonId,
+      allowLateSubmission: entity.allowLateSubmission,
+      latePenaltyPercent: entity.latePenaltyPercent,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

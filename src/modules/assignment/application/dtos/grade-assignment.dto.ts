@@ -5,9 +5,11 @@
 import { z } from 'zod';
 
 export const GradeAssignmentSchema = z.object({
-  submissionId: z.string().min(1, 'Submission ID is required'),
-  score: z.number().min(0, 'Score must be non-negative'),
+  submissionId: z.string().min(1, 'El ID de la entrega es requerido'),
+  courseId: z.string().min(1, 'El ID del curso es requerido'),
+  score: z.number().min(0, 'La puntuación no puede ser negativa'),
   feedback: z.string().optional(),
+  status: z.enum(['GRADED', 'NEEDS_REVISION']).default('GRADED'),
 });
 
 export type GradeAssignmentDTO = z.infer<typeof GradeAssignmentSchema>;
