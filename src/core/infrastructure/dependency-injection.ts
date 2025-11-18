@@ -158,9 +158,24 @@ export const TOKENS = {
   BADGE_REPOSITORY: Symbol.for('BadgeRepository'),
   ACHIEVEMENT_REPOSITORY: Symbol.for('AchievementRepository'),
   MISSION_REPOSITORY: Symbol.for('MissionRepository'),
+  USER_GAMIFICATION_REPOSITORY: Symbol.for('UserGamificationRepository'),
 
   // Repositories - Learning Path
   LEARNING_PATH_REPOSITORY: Symbol.for('LearningPathRepository'),
+
+  // Repositories - Message/Communication
+  MESSAGE_REPOSITORY: Symbol.for('MessageRepository'),
+  CONVERSATION_REPOSITORY: Symbol.for('ConversationRepository'),
+
+  // Repositories - Notification
+  NOTIFICATION_REPOSITORY: Symbol.for('NotificationRepository'),
+
+  // Repositories - Productivity
+  PERSONAL_TASK_REPOSITORY: Symbol.for('PersonalTaskRepository'),
+  CALENDAR_EVENT_REPOSITORY: Symbol.for('CalendarEventRepository'),
+
+  // Repositories - File
+  FILE_REPOSITORY: Symbol.for('FileRepository'),
 
   // Use Cases - Course
   CREATE_COURSE_USE_CASE: Symbol.for('CreateCourseUseCase'),
@@ -173,10 +188,97 @@ export const TOKENS = {
   // Use Cases - Enrollment
   ENROLL_STUDENT_USE_CASE: Symbol.for('EnrollStudentUseCase'),
   UPDATE_PROGRESS_USE_CASE: Symbol.for('UpdateProgressUseCase'),
+  GET_ENROLLMENT_USE_CASE: Symbol.for('GetEnrollmentUseCase'),
+  COMPLETE_ENROLLMENT_USE_CASE: Symbol.for('CompleteEnrollmentUseCase'),
+
+  // Use Cases - Quiz
+  CREATE_QUIZ_USE_CASE: Symbol.for('CreateQuizUseCase'),
+  UPDATE_QUIZ_USE_CASE: Symbol.for('UpdateQuizUseCase'),
+  DELETE_QUIZ_USE_CASE: Symbol.for('DeleteQuizUseCase'),
+  GET_QUIZ_USE_CASE: Symbol.for('GetQuizUseCase'),
+
+  // Use Cases - Assignment
+  CREATE_ASSIGNMENT_USE_CASE: Symbol.for('CreateAssignmentUseCase'),
+  UPDATE_ASSIGNMENT_USE_CASE: Symbol.for('UpdateAssignmentUseCase'),
+  DELETE_ASSIGNMENT_USE_CASE: Symbol.for('DeleteAssignmentUseCase'),
+  GET_ASSIGNMENT_USE_CASE: Symbol.for('GetAssignmentUseCase'),
+  SUBMIT_ASSIGNMENT_USE_CASE: Symbol.for('SubmitAssignmentUseCase'),
+  GRADE_ASSIGNMENT_USE_CASE: Symbol.for('GradeAssignmentUseCase'),
+
+  // Use Cases - Notification
+  CREATE_NOTIFICATION_USE_CASE: Symbol.for('CreateNotificationUseCase'),
+  MARK_NOTIFICATION_AS_READ_USE_CASE: Symbol.for('MarkNotificationAsReadUseCase'),
+  GET_NOTIFICATIONS_USE_CASE: Symbol.for('GetNotificationsUseCase'),
+  GET_UNREAD_COUNT_USE_CASE: Symbol.for('GetUnreadCountUseCase'),
+
+  // Use Cases - Message
+  SEND_MESSAGE_USE_CASE: Symbol.for('SendMessageUseCase'),
+  GET_CONVERSATION_USE_CASE: Symbol.for('GetConversationUseCase'),
+  GET_OR_CREATE_CONVERSATION_USE_CASE: Symbol.for('GetOrCreateConversationUseCase'),
+  MARK_MESSAGES_AS_READ_USE_CASE: Symbol.for('MarkMessagesAsReadUseCase'),
+  GET_CONVERSATIONS_USE_CASE: Symbol.for('GetConversationsUseCase'),
+
+  // Use Cases - Learning Path
+  CREATE_LEARNING_PATH_USE_CASE: Symbol.for('CreateLearningPathUseCase'),
+  UPDATE_LEARNING_PATH_USE_CASE: Symbol.for('UpdateLearningPathUseCase'),
+  ADD_NODE_USE_CASE: Symbol.for('AddNodeUseCase'),
+  ADD_EDGE_USE_CASE: Symbol.for('AddEdgeUseCase'),
+  START_LEARNING_PATH_USE_CASE: Symbol.for('StartLearningPathUseCase'),
+  COMPLETE_NODE_USE_CASE: Symbol.for('CompleteNodeUseCase'),
+  GET_NEXT_NODE_USE_CASE: Symbol.for('GetNextNodeUseCase'),
+  GET_USER_PROGRESS_USE_CASE: Symbol.for('GetUserProgressUseCase'),
 
   // Use Cases - Gamification
+  // Badges
+  CREATE_BADGE_USE_CASE: Symbol.for('CreateBadgeUseCase'),
+  UPDATE_BADGE_USE_CASE: Symbol.for('UpdateBadgeUseCase'),
+  DELETE_BADGE_USE_CASE: Symbol.for('DeleteBadgeUseCase'),
+  GET_BADGE_USE_CASE: Symbol.for('GetBadgeUseCase'),
   AWARD_BADGE_USE_CASE: Symbol.for('AwardBadgeUseCase'),
+  GET_USER_BADGES_USE_CASE: Symbol.for('GetUserBadgesUseCase'),
+  // Achievements
+  CREATE_ACHIEVEMENT_USE_CASE: Symbol.for('CreateAchievementUseCase'),
+  UPDATE_ACHIEVEMENT_USE_CASE: Symbol.for('UpdateAchievementUseCase'),
+  DELETE_ACHIEVEMENT_USE_CASE: Symbol.for('DeleteAchievementUseCase'),
+  GET_ACHIEVEMENT_USE_CASE: Symbol.for('GetAchievementUseCase'),
+  UNLOCK_ACHIEVEMENT_USE_CASE: Symbol.for('UnlockAchievementUseCase'),
+  GET_USER_ACHIEVEMENTS_USE_CASE: Symbol.for('GetUserAchievementsUseCase'),
+  // Missions
+  CREATE_MISSION_USE_CASE: Symbol.for('CreateMissionUseCase'),
+  UPDATE_MISSION_USE_CASE: Symbol.for('UpdateMissionUseCase'),
+  DELETE_MISSION_USE_CASE: Symbol.for('DeleteMissionUseCase'),
+  GET_MISSION_USE_CASE: Symbol.for('GetMissionUseCase'),
+  COMPLETE_MISSION_USE_CASE: Symbol.for('CompleteMissionUseCase'),
+  GET_ACTIVE_MISSIONS_USE_CASE: Symbol.for('GetActiveMissionsUseCase'),
+  // User Gamification
   ADD_XP_USE_CASE: Symbol.for('AddXpUseCase'),
+  ADD_COINS_USE_CASE: Symbol.for('AddCoinsUseCase'),
+  GET_USER_GAMIFICATION_PROFILE_USE_CASE: Symbol.for('GetUserGamificationProfileUseCase'),
+  GET_LEADERBOARD_USE_CASE: Symbol.for('GetLeaderboardUseCase'),
+
+  // Use Cases - Productivity
+  // Tasks
+  CREATE_TASK_USE_CASE: Symbol.for('CreateTaskUseCase'),
+  UPDATE_TASK_USE_CASE: Symbol.for('UpdateTaskUseCase'),
+  DELETE_TASK_USE_CASE: Symbol.for('DeleteTaskUseCase'),
+  GET_TASK_USE_CASE: Symbol.for('GetTaskUseCase'),
+  COMPLETE_TASK_USE_CASE: Symbol.for('CompleteTaskUseCase'),
+  CANCEL_TASK_USE_CASE: Symbol.for('CancelTaskUseCase'),
+  GET_USER_TASKS_USE_CASE: Symbol.for('GetUserTasksUseCase'),
+  // Calendar Events
+  CREATE_EVENT_USE_CASE: Symbol.for('CreateEventUseCase'),
+  UPDATE_EVENT_USE_CASE: Symbol.for('UpdateEventUseCase'),
+  DELETE_EVENT_USE_CASE: Symbol.for('DeleteEventUseCase'),
+  GET_EVENT_USE_CASE: Symbol.for('GetEventUseCase'),
+  GET_USER_EVENTS_USE_CASE: Symbol.for('GetUserEventsUseCase'),
+  RESCHEDULE_EVENT_USE_CASE: Symbol.for('RescheduleEventUseCase'),
+
+  // Use Cases - File
+  UPLOAD_FILE_USE_CASE: Symbol.for('UploadFileUseCase'),
+  GET_FILE_USE_CASE: Symbol.for('GetFileUseCase'),
+  UPDATE_FILE_USE_CASE: Symbol.for('UpdateFileUseCase'),
+  DELETE_FILE_USE_CASE: Symbol.for('DeleteFileUseCase'),
+  SEARCH_FILES_USE_CASE: Symbol.for('SearchFilesUseCase'),
 } as const;
 
 /**
