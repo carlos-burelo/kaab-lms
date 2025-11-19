@@ -39,7 +39,7 @@ export default function ForumsPage() {
   }, [])
 
   const loadThreads = async () => {
-    const result = await getDiscussionThreads()
+    const result = await getDiscussionThreads({})
     if (result.success && result.data) {
       setThreads(result.data as any)
     }

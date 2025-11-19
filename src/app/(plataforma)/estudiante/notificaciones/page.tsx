@@ -16,8 +16,8 @@ export default async function NotificationsPage() {
     getUnreadNotificationCount()
   ])
 
-  const notifications = notificationsResult.success ? notificationsResult.data : []
-  const unreadCount = unreadCountResult.success ? unreadCountResult.data : 0
+  const notifications = notificationsResult.success ? (notificationsResult.data as any) : []
+  const unreadCount = (unreadCountResult.success ? unreadCountResult.data : 0) || 0
 
   return (
     <div className='container mx-auto py-6 space-y-6'>

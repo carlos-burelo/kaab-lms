@@ -16,7 +16,7 @@ export default async function MisCursosPage() {
     redirect('/sign-in')
   }
 
-  const enrollments = result.data || []
+  const enrollments = (result.data as any) || []
 
   return (
     <div className='p-4 lg:p-6'>

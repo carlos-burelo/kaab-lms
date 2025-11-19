@@ -46,7 +46,7 @@ export function MessagingInterface() {
   }, [selectedConversation])
 
   const loadConversations = async () => {
-    const result = await getConversations()
+    const result = await getConversations({})
     if (result.success && result.data) {
       setConversations(result.data as any)
     }

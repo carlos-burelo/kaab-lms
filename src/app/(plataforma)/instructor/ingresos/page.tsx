@@ -47,8 +47,8 @@ export default function RevenuePage() {
 
   const loadData = async () => {
     const [purchasesResult, statsResult] = await Promise.all([
-      getMyPurchases(),
-      getRevenueStats()
+      getMyPurchases({}),
+      getRevenueStats({})
     ])
 
     if (purchasesResult.success && purchasesResult.data) {

@@ -94,8 +94,8 @@ export default async function QuizPage({ params, searchParams }: QuizPageProps) 
 
           {selectedLesson.quiz ? (
             <>
-              <QuizForm lessonId={selectedLesson.id} initialData={selectedLesson.quiz} />
-              <QuestionManager quizId={selectedLesson.quiz.id} questions={selectedLesson.quiz.questions || []} />
+              <QuizForm lessonId={selectedLesson.id} initialData={selectedLesson.quiz as any} />
+              <QuestionManager quizId={selectedLesson.quiz.id} questions={(selectedLesson.quiz.questions as any) || []} />
             </>
           ) : (
             <QuizForm lessonId={selectedLesson.id} />

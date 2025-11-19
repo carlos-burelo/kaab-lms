@@ -16,7 +16,7 @@ export default async function MisCertificadosPage() {
     redirect('/sign-in')
   }
 
-  const certificates = result.data || []
+  const certificates = (result.data as any) || []
 
   return (
     <div className='p-4 lg:p-6'>

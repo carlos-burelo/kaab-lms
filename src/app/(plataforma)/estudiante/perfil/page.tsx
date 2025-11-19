@@ -40,7 +40,7 @@ export default async function ProfilePage() {
 
         <TabsContent value='profile' className='space-y-4'>
           <Suspense fallback={<ProfileSkeleton />}>
-            <ProfileForm initialProfile={profile} userEmail={user.email} />
+            <ProfileForm initialProfile={profile} userEmail={user.email || ''} />
           </Suspense>
         </TabsContent>
 

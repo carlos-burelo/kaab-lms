@@ -108,7 +108,15 @@ type ActionResponse<T = any> = {
  */
 export async function getQuizById(quizId: string): Promise<ActionResponse> {
   try {
-    const result = await getQuizUseCase.execute({ quizId })
+    const session = await getSession()
+    if (!session?.id) {
+      throw new Error('No autenticado')
+    }
+
+    const result = await getQuizUseCase.execute({
+      quizId,
+      currentUserId: session.id
+    })
 
     if (result.isFailure) {
       throw new Error(result.error.message)

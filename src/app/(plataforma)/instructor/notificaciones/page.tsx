@@ -37,7 +37,7 @@ export default function NotificationsPage() {
   }
 
   const markAllAsRead = async () => {
-    const result = await markNotificationsAsRead()
+    const result = await markNotificationsAsRead({})
     if (result.success) {
       toast.success('Todas las notificaciones marcadas como leídas')
       loadNotifications()

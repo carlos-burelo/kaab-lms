@@ -7,3 +7,5 @@
 // - Catálogo de cursos públicos
 // - Búsqueda de cursos
 // - Información pública
+
+export {}
