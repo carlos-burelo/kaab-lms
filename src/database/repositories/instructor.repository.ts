@@ -565,9 +565,8 @@ export class InstructorRepository extends BaseRepository {
     description: string | null
     instructions: string | null
     dueDate: Date
-    maxScore: number
-    allowLateSubmission: boolean
-    latePenaltyPercent: number | null
+    maxPoints: number
+    allowLate: boolean
   }) {
     try {
       return await this.client.assignment.create({
@@ -577,9 +576,8 @@ export class InstructorRepository extends BaseRepository {
           description: data.description,
           instructions: data.instructions,
           dueDate: data.dueDate,
-          maxScore: data.maxScore,
-          allowLateSubmission: data.allowLateSubmission,
-          latePenaltyPercent: data.latePenaltyPercent
+          maxPoints: data.maxPoints,
+          allowLate: data.allowLate
         }
       })
     } catch (error) {
@@ -597,9 +595,8 @@ export class InstructorRepository extends BaseRepository {
       description: string | null
       instructions: string | null
       dueDate: Date
-      maxScore: number
-      allowLateSubmission: boolean
-      latePenaltyPercent: number | null
+      maxPoints: number
+      allowLate: boolean
     }
   ) {
     try {
@@ -610,9 +607,8 @@ export class InstructorRepository extends BaseRepository {
           description: data.description,
           instructions: data.instructions,
           dueDate: data.dueDate,
-          maxScore: data.maxScore,
-          allowLateSubmission: data.allowLateSubmission,
-          latePenaltyPercent: data.latePenaltyPercent
+          maxPoints: data.maxPoints,
+          allowLate: data.allowLate
         }
       })
     } catch (error) {
@@ -640,7 +636,7 @@ export class InstructorRepository extends BaseRepository {
                   profile: true
                 }
               },
-              files: true
+              file: true
             }
           }
         }
@@ -676,7 +672,7 @@ export class InstructorRepository extends BaseRepository {
               profile: true
             }
           },
-          files: true,
+          file: true,
           assignment: true
         },
         orderBy: { submittedAt: 'desc' }
@@ -692,7 +688,7 @@ export class InstructorRepository extends BaseRepository {
   async gradeAssignmentSubmission(
     submissionId: string,
     data: {
-      score: number
+      grade: number
       feedback: string | null
       status: 'GRADED' | 'NEEDS_REVISION'
     }
@@ -701,7 +697,7 @@ export class InstructorRepository extends BaseRepository {
       return await this.client.assignmentSubmission.update({
         where: { id: submissionId },
         data: {
-          score: data.score,
+          grade: data.grade,
           feedback: data.feedback,
           status: data.status,
           gradedAt: new Date()

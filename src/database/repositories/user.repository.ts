@@ -489,28 +489,17 @@ export class UserRepository extends BaseRepository {
   /**
    * Crea un mensaje
    */
-  async createMessage(data: { senderId: string; recipientId: string; content: string; fileIds?: string[] }) {
+  async createMessage(data: { conversationId: string; senderId: string; content: string; fileId?: string }) {
     try {
       const message = await this.client.message.create({
         data: {
+          conversationId: data.conversationId,
           senderId: data.senderId,
-          recipientId: data.recipientId,
           content: data.content,
+          fileId: data.fileId,
           createdAt: new Date()
         }
       })
-
-      // Conectar archivos si existen
-      if (data.fileIds && data.fileIds.length > 0) {
-        await this.client.message.update({
-          where: { id: message.id },
-          data: {
-            files: {
-              connect: data.fileIds.map((id) => ({ id }))
-            }
-          }
-        })
-      }
 
       return message
     } catch (_error) {
@@ -525,11 +514,11 @@ export class UserRepository extends BaseRepository {
     try {
       return await this.client.conversation.findMany({
         where: {
-          OR: [{ userId }, { recipientId: userId }]
+          OR: [{ initiatorId: userId }, { receiverId: userId }]
         },
         include: {
-          user: { include: { profile: true } },
-          recipient: { include: { profile: true } },
+          initiator: { include: { profile: true } },
+          receiver: { include: { profile: true } },
           messages: {
             orderBy: { createdAt: 'desc' },
             take: 1
@@ -553,8 +542,8 @@ export class UserRepository extends BaseRepository {
       return await this.client.conversation.findUnique({
         where: { id: conversationId },
         include: {
-          user: { include: { profile: true } },
-          recipient: { include: { profile: true } }
+          initiator: { include: { profile: true } },
+          receiver: { include: { profile: true } }
         }
       })
     } catch (_error) {
@@ -572,7 +561,7 @@ export class UserRepository extends BaseRepository {
         where: { conversationId },
         include: {
           sender: { include: { profile: true } },
-          files: true
+          file: true
         },
         orderBy: { createdAt: 'desc' },
         take: limit,
@@ -592,10 +581,10 @@ export class UserRepository extends BaseRepository {
       return await this.client.message.updateMany({
         where: {
           conversationId,
-          recipientId: userId,
+          senderId: { not: userId },
           isRead: false
         },
-        data: { isRead: true }
+        data: { isRead: true, readAt: new Date() }
       })
     } catch (_error) {
       this.handleError(_error, 'UserRepository.markConversationMessagesAsRead')
@@ -610,8 +599,8 @@ export class UserRepository extends BaseRepository {
       return await this.client.conversation.findFirst({
         where: {
           OR: [
-            { userId: userId1, recipientId: userId2 },
-            { userId: userId2, recipientId: userId1 }
+            { initiatorId: userId1, receiverId: userId2 },
+            { initiatorId: userId2, receiverId: userId1 }
           ]
         }
       })
@@ -628,8 +617,8 @@ export class UserRepository extends BaseRepository {
     try {
       return await this.client.conversation.create({
         data: {
-          userId: userId1,
-          recipientId: userId2
+          initiatorId: userId1,
+          receiverId: userId2
         }
       })
     } catch (_error) {
@@ -669,93 +658,6 @@ export class UserRepository extends BaseRepository {
   }
 
   /**
-   * Crea un progreso de ruta de aprendizaje
-   */
-  async createLearningPathProgress(data: {
-    userId: string
-    learningPathId: string
-    currentNodeId: string | null
-    completedNodes: string[]
-    status: string
-  }) {
-    try {
-      return await this.client.learningPathProgress.create({
-        data: {
-          userId: data.userId,
-          learningPathId: data.learningPathId,
-          currentNodeId: data.currentNodeId,
-          completedNodes: data.completedNodes,
-          status: data.status,
-          startedAt: new Date()
-        },
-        include: {
-          learningPath: true
-        }
-      })
-    } catch (_error) {
-      this.handleError(_error, 'UserRepository.createLearningPathProgress')
-    }
-  }
-
-  /**
-   * Obtiene el progreso de una ruta de aprendizaje
-   */
-  async getLearningPathProgress(learningPathId: string, userId: string) {
-    try {
-      return await this.client.learningPathProgress.findFirst({
-        where: {
-          learningPathId,
-          userId
-        },
-        include: {
-          learningPath: {
-            include: {
-              nodes: true,
-              edges: true
-            }
-          }
-        }
-      })
-    } catch (_error) {
-      this.handleError(_error, 'UserRepository.getLearningPathProgress')
-      return null
-    }
-  }
-
-  /**
-   * Actualiza el progreso de una ruta de aprendizaje
-   */
-  async updateLearningPathProgress(
-    learningPathId: string,
-    userId: string,
-    data: {
-      currentNodeId?: string | null
-      completedNodes?: string[]
-      lastCompletedAt?: Date
-      completionData?: Record<string, any>
-      status?: string
-    }
-  ) {
-    try {
-      return await this.client.learningPathProgress.updateMany({
-        where: {
-          learningPathId,
-          userId
-        },
-        data: {
-          ...(data.currentNodeId !== undefined && { currentNodeId: data.currentNodeId }),
-          ...(data.completedNodes && { completedNodes: data.completedNodes }),
-          ...(data.lastCompletedAt && { lastCompletedAt: data.lastCompletedAt }),
-          ...(data.completionData && { completionData: data.completionData }),
-          ...(data.status && { status: data.status })
-        }
-      })
-    } catch (_error) {
-      this.handleError(_error, 'UserRepository.updateLearningPathProgress')
-    }
-  }
-
-  /**
    * Obtiene las rutas de aprendizaje disponibles para un estudiante
    */
   async getAvailableLearningPaths(_userId: string) {
@@ -765,46 +667,23 @@ export class UserRepository extends BaseRepository {
           isPublished: true
         },
         include: {
-          instructor: { include: { profile: true } },
+          instructor: {
+            include: {
+              user: {
+                include: {
+                  profile: true
+                }
+              }
+            }
+          },
           nodes: true,
           edges: true,
-          _count: {
-            select: {
-              progress: true
-            }
-          }
+          image: true
         },
         orderBy: { createdAt: 'desc' }
       })
     } catch (_error) {
       this.handleError(_error, 'UserRepository.getAvailableLearningPaths')
-      return []
-    }
-  }
-
-  /**
-   * Obtiene las rutas de aprendizaje en progreso de un estudiante
-   */
-  async getStudentLearningPathsInProgress(userId: string) {
-    try {
-      return await this.client.learningPathProgress.findMany({
-        where: {
-          userId,
-          status: 'IN_PROGRESS'
-        },
-        include: {
-          learningPath: {
-            include: {
-              instructor: { include: { profile: true } },
-              nodes: true,
-              edges: true
-            }
-          }
-        },
-        orderBy: { startedAt: 'desc' }
-      })
-    } catch (_error) {
-      this.handleError(_error, 'UserRepository.getStudentLearningPathsInProgress')
       return []
     }
   }

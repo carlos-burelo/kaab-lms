@@ -130,9 +130,8 @@ export const createAssignment = createAction({
         description: input.description || null,
         instructions: input.instructions || null,
         dueDate: input.dueDate,
-        maxScore: input.maxScore,
-        allowLateSubmission: input.allowLateSubmission,
-        latePenaltyPercent: input.latePenaltyPercent || null
+        maxPoints: input.maxScore,
+        allowLate: input.allowLateSubmission
       })
 
       if (!assignment) {
@@ -165,9 +164,8 @@ export const updateAssignment = createAction({
           description: input.description || null,
           instructions: input.instructions || null,
           dueDate: input.dueDate,
-          maxScore: input.maxScore,
-          allowLateSubmission: input.allowLateSubmission,
-          latePenaltyPercent: input.latePenaltyPercent || null
+          maxPoints: input.maxScore,
+          allowLate: input.allowLateSubmission
         }
       )
 
@@ -217,7 +215,7 @@ export const gradeSubmission = createAction({
       const graded = await instructorRepository.gradeAssignmentSubmission(
         input.submissionId,
         {
-          score: input.score,
+          grade: input.score,
           feedback: input.feedback || null,
           status: input.status
         }
