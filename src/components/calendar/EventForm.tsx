@@ -456,7 +456,12 @@ export function EventForm({ event, startDate, endDate, onSubmit, onCancel, isLoa
                   placeholder='Nueva etiqueta'
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      addTag()
+                    }
+                  }}
                 />
                 <Button type='button' variant='outline' onClick={addTag}>
                   Agregar
@@ -489,7 +494,12 @@ export function EventForm({ event, startDate, endDate, onSubmit, onCancel, isLoa
                   placeholder='Email del asistente'
                   value={newAttendee}
                   onChange={(e) => setNewAttendee(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addAttendee())}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      addAttendee()
+                    }
+                  }}
                 />
                 <Button type='button' variant='outline' onClick={addAttendee}>
                   Agregar

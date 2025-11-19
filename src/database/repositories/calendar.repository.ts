@@ -21,22 +21,6 @@ interface CalendarFilters {
   search?: string
 }
 
-interface CalendarEventWithCount {
-  id: string
-  userId: string
-  title: string
-  description?: string
-  startDate: Date
-  endDate: Date
-  allDay: boolean
-  location?: string
-  color?: string
-  reminders?: any
-  type: string
-  metadata?: any
-  createdAt: Date
-  updatedAt: Date
-}
 
 export class CalendarRepository {
   /**

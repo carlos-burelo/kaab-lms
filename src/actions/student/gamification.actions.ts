@@ -4,17 +4,17 @@ import { z } from "zod"
 import { createAction } from "@/actions/_shared/action-builder"
 import { idSchema } from "@/actions/_shared/validators"
 import { studentRepository } from "@/database/repositories/student.repository"
-import { Result, ok, err } from "@/core/shared/result"
+import { ok, err } from "@/core/shared/result"
 
 // ============ SCHEMAS ============
 
-const addXpSchema = z.object({
+const _addXpSchema = z.object({
   points: z.number().int().positive(),
   sourceType: z.string(),
   sourceId: z.string()
 })
 
-const addCoinsSchema = z.object({
+const _addCoinsSchema = z.object({
   amount: z.number().int().positive()
 })
 
@@ -60,7 +60,7 @@ export const getGamificationProfile = createAction({
       }
 
       return ok(profile)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener perfil de gamificación"))
     }
   }
@@ -84,7 +84,7 @@ export const getXpForNextLevel = createAction({
       }
 
       return ok(xpInfo)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al calcular XP para siguiente nivel"))
     }
   }
@@ -103,7 +103,7 @@ export const getAchievements = createAction({
     try {
       const achievements = await studentRepository.getAchievements(context.userId)
       return ok(achievements || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener logros"))
     }
   }
@@ -122,7 +122,7 @@ export const getBadges = createAction({
     try {
       const badges = await studentRepository.getBadges(context.userId)
       return ok(badges || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener insignias"))
     }
   }
@@ -141,7 +141,7 @@ export const getActiveMissions = createAction({
     try {
       const missions = await studentRepository.getActiveMissions(context.userId)
       return ok(missions || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener misiones activas"))
     }
   }
@@ -160,7 +160,7 @@ export const getCompletedMissions = createAction({
     try {
       const missions = await studentRepository.getCompletedMissions(context.userId)
       return ok(missions || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener misiones completadas"))
     }
   }
@@ -185,7 +185,7 @@ export const acceptMission = createAction({
       }
 
       return ok({ message: result.message })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al aceptar misión"))
     }
   }
@@ -210,7 +210,7 @@ export const completeMission = createAction({
       }
 
       return ok({ message: result.message })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al completar misión"))
     }
   }
@@ -229,7 +229,7 @@ export const getAvailableRewards = createAction({
     try {
       const rewards = await studentRepository.getAvailableRewards(context.userId)
       return ok(rewards || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener recompensas disponibles"))
     }
   }
@@ -248,7 +248,7 @@ export const getClaimedRewards = createAction({
     try {
       const rewards = await studentRepository.getClaimedRewards(context.userId)
       return ok(rewards || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener recompensas reclamadas"))
     }
   }
@@ -273,7 +273,7 @@ export const claimReward = createAction({
       }
 
       return ok({ message: result.message })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al reclamar recompensa"))
     }
   }
@@ -301,7 +301,7 @@ export const completeAchievement = createAction({
       }
 
       return ok({ message: result.message })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al completar logro"))
     }
   }
@@ -326,7 +326,7 @@ export const awardBadge = createAction({
       }
 
       return ok({ message: result.message })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al otorgar insignia"))
     }
   }
@@ -347,7 +347,7 @@ export const getLeaderboard = createAction({
       const leaderboard = await studentRepository.getLeaderboard(limit)
 
       return ok(leaderboard || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener ranking"))
     }
   }

@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Bell, X, CheckCheck, Trash2 } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
+import { Bell, CheckCheck, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
@@ -24,27 +24,27 @@ export function NotificationCenter() {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
+  const fetchNotifications = useCallback(async () => {
+    const result = await getNotifications(20)
+    if (result.success) {
+      setNotifications(result.data)
+    }
+  }, [])
+
+  const fetchUnreadCount = useCallback(async () => {
+    const result = await getUnreadNotificationCount()
+    if (result.success) {
+      setUnreadCount(result.data)
+    }
+  }, [])
+
   useEffect(() => {
     fetchNotifications()
     fetchUnreadCount()
 
     const interval = setInterval(fetchUnreadCount, 30000)
     return () => clearInterval(interval)
-  }, [])
-
-  async function fetchNotifications() {
-    const result = await getNotifications(20)
-    if (result.success) {
-      setNotifications(result.data)
-    }
-  }
-
-  async function fetchUnreadCount() {
-    const result = await getUnreadNotificationCount()
-    if (result.success) {
-      setUnreadCount(result.data)
-    }
-  }
+  }, [fetchNotifications, fetchUnreadCount])
 
   async function handleMarkAsRead(notificationId: string) {
     await markNotificationAsRead(notificationId)

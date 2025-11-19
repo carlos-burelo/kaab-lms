@@ -23,7 +23,7 @@ export class GetActiveMissionsUseCase extends BaseUseCase<
   }
 
   async execute(
-    request: GetActiveMissionsRequest
+    _request: GetActiveMissionsRequest
   ): Promise<Result<MissionDTO[]>> {
     // Get active missions
     const missionsResult = await this.missionRepository.findActiveMissions();

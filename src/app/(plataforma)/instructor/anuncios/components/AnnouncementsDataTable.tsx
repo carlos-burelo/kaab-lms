@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useTransition } from 'react'
+import { useCallback, useEffect, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -43,11 +43,7 @@ export function AnnouncementsDataTable() {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
-  useEffect(() => {
-    loadAnnouncements()
-  }, [])
-
-  const loadAnnouncements = async () => {
+  const loadAnnouncements = useCallback(async () => {
     setLoading(true)
     const result = await getAnnouncements({})
 
@@ -55,7 +51,11 @@ export function AnnouncementsDataTable() {
       setAnnouncements(result.data as any)
     }
     setLoading(false)
-  }
+  }, [])
+
+  useEffect(() => {
+    loadAnnouncements()
+  }, [loadAnnouncements])
 
   const handleDelete = async (id: string) => {
     if (!confirm('¿Estás seguro de eliminar este anuncio?')) return

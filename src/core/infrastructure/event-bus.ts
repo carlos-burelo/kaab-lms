@@ -10,7 +10,6 @@ import type {
 } from '../shared/domain-event';
 
 export class EventBus implements IEventBus {
-  private static instance: EventBus;
   private handlers: Map<string, Set<EventHandler<DomainEvent>>>;
   private eventQueue: DomainEvent[];
   private isProcessing: boolean;

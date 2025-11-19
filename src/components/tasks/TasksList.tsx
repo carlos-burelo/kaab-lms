@@ -5,17 +5,14 @@ import { formatDistanceToNow, format, isPast } from 'date-fns'
 import { es } from 'date-fns/locale'
 import {
   CheckSquare,
-  Square,
   Plus,
   Trash2,
   Calendar,
   Flag,
   Edit,
-  Tag,
-  Filter,
   ListChecks
 } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -72,7 +69,7 @@ const priorityConfig = {
   URGENT: { label: 'Urgente', color: 'bg-red-500', icon: Flag }
 }
 
-const statusConfig = {
+const _statusConfig = {
   PENDING: { label: 'Pendiente', color: 'border-gray-500' },
   IN_PROGRESS: { label: 'En progreso', color: 'border-blue-500' },
   COMPLETED: { label: 'Completada', color: 'border-green-500' },
@@ -80,7 +77,7 @@ const statusConfig = {
 }
 
 export function TasksList({ initialTasks }: TasksListProps) {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks)
+  const [tasks, _setTasks] = useState<Task[]>(initialTasks)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [formData, setFormData] = useState({

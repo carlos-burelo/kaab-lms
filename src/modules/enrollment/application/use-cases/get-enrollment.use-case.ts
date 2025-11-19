@@ -31,7 +31,7 @@ export class GetEnrollmentUseCase extends BaseUseCase<
   ): Promise<Result<EnrollmentDTO>> {
     const { enrollmentId, userId, courseId } = request;
 
-    let enrollmentResult;
+    let enrollmentResult: Awaited<ReturnType<typeof this.enrollmentRepository.findById>> | undefined;
 
     // Find by ID or by user-course combination
     if (enrollmentId) {

@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { MessageSquare, Search, Send, Paperclip, X } from 'lucide-react'
+import { useCallback, useState, useEffect } from 'react'
+import { MessageSquare, Send, } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -22,24 +22,14 @@ export function MessageCenter() {
   const { toast } = useToast()
   const { register, handleSubmit, reset } = useForm()
 
-  useEffect(() => {
-    loadConversations()
-  }, [])
-
-  useEffect(() => {
-    if (selectedConversation) {
-      loadMessages(selectedConversation.id)
-    }
-  }, [selectedConversation])
-
-  async function loadConversations() {
+  const loadConversations = useCallback(async () => {
     setIsLoading(true)
     try {
       const result = await getConversations()
       if (result.success) {
         setConversations(result.data)
       }
-    } catch (error) {
+    } catch (_error) {
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -48,22 +38,32 @@ export function MessageCenter() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [toast])
 
-  async function loadMessages(conversationId: string) {
+  const loadMessages = useCallback(async (conversationId: string) => {
     try {
       const result = await getConversationMessages(conversationId)
       if (result.success) {
         setMessages(result.data.reverse())
       }
-    } catch (error) {
+    } catch (_error) {
       toast({
         variant: 'destructive',
         title: 'Error',
         description: 'No se pudieron cargar los mensajes'
       })
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    loadConversations()
+  }, [loadConversations])
+
+  useEffect(() => {
+    if (selectedConversation) {
+      loadMessages(selectedConversation.id)
+    }
+  }, [selectedConversation, loadMessages])
 
   async function onSendMessage(data: any) {
     if (!selectedConversation) return
@@ -84,7 +84,7 @@ export function MessageCenter() {
           description: result.error
         })
       }
-    } catch (error) {
+    } catch (_error) {
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -141,7 +141,7 @@ export function MessageCenter() {
                   ).length
 
                   return (
-                    <button
+                    <button type='button'
                       key={conv.id}
                       onClick={() => setSelectedConversation(conv)}
                       className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${

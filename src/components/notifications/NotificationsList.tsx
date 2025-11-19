@@ -5,7 +5,6 @@ import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
 import {
   Bell,
-  BellRing,
   BookOpen,
   MessageSquare,
   Trophy,
@@ -16,7 +15,6 @@ import {
   Users,
   CheckCheck,
   Trash2,
-  X
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'

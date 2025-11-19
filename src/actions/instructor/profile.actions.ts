@@ -15,7 +15,7 @@ export const getInstructorProfile = createAction({
     try {
       const profile = await instructorRepository.getProfile(context.userId)
       return ok(profile)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener perfil"))
     }
   }
@@ -44,7 +44,7 @@ export const updateInstructorProfile = createAction({
       )
 
       return ok(profile)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al actualizar perfil"))
     }
   }
@@ -60,7 +60,7 @@ export const getInstructorStatistics = createAction({
     try {
       const stats = await instructorRepository.getStatistics(context.userId)
       return ok(stats)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener estadísticas"))
     }
   }

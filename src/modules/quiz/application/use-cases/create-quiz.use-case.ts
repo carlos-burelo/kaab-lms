@@ -6,7 +6,6 @@ import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import {
   DuplicateEntityError,
-  ForbiddenError,
 } from '@/core/shared/errors';
 import { Quiz } from '../../domain/quiz.entity';
 import type { IQuizRepository } from '../../domain/quiz.repository.interface';

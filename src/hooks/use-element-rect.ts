@@ -135,7 +135,9 @@ export function useElementRect({
     })
 
     return () => {
-      cleanup.forEach((fn) => fn())
+      for (const fn of cleanup) {
+        fn()
+      }
       setRect(initialRect)
     }
   }, [enabled, getTargetElement, updateRect, useResizeObserver])

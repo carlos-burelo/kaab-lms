@@ -4,7 +4,7 @@ import { z } from "zod"
 import { createAction } from "@/actions/_shared/action-builder"
 import { idSchema, paginationSchema } from "@/actions/_shared/validators"
 import { studentRepository } from "@/database/repositories/student.repository"
-import { Result, ok, err } from "@/core/shared/result"
+import { ok, err } from "@/core/shared/result"
 
 // ============ SCHEMAS ============
 
@@ -31,7 +31,7 @@ export const getEnrolledCourses = createAction({
     try {
       const courses = await studentRepository.getEnrolledCourses(context.userId)
       return ok(courses || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener cursos inscritos"))
     }
   }
@@ -59,7 +59,7 @@ export const getCourseProgress = createAction({
       }
 
       return ok(progress)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener progreso del curso"))
     }
   }
@@ -78,7 +78,7 @@ export const getCompletedLessons = createAction({
     try {
       const lessons = await studentRepository.getCompletedLessons(context.userId)
       return ok(lessons || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener lecciones completadas"))
     }
   }
@@ -112,7 +112,7 @@ export const getAvailableCourses = createAction({
         limit,
         hasMore: (courses?.length || 0) === limit
       })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener cursos disponibles"))
     }
   }
@@ -139,7 +139,7 @@ export const checkEnrollment = createAction({
         isEnrolled: !!enrollment,
         enrollment: enrollment || null
       })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al verificar inscripción"))
     }
   }
@@ -156,12 +156,12 @@ export const enrollInCourse = createAction({
   schema: enrollInCourseSchema,
   requireAuth: true,
   allowedRoles: ["STUDENT"],
-  execute: async (input, context) => {
+  execute: async (_input, _context) => {
     try {
       // TODO: Esto debería llamar al use case EnrollInCourseUseCase
       // Por ahora, retornamos un placeholder
       return err(new Error("Funcionalidad en desarrollo. Usar EnrollInCourseUseCase"))
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al inscribirse en el curso"))
     }
   }

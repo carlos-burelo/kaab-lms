@@ -11,8 +11,6 @@ interface CourseSlugProps {
 }
 
 export class CourseSlug extends ValueObject<CourseSlugProps> {
-  private static readonly SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-  private static readonly MAX_LENGTH = 200;
 
   get value(): string {
     return this.props.value;

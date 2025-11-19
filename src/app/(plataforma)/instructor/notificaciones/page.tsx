@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { Button } from '@/components/ui/button'
@@ -24,17 +24,17 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadNotifications()
-  }, [])
-
-  const loadNotifications = async () => {
+  const loadNotifications = useCallback(async () => {
     const result = await getNotifications({ limit: 100 })
     if (result.success && result.data) {
       setNotifications(result.data as any)
     }
     setLoading(false)
-  }
+  }, [])
+
+  useEffect(() => {
+    loadNotifications()
+  }, [loadNotifications])
 
   const markAllAsRead = async () => {
     const result = await markNotificationsAsRead({})

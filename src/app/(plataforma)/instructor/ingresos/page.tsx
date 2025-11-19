@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import {
@@ -41,11 +41,7 @@ export default function RevenuePage() {
   const [stats, setStats] = useState<RevenueStats | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     const [purchasesResult, statsResult] = await Promise.all([
       getMyPurchases({}),
       getRevenueStats({})
@@ -60,7 +56,11 @@ export default function RevenuePage() {
     }
 
     setLoading(false)
-  }
+  }, [])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   if (loading) {
     return <div className='p-4'>Cargando datos de ingresos...</div>

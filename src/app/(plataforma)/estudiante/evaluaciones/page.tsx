@@ -4,7 +4,6 @@ import { getQuizAttempts } from '@/actions/student/quiz.actions'
 import { QuizHistoryList } from '@/components/quiz/QuizHistoryList'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Brain } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Mis Evaluaciones',

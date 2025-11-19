@@ -1,7 +1,7 @@
 'use client'
 
 import { MessageCircleIcon, PlusIcon, MessageSquareIcon, UserIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getDiscussionThreads, createDiscussionThread } from '@/actions/student/discussion.actions'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -22,18 +22,18 @@ export function CourseDiscussionZone({ courseId }: CourseDiscussionZoneProps) {
   const [newThread, setNewThread] = useState({ title: '', description: '' })
   const [creating, setCreating] = useState(false)
 
-  useEffect(() => {
-    loadThreads()
-  }, [courseId])
-
-  const loadThreads = async () => {
+  const loadThreads = useCallback(async () => {
     setLoading(true)
     const result = await getDiscussionThreads({ courseId })
     if (result.success) {
       setThreads(result.data || [])
     }
     setLoading(false)
-  }
+  }, [courseId])
+
+  useEffect(() => {
+    loadThreads()
+  }, [loadThreads])
 
   const handleCreateThread = async () => {
     if (!newThread.title.trim()) {
@@ -87,7 +87,7 @@ export function CourseDiscussionZone({ courseId }: CourseDiscussionZoneProps) {
             </DialogHeader>
             <div className='space-y-4'>
               <div>
-                <label className='text-sm font-medium'>Título</label>
+                <div className='text-sm font-medium'>Título</div>
                 <Input
                   value={newThread.title}
                   onChange={(e) => setNewThread({ ...newThread, title: e.target.value })}
@@ -95,7 +95,7 @@ export function CourseDiscussionZone({ courseId }: CourseDiscussionZoneProps) {
                 />
               </div>
               <div>
-                <label className='text-sm font-medium'>Descripción (opcional)</label>
+                <div className='text-sm font-medium'>Descripción (opcional)</div>
                 <Textarea
                   value={newThread.description}
                   onChange={(e) => setNewThread({ ...newThread, description: e.target.value })}

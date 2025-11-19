@@ -2,7 +2,6 @@
 
 import type { Prisma } from '@prisma/client'
 import { BadgeCheckIcon, DownloadIcon, ExternalLinkIcon, CalendarIcon } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'

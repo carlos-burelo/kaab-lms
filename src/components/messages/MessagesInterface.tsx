@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useCallback, useState, useEffect, useRef } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { Send, Search, MoreVertical, User, Trash2, MessageSquare } from 'lucide-react'
@@ -95,13 +95,13 @@ export function MessagesInterface({ initialConversations }: MessagesInterfacePro
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+  }, [])
 
   useEffect(() => {
     scrollToBottom()
-  }, [messages])
+  }, [scrollToBottom])
 
   const loadConversationMessages = async (conversationId: string) => {
     setIsLoading(true)
@@ -183,7 +183,7 @@ export function MessagesInterface({ initialConversations }: MessagesInterfacePro
     }
   }
 
-  const getOtherUser = (conversation: Conversation, currentUserId?: string) => {
+  const getOtherUser = (conversation: Conversation, _currentUserId?: string) => {
     // This is a simplified version - you'd need the current user ID
     return conversation.initiator
   }

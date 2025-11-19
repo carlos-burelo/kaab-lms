@@ -4,7 +4,7 @@ import { closestCenter, DndContext, type DragEndEvent, PointerSensor, useSensor,
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import type { ContentType } from '@prisma/client'
 import { PlusIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { createLessonContent, deleteLessonContent, getLessonById, updateContentPositions } from '@/actions/courseActions'
 import { Button } from '@/components/ui/button'
 import { ContentTypeSelector } from './ContentTypeSelector'
@@ -30,7 +30,8 @@ export function CourseContentEditor({ lessonId, courseId }: LessonContentEditorP
       activationConstraint: { distance: 8 }
     })
   )
-  async function loadLesson() {
+
+  const loadLesson = useCallback(async () => {
     setIsLoading(true)
     try {
       const response = await getLessonById(lessonId)
@@ -41,7 +42,7 @@ export function CourseContentEditor({ lessonId, courseId }: LessonContentEditorP
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [lessonId])
 
   useEffect(() => {
     loadLesson()

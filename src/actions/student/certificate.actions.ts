@@ -17,7 +17,7 @@ export const getCertificates = createAction({
     try {
       const certificates = await studentRepository.getCertificates(context.userId)
       return ok(certificates || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener certificados"))
     }
   }

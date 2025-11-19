@@ -16,7 +16,7 @@ export const getConversations = createAction({
         context.userId
       )
       return ok(conversations || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener conversaciones"))
     }
   }
@@ -42,7 +42,7 @@ export const getConversationDetail = createAction({
       }
 
       return ok(conversation)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener conversación"))
     }
   }
@@ -68,7 +68,7 @@ export const sendMessage = createAction({
       })
 
       return ok(message)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al enviar mensaje"))
     }
   }
@@ -90,7 +90,7 @@ export const getOrCreateConversation = createAction({
       )
 
       return ok(conversation)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al crear conversación"))
     }
   }

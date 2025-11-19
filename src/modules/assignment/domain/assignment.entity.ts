@@ -238,7 +238,7 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
   /**
    * Check if user can edit assignment
    */
-  canBeEditedBy(userId: string): boolean {
+  canBeEditedBy(_userId: string): boolean {
     // Business rule: assignments can be edited by instructors
     // This is a placeholder - actual implementation would check user role
     return true;

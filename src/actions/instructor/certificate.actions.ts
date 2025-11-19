@@ -19,7 +19,7 @@ export const getCertificateTemplates = createAction({
     try {
       const templates = await instructorRepository.getCertificateTemplates()
       return ok(templates || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener plantillas de certificados"))
     }
   }
@@ -53,7 +53,7 @@ export const getIssuedCertificates = createAction({
       )
 
       return ok(certificates || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener certificados emitidos"))
     }
   }

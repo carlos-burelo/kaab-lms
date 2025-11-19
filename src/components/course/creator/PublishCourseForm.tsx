@@ -96,14 +96,14 @@ export function PublishCourseForm({ course }: PublishCourseFormProps) {
   const durationNum = durationMinutes ? parseInt(durationMinutes, 10) : null
 
   const priceErrors = []
-  if (price && isNaN(priceNum!)) priceErrors.push('Precio inválido')
+  if (price && Number.isNaN(priceNum!)) priceErrors.push('Precio inválido')
   if (price && priceNum! < 0) priceErrors.push('Precio no puede ser negativo')
-  if (discountPrice && isNaN(discountPriceNum!)) priceErrors.push('Precio con descuento inválido')
+  if (discountPrice && Number.isNaN(discountPriceNum!)) priceErrors.push('Precio con descuento inválido')
   if (discountPrice && discountPriceNum! < 0) priceErrors.push('Precio con descuento no puede ser negativo')
   if (price && discountPrice && discountPriceNum! >= priceNum!) {
     priceErrors.push('Precio con descuento debe ser menor que el precio normal')
   }
-  if (durationMinutes && isNaN(durationNum!)) priceErrors.push('Duración inválida')
+  if (durationMinutes && Number.isNaN(durationNum!)) priceErrors.push('Duración inválida')
   if (durationMinutes && durationNum! < 0) priceErrors.push('Duración no puede ser negativa')
 
   const hasErrors = priceErrors.length > 0
@@ -286,11 +286,11 @@ export function PublishCourseForm({ course }: PublishCourseFormProps) {
                       placeholder='0.00'
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      className={`flex-1 ${price && isNaN(priceNum!) ? 'border-red-500' : ''}`}
+                      className={`flex-1 ${price && Number.isNaN(priceNum!) ? 'border-red-500' : ''}`}
                     />
                   </div>
                   <p className='text-xs text-muted-foreground'>Precio normal del curso</p>
-                  {price && isNaN(priceNum!) && (
+                  {price && Number.isNaN(priceNum!) && (
                     <p className='text-xs text-red-500 font-medium'>Número inválido</p>
                   )}
                   {price && priceNum! < 0 && (
@@ -312,14 +312,14 @@ export function PublishCourseForm({ course }: PublishCourseFormProps) {
                       value={discountPrice}
                       onChange={(e) => setDiscountPrice(e.target.value)}
                       className={`flex-1 ${
-                        discountPrice && (isNaN(discountPriceNum!) || (price && discountPriceNum! >= priceNum!))
+                        discountPrice && (Number.isNaN(discountPriceNum!) || (price && discountPriceNum! >= priceNum!))
                           ? 'border-red-500'
                           : ''
                       }`}
                     />
                   </div>
                   <p className='text-xs text-muted-foreground'>Opcional: Precio con descuento</p>
-                  {discountPrice && isNaN(discountPriceNum!) && (
+                  {discountPrice && Number.isNaN(discountPriceNum!) && (
                     <p className='text-xs text-red-500 font-medium'>Número inválido</p>
                   )}
                   {discountPrice && discountPriceNum! < 0 && (
@@ -342,11 +342,11 @@ export function PublishCourseForm({ course }: PublishCourseFormProps) {
                       placeholder='0'
                       value={durationMinutes}
                       onChange={(e) => setDurationMinutes(e.target.value)}
-                      className={`flex-1 ${durationMinutes && isNaN(durationNum!) ? 'border-red-500' : ''}`}
+                      className={`flex-1 ${durationMinutes && Number.isNaN(durationNum!) ? 'border-red-500' : ''}`}
                     />
                   </div>
                   <p className='text-xs text-muted-foreground'>Tiempo total estimado</p>
-                  {durationMinutes && isNaN(durationNum!) && (
+                  {durationMinutes && Number.isNaN(durationNum!) && (
                     <p className='text-xs text-red-500 font-medium'>Número inválido</p>
                   )}
                   {durationMinutes && durationNum! < 0 && (

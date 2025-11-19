@@ -22,7 +22,7 @@ export abstract class BaseUseCase<TRequest, TResponse>
    * Validates the request
    * Override this method to add custom validation
    */
-  protected async validate(request: TRequest): Promise<Result<void>> {
+  protected async validate(_request: TRequest): Promise<Result<void>> {
     // Override in subclasses
     return Result.ok(undefined);
   }

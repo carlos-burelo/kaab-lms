@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -44,11 +44,7 @@ export default function ReviewsPage() {
   const [selectedRating, setSelectedRating] = useState<string>('all')
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     const [reviewsResult, coursesResult] = await Promise.all([
       getReviews(),
       getMyCourses()
@@ -63,7 +59,11 @@ export default function ReviewsPage() {
     }
 
     setLoading(false)
-  }
+  }, [])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const filteredReviews = reviews.filter((review) => {
     const courseMatch = selectedCourse === 'all' || review.course.id === selectedCourse
@@ -165,7 +165,7 @@ export default function ReviewsPage() {
           <CardContent>
             <div className='grid gap-4 md:grid-cols-2'>
               <div>
-                <label className='text-sm font-medium mb-2 block'>Curso</label>
+                <div className='text-sm font-medium mb-2 block'>Curso</div>
                 <Select value={selectedCourse} onValueChange={setSelectedCourse}>
                   <SelectTrigger>
                     <SelectValue placeholder='Todos los cursos' />
@@ -182,7 +182,7 @@ export default function ReviewsPage() {
               </div>
 
               <div>
-                <label className='text-sm font-medium mb-2 block'>Calificación</label>
+                <div className='text-sm font-medium mb-2 block'>Calificación</div>
                 <Select value={selectedRating} onValueChange={setSelectedRating}>
                   <SelectTrigger>
                     <SelectValue placeholder='Todas las calificaciones' />

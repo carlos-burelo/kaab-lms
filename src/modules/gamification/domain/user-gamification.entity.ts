@@ -18,9 +18,6 @@ export interface UserGamificationProps extends EntityProps {
 }
 
 export class UserGamification extends AggregateRoot<UserGamificationProps> {
-  // XP thresholds for each level (exponential growth)
-  private static readonly XP_PER_LEVEL_BASE = 100;
-  private static readonly XP_GROWTH_FACTOR = 1.5;
 
   get userId(): string {
     return this._props.userId;
