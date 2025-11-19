@@ -1,4 +1,5 @@
 'use server'
+import { error } from 'node:console'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { CourseLevel } from '@prisma/client'
@@ -132,7 +133,7 @@ export async function getCourseById(courseId: string): Promise<ActionResponse> {
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error obteniendo curso'
+      error: _error instanceof Error ? _error.message : 'Error obteniendo curso'
     }
   }
 }

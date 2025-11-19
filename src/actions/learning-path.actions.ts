@@ -1,5 +1,6 @@
 'use server'
 
+import { error } from 'console'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
 import { instructorRepository, userRepository } from '@/database/repositories'
@@ -44,7 +45,7 @@ export async function getLearningPath(learningPathId: string) {
 
     return { success: true, data: learningPath }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener ruta'
+    const message = _error instanceof Error ? _error.message : 'Error al obtener ruta'
     return { success: false, error: message }
   }
 }

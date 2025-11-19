@@ -1,5 +1,6 @@
 'use server'
 
+import { error } from 'console'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
 import { userRepository } from '@/database/repositories'
@@ -55,7 +56,7 @@ export async function sendMessage(data: z.infer<typeof SendMessageSchema>) {
     revalidatePath('/instructor')
     return { success: true, data: message }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al enviar mensaje'
+    const message = _error instanceof Error ? _error.message : 'Error al enviar mensaje'
     return { success: false, error: message }
   }
 }

@@ -2,31 +2,30 @@
  * Task Status Value Object
  */
 
-export enum TaskStatus {
-  PENDING = 'PENDING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
+import { PersonalTaskStatus } from '@prisma/client'
+
+// export enum TaskStatus {
+//   PENDING = 'PENDING',
+//   IN_PROGRESS = 'IN_PROGRESS',
+//   COMPLETED = 'COMPLETED',
+//   CANCELLED = 'CANCELLED',
+// }
+
+export function isValidTaskStatus(value: string): value is PersonalTaskStatus {
+  return Object.values(PersonalTaskStatus).includes(value as PersonalTaskStatus)
 }
 
-export function isValidTaskStatus(value: string): value is TaskStatus {
-  return Object.values(TaskStatus).includes(value as TaskStatus);
+export function canTransitionTo(from: PersonalTaskStatus, to: PersonalTaskStatus): boolean {
+  const allowedTransitions: Record<PersonalTaskStatus, PersonalTaskStatus[]> = {
+    [PersonalTaskStatus.PENDING]: [PersonalTaskStatus.IN_PROGRESS, PersonalTaskStatus.CANCELED],
+    [PersonalTaskStatus.IN_PROGRESS]: [PersonalTaskStatus.COMPLETED, PersonalTaskStatus.CANCELED, PersonalTaskStatus.PENDING],
+    [PersonalTaskStatus.COMPLETED]: [PersonalTaskStatus.IN_PROGRESS],
+    [PersonalTaskStatus.CANCELED]: [PersonalTaskStatus.PENDING]
+  }
+
+  return allowedTransitions[from].includes(to)
 }
 
-export function canTransitionTo(
-  from: TaskStatus,
-  to: TaskStatus
-): boolean {
-  const allowedTransitions: Record<TaskStatus, TaskStatus[]> = {
-    [TaskStatus.PENDING]: [TaskStatus.IN_PROGRESS, TaskStatus.CANCELLED],
-    [TaskStatus.IN_PROGRESS]: [TaskStatus.COMPLETED, TaskStatus.CANCELLED, TaskStatus.PENDING],
-    [TaskStatus.COMPLETED]: [TaskStatus.IN_PROGRESS],
-    [TaskStatus.CANCELLED]: [TaskStatus.PENDING],
-  };
-
-  return allowedTransitions[from].includes(to);
-}
-
-export function isTerminalStatus(status: TaskStatus): boolean {
-  return status === TaskStatus.COMPLETED || status === TaskStatus.CANCELLED;
+export function isTerminalStatus(status: PersonalTaskStatus): boolean {
+  return status === PersonalTaskStatus.COMPLETED || status === PersonalTaskStatus.CANCELED
 }

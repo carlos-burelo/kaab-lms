@@ -1,5 +1,6 @@
 'use server'
 
+import { error } from 'console'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
 import { enrollmentRepository } from '@/database/repositories'
@@ -91,7 +92,7 @@ export async function getEnrollments(params: z.infer<typeof GetEnrollmentsSchema
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting enrollments'
+      error: _error instanceof Error ? _error.message : 'Error getting enrollments'
     }
   }
 }

@@ -1,5 +1,6 @@
 'use server'
 
+import { error } from 'console'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
 import { fileRepository } from '@/database/repositories'
@@ -79,7 +80,7 @@ export async function getUploadedFiles(params: z.infer<typeof GetUploadedFilesSc
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting files'
+      error: _error instanceof Error ? _error.message : 'Error getting files'
     }
   }
 }
