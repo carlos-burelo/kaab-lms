@@ -12,9 +12,6 @@ interface CoursePriceProps {
 }
 
 export class CoursePrice extends ValueObject<CoursePriceProps> {
-  private static readonly MIN_PRICE = 0;
-  private static readonly MAX_PRICE = 999999.99;
-  private static readonly ALLOWED_CURRENCIES = ['MXN', 'USD', 'EUR'];
 
   get amount(): number {
     return this.props.amount;

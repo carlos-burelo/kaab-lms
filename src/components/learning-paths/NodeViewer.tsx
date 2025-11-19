@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { CheckCircle, BookOpen, GitBranch, Loader2 } from 'lucide-react'
+import { CheckCircle, Loader2 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
@@ -72,7 +72,7 @@ export function NodeViewer({ node, learningPath, onComplete, isLoading }: NodeVi
                 placeholder="Ingresa tu puntuación"
                 value={completionData.score || ''}
                 onChange={(e) =>
-                  setCompletionData({ ...completionData, score: parseInt(e.target.value) || 0 })
+                  setCompletionData({ ...completionData, score: parseInt(e.target.value, 10) || 0 })
                 }
               />
             </div>
@@ -86,7 +86,7 @@ export function NodeViewer({ node, learningPath, onComplete, isLoading }: NodeVi
                 placeholder="Número de intentos"
                 value={completionData.attempts || ''}
                 onChange={(e) =>
-                  setCompletionData({ ...completionData, attempts: parseInt(e.target.value) || 1 })
+                  setCompletionData({ ...completionData, attempts: parseInt(e.target.value, 10) || 1 })
                 }
               />
             </div>

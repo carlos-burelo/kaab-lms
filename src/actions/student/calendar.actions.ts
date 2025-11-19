@@ -35,7 +35,7 @@ export const getCalendarEvents = createAction({
       )
 
       return ok(events || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener eventos del calendario"))
     }
   }

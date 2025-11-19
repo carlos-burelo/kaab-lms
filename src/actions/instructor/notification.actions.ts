@@ -22,7 +22,7 @@ export const getNotifications = createAction({
         input?.limit
       )
       return ok(notifications || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener notificaciones"))
     }
   }
@@ -45,7 +45,7 @@ export const markNotificationsAsRead = createAction({
         input?.notificationIds
       )
       return ok({ success: true })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al marcar notificaciones"))
     }
   }
@@ -62,7 +62,7 @@ export const countUnreadNotifications = createAction({
         context.userId
       )
       return ok(count)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al contar notificaciones"))
     }
   }

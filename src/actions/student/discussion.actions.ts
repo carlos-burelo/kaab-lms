@@ -53,7 +53,7 @@ export const getDiscussionThreads = createAction({
       })
 
       return ok(threads || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener hilos de discusión"))
     }
   }
@@ -108,7 +108,7 @@ export const getThreadWithPosts = createAction({
       })
 
       return ok(thread)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener hilo de discusión"))
     }
   }
@@ -146,7 +146,7 @@ export const createDiscussionThread = createAction({
       })
 
       return ok(thread)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al crear hilo de discusión"))
     }
   }
@@ -186,7 +186,7 @@ export const createDiscussionPost = createAction({
       })
 
       return ok(post)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al crear post"))
     }
   }

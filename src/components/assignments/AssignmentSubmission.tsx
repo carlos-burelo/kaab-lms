@@ -53,7 +53,7 @@ export function AssignmentSubmission({ assignment, courseId, studentSubmission }
 
   const isOverdue = new Date() > new Date(assignment.dueDate)
   const daysOverdue = isOverdue
-    ? Math.floor((new Date().getTime() - new Date(assignment.dueDate).getTime()) / (1000 * 60 * 60 * 24))
+    ? Math.floor((Date.now()- new Date(assignment.dueDate).getTime()) / (1000 * 60 * 60 * 24))
     : null
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -73,7 +73,7 @@ export function AssignmentSubmission({ assignment, courseId, studentSubmission }
           toast.error(`No se pudo cargar ${file.name}`)
         }
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error('Ocurrió un error al cargar archivos')
     } finally {
       setIsUploading(false)

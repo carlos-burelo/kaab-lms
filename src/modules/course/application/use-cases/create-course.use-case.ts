@@ -5,7 +5,6 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import {
-  EntityNotFoundError,
   ForbiddenError,
   DuplicateEntityError,
 } from '@/core/shared/errors';

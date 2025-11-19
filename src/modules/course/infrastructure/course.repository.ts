@@ -4,7 +4,7 @@
  */
 
 import { Result } from '@/core/shared/result';
-import { DatabaseError, EntityNotFoundError } from '@/core/shared/errors';
+import { DatabaseError, } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
 import type { Course } from '../domain/course.entity';
 import type {
@@ -229,7 +229,7 @@ export class CourseRepository implements ICourseRepository {
     }>
   > {
     try {
-      const [enrollments, reviews, course] = await Promise.all([
+      const [enrollments, _reviews, course] = await Promise.all([
         prisma.enrollment.findMany({
           where: { courseId },
           select: {

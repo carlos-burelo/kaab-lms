@@ -36,7 +36,7 @@ export const getAssignmentSubmissions = createAction({
       )
 
       return ok(submissions || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener entregas de asignaciones"))
     }
   }
@@ -66,7 +66,7 @@ export const submitAssignment = createAction({
       }
 
       return ok(submission)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al enviar asignación"))
     }
   }

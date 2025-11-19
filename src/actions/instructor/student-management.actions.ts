@@ -17,7 +17,7 @@ export const getMyStudents = createAction({
     try {
       const students = await instructorRepository.getMyStudents(context.userId)
       return ok(students || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener estudiantes"))
     }
   }

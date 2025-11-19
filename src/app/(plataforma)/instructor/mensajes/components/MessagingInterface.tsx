@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -35,31 +35,31 @@ export function MessagingInterface() {
   const [newMessage, setNewMessage] = useState('')
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadConversations()
-  }, [])
-
-  useEffect(() => {
-    if (selectedConversation) {
-      loadMessages(selectedConversation)
-    }
-  }, [selectedConversation])
-
-  const loadConversations = async () => {
+  const loadConversations = useCallback(async () => {
     const result = await getConversations({})
     if (result.success && result.data) {
       setConversations(result.data as any)
     }
     setLoading(false)
-  }
+  }, [])
 
-  const loadMessages = async (conversationId: string) => {
+  const loadMessages = useCallback(async (conversationId: string) => {
     const result = await getConversationDetail({ conversationId })
     if (result.success && result.data) {
       const conv = result.data as any
       setMessages(conv.messages || [])
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    loadConversations()
+  }, [loadConversations])
+
+  useEffect(() => {
+    if (selectedConversation) {
+      loadMessages(selectedConversation)
+    }
+  }, [selectedConversation, loadMessages])
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation) return
@@ -94,8 +94,8 @@ export function MessagingInterface() {
             </div>
           ) : (
             conversations.map((conv) => {
-              const otherUser =
-                conv.initiator.id === conv.initiator.id ? conv.receiver : conv.initiator
+              // TODO: Should compare with current user ID to determine other user
+              const otherUser = conv.receiver
               return (
                 <div
                   key={conv.id}

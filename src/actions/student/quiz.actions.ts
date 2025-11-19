@@ -17,7 +17,7 @@ export const getQuizAttempts = createAction({
     try {
       const attempts = await studentRepository.getQuizAttempts(context.userId)
       return ok(attempts || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener intentos de quiz"))
     }
   }

@@ -21,56 +21,6 @@ export interface FileTypeProps {
 }
 
 export class FileType extends ValueObject<FileTypeProps> {
-  // Common MIME types mapping
-  private static readonly MIME_TYPE_CATEGORIES: Record<string, FileCategory> = {
-    // Images
-    'image/jpeg': FileCategory.IMAGE,
-    'image/jpg': FileCategory.IMAGE,
-    'image/png': FileCategory.IMAGE,
-    'image/gif': FileCategory.IMAGE,
-    'image/webp': FileCategory.IMAGE,
-    'image/svg+xml': FileCategory.IMAGE,
-    'image/bmp': FileCategory.IMAGE,
-
-    // Videos
-    'video/mp4': FileCategory.VIDEO,
-    'video/mpeg': FileCategory.VIDEO,
-    'video/webm': FileCategory.VIDEO,
-    'video/ogg': FileCategory.VIDEO,
-    'video/quicktime': FileCategory.VIDEO,
-    'video/x-msvideo': FileCategory.VIDEO,
-
-    // Audio
-    'audio/mpeg': FileCategory.AUDIO,
-    'audio/mp3': FileCategory.AUDIO,
-    'audio/wav': FileCategory.AUDIO,
-    'audio/ogg': FileCategory.AUDIO,
-    'audio/webm': FileCategory.AUDIO,
-    'audio/aac': FileCategory.AUDIO,
-
-    // Documents
-    'application/pdf': FileCategory.DOCUMENT,
-    'application/msword': FileCategory.DOCUMENT,
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': FileCategory.DOCUMENT,
-    'application/vnd.ms-excel': FileCategory.DOCUMENT,
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': FileCategory.DOCUMENT,
-    'application/vnd.ms-powerpoint': FileCategory.DOCUMENT,
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation': FileCategory.DOCUMENT,
-    'text/plain': FileCategory.DOCUMENT,
-    'text/csv': FileCategory.DOCUMENT,
-    'text/html': FileCategory.DOCUMENT,
-    'text/css': FileCategory.DOCUMENT,
-    'text/javascript': FileCategory.DOCUMENT,
-    'application/json': FileCategory.DOCUMENT,
-    'application/xml': FileCategory.DOCUMENT,
-
-    // Archives
-    'application/zip': FileCategory.ARCHIVE,
-    'application/x-rar-compressed': FileCategory.ARCHIVE,
-    'application/x-7z-compressed': FileCategory.ARCHIVE,
-    'application/x-tar': FileCategory.ARCHIVE,
-    'application/gzip': FileCategory.ARCHIVE,
-  };
 
   get mimeType(): string {
     return this._props.mimeType;

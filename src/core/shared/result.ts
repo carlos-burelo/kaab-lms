@@ -4,7 +4,7 @@
  * Based on Railway Oriented Programming
  */
 
-import { error } from 'console'
+import { error } from 'node:console'
 
 export class Result<T, E = Error> {
   private constructor(

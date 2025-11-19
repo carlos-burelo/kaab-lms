@@ -56,7 +56,7 @@ export const getPendingSubmissions = createAction({
         context.userId
       )
       return ok(submissions || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener entregas pendientes"))
     }
   }
@@ -83,7 +83,7 @@ export const getAssignmentById = createAction({
       }
 
       return ok(assignment)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener asignación"))
     }
   }
@@ -106,7 +106,7 @@ export const getAssignmentSubmissions = createAction({
       )
 
       return ok(submissions || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener entregas"))
     }
   }
@@ -140,7 +140,7 @@ export const createAssignment = createAction({
       }
 
       return ok(assignment)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al crear asignación"))
     }
   }
@@ -176,7 +176,7 @@ export const updateAssignment = createAction({
       }
 
       return ok(assignment)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al actualizar asignación"))
     }
   }
@@ -196,7 +196,7 @@ export const deleteAssignment = createAction({
     try {
       await instructorRepository.deleteAssignment(input.assignmentId)
       return ok({ success: true })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al eliminar asignación"))
     }
   }
@@ -228,7 +228,7 @@ export const gradeSubmission = createAction({
       }
 
       return ok(graded)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al calificar entrega"))
     }
   }

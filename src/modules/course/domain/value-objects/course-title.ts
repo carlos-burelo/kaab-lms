@@ -11,8 +11,6 @@ interface CourseTitleProps {
 }
 
 export class CourseTitle extends ValueObject<CourseTitleProps> {
-  private static readonly MIN_LENGTH = 3;
-  private static readonly MAX_LENGTH = 200;
 
   get value(): string {
     return this.props.value;

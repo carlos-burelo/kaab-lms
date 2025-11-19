@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useTransition } from 'react'
+import { useCallback, useEffect, useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -51,11 +51,7 @@ export function InstructorProfileForm() {
     }
   })
 
-  useEffect(() => {
-    loadProfile()
-  }, [])
-
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     const result = await getInstructorProfile()
 
     if (result.success && result.data) {
@@ -69,7 +65,11 @@ export function InstructorProfileForm() {
       })
     }
     setLoading(false)
-  }
+  }, [form])
+
+  useEffect(() => {
+    loadProfile()
+  }, [loadProfile])
 
   const onSubmit = (data: FormValues) => {
     startTransition(async () => {

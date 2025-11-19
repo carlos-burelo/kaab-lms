@@ -8,7 +8,6 @@ import { BusinessRuleError, ValidationError } from '@/core/shared/errors';
 import {
   QuizCreatedEvent,
   QuizPublishedEvent,
-  QuizCompletedEvent,
 } from './events';
 
 export enum QuestionType {

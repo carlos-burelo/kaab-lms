@@ -69,18 +69,18 @@ export class CourseMapper
 
     // Restore published state
     if (raw.isPublished) {
-      course['_props'].isPublished = true;
-      course['_props'].publishedAt = raw.publishedAt || undefined;
+      course._props.isPublished = true;
+      course._props.publishedAt = raw.publishedAt || undefined;
     }
 
     // Restore featured state
     if (raw.isFeatured) {
-      course['_props'].isFeatured = true;
+      course._props.isFeatured = true;
     }
 
     // Restore rating
-    course['_props'].rating = raw.rating;
-    course['_props'].totalReviews = raw.totalReviews;
+    course._props.rating = raw.rating;
+    course._props.totalReviews = raw.totalReviews;
 
     return course;
   }

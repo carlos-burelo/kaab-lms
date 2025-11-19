@@ -9,7 +9,7 @@ import {
   NotificationCreatedEvent,
   NotificationReadEvent,
 } from './events';
-import { type NotificationType, NotificationTypeEnum } from './value-objects/notification-type';
+import type { NotificationType, } from './value-objects/notification-type';
 
 export interface NotificationProps extends EntityProps {
   userId: string;

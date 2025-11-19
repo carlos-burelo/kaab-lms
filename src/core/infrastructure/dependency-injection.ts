@@ -14,7 +14,6 @@ interface Registration<T> {
 }
 
 export class Container {
-  private static instance: Container;
   private registry: Map<string | symbol, Registration<unknown>>;
 
   private constructor() {
@@ -286,10 +285,10 @@ export const TOKENS = {
  */
 export function injectable(token: string | symbol) {
   return <T extends { new (...args: unknown[]): unknown }>(
-    constructor: T
+    ctor: T
   ) => {
-    container.register(token, constructor);
-    return constructor;
+    container.register(token, ctor);
+    return ctor;
   };
 }
 
@@ -299,7 +298,7 @@ export function injectable(token: string | symbol) {
 export function inject(token: string | symbol) {
   return (
     target: unknown,
-    propertyKey: string,
+    _propertyKey: string,
     parameterIndex: number
   ) => {
     // Store metadata for later injection

@@ -35,7 +35,7 @@ export const getLearningPaths = createAction({
     try {
       const paths = await instructorRepository.getLearningPaths(context.userId)
       return ok(paths || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener rutas de aprendizaje"))
     }
   }
@@ -68,7 +68,7 @@ export const getLearningPathDetail = createAction({
       }
 
       return ok(path)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener detalles de la ruta"))
     }
   }
@@ -100,7 +100,7 @@ export const createLearningPath = createAction({
       }
 
       return ok({ id: result.id })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al crear ruta de aprendizaje"))
     }
   }
@@ -130,7 +130,7 @@ export const saveLearningPathDesign = createAction({
       )
 
       return ok({ success: true })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al guardar diseño de la ruta"))
     }
   }
@@ -158,7 +158,7 @@ export const deleteLearningPath = createAction({
       )
 
       return ok({ success: true })
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al eliminar ruta de aprendizaje"))
     }
   }

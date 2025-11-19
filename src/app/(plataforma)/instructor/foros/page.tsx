@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -34,17 +34,17 @@ export default function ForumsPage() {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  useEffect(() => {
-    loadThreads()
-  }, [])
-
-  const loadThreads = async () => {
+  const loadThreads = useCallback(async () => {
     const result = await getDiscussionThreads({})
     if (result.success && result.data) {
       setThreads(result.data as any)
     }
     setLoading(false)
-  }
+  }, [])
+
+  useEffect(() => {
+    loadThreads()
+  }, [loadThreads])
 
   return (
     <>

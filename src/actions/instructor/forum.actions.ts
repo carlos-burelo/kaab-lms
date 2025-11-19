@@ -17,7 +17,7 @@ export const getDiscussionThreads = createAction({
         context.userId
       )
       return ok(threads || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener threads"))
     }
   }
@@ -40,7 +40,7 @@ export const getThreadDetail = createAction({
       }
 
       return ok(thread)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener thread"))
     }
   }
@@ -66,7 +66,7 @@ export const createDiscussionPost = createAction({
       })
 
       return ok(post)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al crear post"))
     }
   }
@@ -92,7 +92,7 @@ export const updateDiscussionThread = createAction({
       )
 
       return ok(thread)
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al actualizar thread"))
     }
   }

@@ -27,7 +27,7 @@ export class GetUserEventsUseCase extends BaseUseCase<
     const { userId, type, startDate, endDate } = request;
 
     // Find events
-    let eventsResult;
+    let eventsResult: Awaited<ReturnType<typeof this.calendarEventRepository.findByUser>> | undefined;
 
     if (startDate && endDate) {
       eventsResult = await this.eventRepository.findByDateRange(userId, startDate, endDate);

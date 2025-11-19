@@ -172,7 +172,7 @@ export function QuizHistoryList({ attempts }: QuizHistoryListProps) {
 
                     <div className='flex flex-col items-center gap-2'>
                       <div className='relative h-20 w-20'>
-                        <svg className='transform -rotate-90 h-20 w-20'>
+                        <svg className='transform -rotate-90 h-20 w-20' role='img' aria-label='Quiz progress circle'>
                           <circle
                             cx='40'
                             cy='40'

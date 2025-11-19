@@ -19,7 +19,7 @@ export const getDiscussionThreads = createAction({
         context.userId
       )
       return ok(threads || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener hilos de discusión"))
     }
   }

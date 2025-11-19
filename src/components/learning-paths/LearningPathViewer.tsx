@@ -1,7 +1,7 @@
 'use client'
 
 import { CheckCircle, Play } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { completeNode, getLearningPathProgress, getNextNode, startLearningPath } from '@/actions/learning-path.actions'
 import { Badge } from '@/components/ui/badge'
@@ -31,11 +31,7 @@ export function LearningPathViewer({ learningPath, onComplete }: LearningPathVie
   const [isLoading, setIsLoading] = useState(true)
   const [isStarted, setIsStarted] = useState(false)
 
-  useEffect(() => {
-    loadProgress()
-  }, [])
-
-  async function loadProgress() {
+  const loadProgress = useCallback(async () => {
     setIsLoading(true)
     try {
       const result = await getLearningPathProgress(learningPath.id)
@@ -55,7 +51,11 @@ export function LearningPathViewer({ learningPath, onComplete }: LearningPathVie
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [learningPath.id, learningPath.nodes])
+
+  useEffect(() => {
+    loadProgress()
+  }, [loadProgress])
 
   async function handleStart() {
     setIsLoading(true)
@@ -99,8 +99,8 @@ export function LearningPathViewer({ learningPath, onComplete }: LearningPathVie
         })
 
         if (nextResult.success) {
-          if (nextResult!.data?.nextNode) {
-            setCurrentNode(nextResult?.data.nextNode!)
+          if (nextResult.data?.nextNode) {
+            setCurrentNode(nextResult.data.nextNode)
           } else if (nextResult?.data?.isCompleted) {
             setProgress({ ...result.data, status: 'COMPLETED' })
             toast.success('¡Felicidades! Has completado la ruta de aprendizaje')
@@ -110,7 +110,7 @@ export function LearningPathViewer({ learningPath, onComplete }: LearningPathVie
       } else {
         toast.error(result.error)
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error('Error al completar el nodo')
     } finally {
       setIsLoading(false)

@@ -30,7 +30,7 @@ const difficultyColors = {
 }
 
 export function MissionCard({
-  id,
+  id: _id,
   name,
   description,
   icon,

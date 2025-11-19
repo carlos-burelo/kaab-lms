@@ -17,7 +17,7 @@ export const getPersonalTasks = createAction({
     try {
       const tasks = await studentRepository.getPersonalTasks(context.userId)
       return ok(tasks || [])
-    } catch (error) {
+    } catch (_error) {
       return err(new Error("Error al obtener tareas personales"))
     }
   }

@@ -25,7 +25,7 @@ export class GetUserTasksUseCase extends BaseUseCase<
     const { userId, status } = request;
 
     // Find tasks
-    let tasksResult;
+    let tasksResult: Awaited<ReturnType<typeof this.personalTaskRepository.findAll>> | undefined;
 
     if (status) {
       tasksResult = await this.taskRepository.findByUserAndStatus(userId, status);

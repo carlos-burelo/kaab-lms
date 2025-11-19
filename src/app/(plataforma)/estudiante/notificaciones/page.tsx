@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getNotifications, getUnreadNotificationCount } from '@/actions/notification.actions'
 import { NotificationsList } from '@/components/notifications/NotificationsList'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const metadata: Metadata = {
