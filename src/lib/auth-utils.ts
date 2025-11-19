@@ -3,8 +3,8 @@
  * Todas las verificaciones se hacen en el servidor
  */
 
-import { getSession } from '@/lib/auth'
 import { redirect } from 'next/navigation'
+import { getSession } from '@/lib/auth'
 import { getDefaultDashboard, hasAccessToRoute } from '@/lib/auth-config'
 
 /**

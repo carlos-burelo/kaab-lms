@@ -2,9 +2,9 @@
  * Notification Type Value Object
  */
 
-import { ValueObject } from '@/core/shared/value-object';
-import { Result } from '@/core/shared/result';
-import { ValidationError } from '@/core/shared/errors';
+import { ValidationError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { ValueObject } from '@/core/shared/value-object'
 
 export enum NotificationTypeEnum {
   SYSTEM = 'SYSTEM',
@@ -15,32 +15,28 @@ export enum NotificationTypeEnum {
   MISSION = 'MISSION',
   PAYMENT = 'PAYMENT',
   REMINDER = 'REMINDER',
-  SOCIAL = 'SOCIAL',
+  SOCIAL = 'SOCIAL'
 }
 
 interface NotificationTypeProps {
-  value: NotificationTypeEnum;
+  value: NotificationTypeEnum
 }
 
 export class NotificationType extends ValueObject<NotificationTypeProps> {
   get value(): NotificationTypeEnum {
-    return this.props.value;
+    return this.props.value
   }
 
   private constructor(props: NotificationTypeProps) {
-    super(props);
+    super(props)
   }
 
-  public static create(
-    type: string
-  ): Result<NotificationType, ValidationError> {
+  public static create(type: string): Result<NotificationType, ValidationError> {
     if (!type) {
-      return Result.fail(
-        new ValidationError('Notification type is required', 'type')
-      );
+      return Result.fail(new ValidationError('Notification type is required', 'type'))
     }
 
-    const upperType = type.toUpperCase();
+    const upperType = type.toUpperCase()
 
     if (!Object.values(NotificationTypeEnum).includes(upperType as NotificationTypeEnum)) {
       return Result.fail(
@@ -48,28 +44,24 @@ export class NotificationType extends ValueObject<NotificationTypeProps> {
           `Invalid notification type: ${type}. Must be one of: ${Object.values(NotificationTypeEnum).join(', ')}`,
           'type'
         )
-      );
+      )
     }
 
-    return Result.ok(
-      new NotificationType({ value: upperType as NotificationTypeEnum })
-    );
+    return Result.ok(new NotificationType({ value: upperType as NotificationTypeEnum }))
   }
 
-  public static fromEnum(
-    type: NotificationTypeEnum
-  ): Result<NotificationType, ValidationError> {
-    return NotificationType.create(type);
+  public static fromEnum(type: NotificationTypeEnum): Result<NotificationType, ValidationError> {
+    return NotificationType.create(type)
   }
 
   public equals(other: NotificationType): boolean {
     if (!(other instanceof NotificationType)) {
-      return false;
+      return false
     }
-    return this.value === other.value;
+    return this.value === other.value
   }
 
   public toString(): string {
-    return this.value;
+    return this.value
   }
 }

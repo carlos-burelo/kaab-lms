@@ -668,12 +668,7 @@ export class StudentRepository extends BaseRepository {
   /**
    * Envía una asignación
    */
-  async submitAssignment(data: {
-    assignmentId: string
-    userId: string
-    submissionText: string | null
-    fileIds: string[]
-  }) {
+  async submitAssignment(data: { assignmentId: string; userId: string; submissionText: string | null; fileIds: string[] }) {
     try {
       const submission = await this.client.assignmentSubmission.create({
         data: {

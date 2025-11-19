@@ -44,8 +44,8 @@ export async function createNotification(data: z.infer<typeof CreateNotification
     revalidatePath('/estudiante')
     revalidatePath('/instructor')
     return { success: true, data: notification }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al crear notificación'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al crear notificación'
     return { success: false, error: message }
   }
 }
@@ -63,8 +63,8 @@ export async function getNotifications(limit: number = 20) {
 
     const notifications = await userRepository.getNotifications(user.id, limit)
     return { success: true, data: notifications }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener notificaciones'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al obtener notificaciones'
     return { success: false, error: message }
   }
 }
@@ -82,8 +82,8 @@ export async function getUnreadNotifications() {
 
     const notifications = await userRepository.getUnreadNotifications(user.id)
     return { success: true, data: notifications }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener notificaciones'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al obtener notificaciones'
     return { success: false, error: message }
   }
 }
@@ -101,8 +101,8 @@ export async function getUnreadNotificationCount() {
 
     const count = await userRepository.getUnreadNotificationCount(user.id)
     return { success: true, data: count }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al contar notificaciones'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al contar notificaciones'
     return { success: false, error: message }
   }
 }
@@ -129,8 +129,8 @@ export async function markNotificationAsRead(notificationId: string) {
     const updated = await userRepository.markNotificationAsRead(validated.notificationId)
 
     return { success: true, data: updated }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al actualizar notificación'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al actualizar notificación'
     return { success: false, error: message }
   }
 }
@@ -149,8 +149,8 @@ export async function markAllNotificationsAsRead() {
     await userRepository.markAllNotificationsAsRead(user.id)
 
     return { success: true }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al actualizar notificaciones'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al actualizar notificaciones'
     return { success: false, error: message }
   }
 }
@@ -175,8 +175,8 @@ export async function deleteNotification(notificationId: string) {
     await userRepository.deleteNotification(notificationId)
 
     return { success: true }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al eliminar notificación'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al eliminar notificación'
     return { success: false, error: message }
   }
 }
@@ -194,8 +194,8 @@ export async function notifyAchievementUnlocked(userId: string, achievementTitle
       message: `¡Felicitaciones! Has desbloqueado el logro: ${achievementTitle}`,
       resourceType: 'ACHIEVEMENT'
     })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al crear notificación'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al crear notificación'
     return { success: false, error: message }
   }
 }
@@ -213,8 +213,8 @@ export async function notifyBadgeEarned(userId: string, badgeTitle: string) {
       message: `¡Excelente! Has ganado la insignia: ${badgeTitle}`,
       resourceType: 'BADGE'
     })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al crear notificación'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al crear notificación'
     return { success: false, error: message }
   }
 }
@@ -232,8 +232,8 @@ export async function notifyMissionCompleted(userId: string, missionTitle: strin
       message: `Has completado la misión: ${missionTitle}`,
       resourceType: 'MISSION'
     })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al crear notificación'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al crear notificación'
     return { success: false, error: message }
   }
 }
@@ -252,8 +252,8 @@ export async function notifyAssignmentGraded(userId: string, assignmentTitle: st
       resourceId: courseId,
       resourceType: 'COURSE'
     })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al crear notificación'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al crear notificación'
     return { success: false, error: message }
   }
 }
@@ -271,8 +271,8 @@ export async function notifyNewMessage(userId: string, senderName: string) {
       message: `${senderName} te ha enviado un mensaje`,
       resourceType: 'MESSAGE'
     })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al crear notificación'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al crear notificación'
     return { success: false, error: message }
   }
 }
@@ -292,8 +292,8 @@ export async function notifyAssignmentDueDate(userId: string, assignmentTitle: s
       message: `${assignmentTitle}: ${message}`,
       resourceType: 'ASSIGNMENT'
     })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al crear notificación'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al crear notificación'
     return { success: false, error: message }
   }
 }

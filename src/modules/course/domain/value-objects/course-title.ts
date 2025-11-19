@@ -2,48 +2,43 @@
  * Course Title Value Object
  */
 
-import { ValueObject } from '@/core/shared/value-object';
-import { ValidationError } from '@/core/shared/errors';
-import { Result } from '@/core/shared/result';
+import { ValidationError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { ValueObject } from '@/core/shared/value-object'
 
 interface CourseTitleProps {
-  value: string;
+  value: string
 }
 
 export class CourseTitle extends ValueObject<CourseTitleProps> {
-
   get value(): string {
-    return this.props.value;
+    return this.props.value
   }
 
   private constructor(props: CourseTitleProps) {
-    super(props);
+    super(props)
   }
 
   static create(title: string): Result<CourseTitle, ValidationError> {
     // Trim and validate
-    const trimmed = title.trim();
+    const trimmed = title.trim()
 
     if (trimmed.length < CourseTitle.MIN_LENGTH) {
       return Result.fail(
-        new ValidationError(
-          `Title must be at least ${CourseTitle.MIN_LENGTH} characters`,
-          'title',
-          { minLength: String(CourseTitle.MIN_LENGTH) }
-        )
-      );
+        new ValidationError(`Title must be at least ${CourseTitle.MIN_LENGTH} characters`, 'title', {
+          minLength: String(CourseTitle.MIN_LENGTH)
+        })
+      )
     }
 
     if (trimmed.length > CourseTitle.MAX_LENGTH) {
       return Result.fail(
-        new ValidationError(
-          `Title must not exceed ${CourseTitle.MAX_LENGTH} characters`,
-          'title',
-          { maxLength: String(CourseTitle.MAX_LENGTH) }
-        )
-      );
+        new ValidationError(`Title must not exceed ${CourseTitle.MAX_LENGTH} characters`, 'title', {
+          maxLength: String(CourseTitle.MAX_LENGTH)
+        })
+      )
     }
 
-    return Result.ok(new CourseTitle({ value: trimmed }));
+    return Result.ok(new CourseTitle({ value: trimmed }))
   }
 }

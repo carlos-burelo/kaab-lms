@@ -71,9 +71,9 @@ export function ImageUploader({ label, onImageUpload, currentImage, required = f
 
             setPreview(response.data.url)
             onImageUpload(response.data.id)
-          } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Error al subir la imagen'
-            console.error('Error uploading image:', error)
+          } catch (_error) {
+            const errorMessage = _error instanceof Error ? _error.message : 'Error al subir la imagen'
+            console.error('Error uploading image:', _error)
             throw new Error(errorMessage)
           }
         })(),

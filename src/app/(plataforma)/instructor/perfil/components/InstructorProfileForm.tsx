@@ -1,30 +1,16 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription
-} from '@/components/ui/form'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
-import { getInstructorProfile, updateInstructorProfile } from '@/actions/instructor/profile.actions'
 import { toast } from 'sonner'
+import { z } from 'zod'
+import { getInstructorProfile, updateInstructorProfile } from '@/actions/instructor/profile.actions'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 
 const formSchema = z.object({
   publicBio: z.string().optional(),
@@ -103,9 +89,7 @@ export function InstructorProfileForm() {
         <Card>
           <CardHeader>
             <CardTitle>Información Pública</CardTitle>
-            <CardDescription>
-              Esta información será visible para los estudiantes
-            </CardDescription>
+            <CardDescription>Esta información será visible para los estudiantes</CardDescription>
           </CardHeader>
           <CardContent className='space-y-4'>
             <FormField
@@ -115,15 +99,9 @@ export function InstructorProfileForm() {
                 <FormItem>
                   <FormLabel>Biografía Pública</FormLabel>
                   <FormControl>
-                    <Textarea
-                      {...field}
-                      placeholder='Cuéntanos sobre ti, tu experiencia y qué te motiva a enseñar...'
-                      rows={6}
-                    />
+                    <Textarea {...field} placeholder='Cuéntanos sobre ti, tu experiencia y qué te motiva a enseñar...' rows={6} />
                   </FormControl>
-                  <FormDescription>
-                    Comparte tu historia y experiencia con los estudiantes
-                  </FormDescription>
+                  <FormDescription>Comparte tu historia y experiencia con los estudiantes</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -134,9 +112,7 @@ export function InstructorProfileForm() {
         <Card>
           <CardHeader>
             <CardTitle>Cualificaciones</CardTitle>
-            <CardDescription>
-              Agrega tus certificaciones y experiencia profesional
-            </CardDescription>
+            <CardDescription>Agrega tus certificaciones y experiencia profesional</CardDescription>
           </CardHeader>
           <CardContent className='space-y-4'>
             <FormField
@@ -146,11 +122,7 @@ export function InstructorProfileForm() {
                 <FormItem>
                   <FormLabel>Certificaciones</FormLabel>
                   <FormControl>
-                    <Textarea
-                      {...field}
-                      placeholder='Lista tus certificaciones, títulos y credenciales...'
-                      rows={4}
-                    />
+                    <Textarea {...field} placeholder='Lista tus certificaciones, títulos y credenciales...' rows={4} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -164,11 +136,7 @@ export function InstructorProfileForm() {
                 <FormItem>
                   <FormLabel>Experiencia Profesional</FormLabel>
                   <FormControl>
-                    <Textarea
-                      {...field}
-                      placeholder='Describe tu experiencia laboral relevante...'
-                      rows={4}
-                    />
+                    <Textarea {...field} placeholder='Describe tu experiencia laboral relevante...' rows={4} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -180,9 +148,7 @@ export function InstructorProfileForm() {
         <Card>
           <CardHeader>
             <CardTitle>Información de Pago</CardTitle>
-            <CardDescription>
-              Configura cómo deseas recibir tus pagos (privado)
-            </CardDescription>
+            <CardDescription>Configura cómo deseas recibir tus pagos (privado)</CardDescription>
           </CardHeader>
           <CardContent className='space-y-4'>
             <FormField
@@ -194,9 +160,7 @@ export function InstructorProfileForm() {
                   <FormControl>
                     <Input {...field} placeholder='18 dígitos' maxLength={18} />
                   </FormControl>
-                  <FormDescription>
-                    Tu CLABE interbancaria para transferencias
-                  </FormDescription>
+                  <FormDescription>Tu CLABE interbancaria para transferencias</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -211,9 +175,7 @@ export function InstructorProfileForm() {
                   <FormControl>
                     <Input {...field} type='email' placeholder='tu@email.com' />
                   </FormControl>
-                  <FormDescription>
-                    Opcional: email asociado a tu cuenta de PayPal
-                  </FormDescription>
+                  <FormDescription>Opcional: email asociado a tu cuenta de PayPal</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

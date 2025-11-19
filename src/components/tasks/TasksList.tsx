@@ -1,50 +1,31 @@
 'use client'
 
-import { useState } from 'react'
-import { formatDistanceToNow, format, isPast } from 'date-fns'
+import { format, formatDistanceToNow, isPast } from 'date-fns'
 import { es } from 'date-fns/locale'
-import {
-  CheckSquare,
-  Plus,
-  Trash2,
-  Calendar,
-  Flag,
-  Edit,
-  ListChecks
-} from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { Calendar, CheckSquare, Edit, Flag, ListChecks, Plus, Trash2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { createPersonalTask, deletePersonalTask, toggleTaskCompletion, updatePersonalTask } from '@/actions/task.actions'
 import { Badge } from '@/components/ui/badge'
-import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  createPersonalTask,
-  updatePersonalTask,
-  deletePersonalTask,
-  toggleTaskCompletion
-} from '@/actions/task.actions'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogFooter
+  DialogTrigger
 } from '@/components/ui/dialog'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
-import { useRouter } from 'next/navigation'
-import { cn } from '@/lib/utils'
-import { useToast } from '@/hooks/use-toast'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Textarea } from '@/components/ui/textarea'
+import { useToast } from '@/hooks/use-toast'
+import { cn } from '@/lib/utils'
 
 type Task = {
   id: string
@@ -336,7 +317,15 @@ export function TasksList({ initialTasks }: TasksListProps) {
               </CardContent>
             </Card>
           ) : (
-            pendingTasks.map((task) => <TaskCard key={task.id} task={task} onToggle={handleToggleComplete} onEdit={openEditDialog} onDelete={handleDeleteTask} />)
+            pendingTasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onToggle={handleToggleComplete}
+                onEdit={openEditDialog}
+                onDelete={handleDeleteTask}
+              />
+            ))
           )}
         </TabsContent>
 
@@ -349,7 +338,15 @@ export function TasksList({ initialTasks }: TasksListProps) {
               </CardContent>
             </Card>
           ) : (
-            completedTasks.map((task) => <TaskCard key={task.id} task={task} onToggle={handleToggleComplete} onEdit={openEditDialog} onDelete={handleDeleteTask} />)
+            completedTasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onToggle={handleToggleComplete}
+                onEdit={openEditDialog}
+                onDelete={handleDeleteTask}
+              />
+            ))
           )}
         </TabsContent>
       </Tabs>
@@ -448,13 +445,9 @@ function TaskCard({
           <div className='flex-1 space-y-2'>
             <div className='flex items-start justify-between gap-4'>
               <div className='flex-1'>
-                <h3 className={cn('font-semibold', isCompleted && 'line-through text-muted-foreground')}>
-                  {task.title}
-                </h3>
+                <h3 className={cn('font-semibold', isCompleted && 'line-through text-muted-foreground')}>{task.title}</h3>
                 {task.description && (
-                  <p className={cn('text-sm text-muted-foreground mt-1', isCompleted && 'line-through')}>
-                    {task.description}
-                  </p>
+                  <p className={cn('text-sm text-muted-foreground mt-1', isCompleted && 'line-through')}>{task.description}</p>
                 )}
               </div>
 

@@ -2,20 +2,20 @@
  * Badge Mapper
  */
 
-import type { Mapper } from '@/core/shared/mapper.interface';
-import { Badge, type BadgeProps } from '../domain/badge.entity';
-import type { BadgeRarity } from '../domain/value-objects';
-import type { Badge as PrismaBadge } from '@prisma/client';
+import type { Badge as PrismaBadge } from '@prisma/client'
+import type { Mapper } from '@/core/shared/mapper.interface'
+import { Badge, type BadgeProps } from '../domain/badge.entity'
+import type { BadgeRarity } from '../domain/value-objects'
 
 export interface BadgeDTO {
-  id: string;
-  name: string;
-  description: string;
-  imageId?: string;
-  rarity: BadgeRarity;
-  condition: Record<string, any>;
-  createdAt: Date;
-  updatedAt: Date;
+  id: string
+  name: string
+  description: string
+  imageId?: string
+  rarity: BadgeRarity
+  condition: Record<string, any>
+  createdAt: Date
+  updatedAt: Date
 }
 
 class BadgeMapper implements Mapper<Badge, PrismaBadge, BadgeDTO> {
@@ -28,16 +28,16 @@ class BadgeMapper implements Mapper<Badge, PrismaBadge, BadgeDTO> {
       condition: raw.condition as Record<string, any>,
       id: raw.id,
       createdAt: raw.createdAt,
-      updatedAt: raw.createdAt, // Prisma Badge doesn't have updatedAt
-    };
-
-    // Use factory method instead of direct instantiation
-    const result = Badge.create(props);
-    if (result.isFailure) {
-      throw new Error(`Failed to create Badge entity: ${result.error.message}`);
+      updatedAt: raw.createdAt // Prisma Badge doesn't have updatedAt
     }
 
-    return result.value;
+    // Use factory method instead of direct instantiation
+    const result = Badge.create(props)
+    if (result.isFailure) {
+      throw new Error(`Failed to create Badge entity: ${result.error.message}`)
+    }
+
+    return result.value
   }
 
   toPersistence(entity: Badge): Omit<PrismaBadge, 'createdAt'> {
@@ -47,8 +47,8 @@ class BadgeMapper implements Mapper<Badge, PrismaBadge, BadgeDTO> {
       description: entity.description,
       imageId: entity.imageId || null,
       rarity: entity.rarity,
-      condition: entity.condition,
-    };
+      condition: entity.condition
+    }
   }
 
   toDTO(entity: Badge): BadgeDTO {
@@ -60,9 +60,9 @@ class BadgeMapper implements Mapper<Badge, PrismaBadge, BadgeDTO> {
       rarity: entity.rarity,
       condition: entity.condition,
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    };
+      updatedAt: entity.updatedAt
+    }
   }
 }
 
-export const badgeMapper = new BadgeMapper();
+export const badgeMapper = new BadgeMapper()

@@ -1,6 +1,5 @@
 'use server'
 
-import { error } from 'console'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
 import { instructorRepository, userRepository } from '@/database/repositories'
@@ -81,7 +80,7 @@ export async function startLearningPath(learningPathId: string) {
     revalidatePath('/estudiante')
     return { success: true, data: progress }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al iniciar ruta'
+    const message = _error instanceof Error ? _error.message : 'Error al iniciar ruta'
     return { success: false, error: message }
   }
 }
@@ -127,7 +126,7 @@ export async function completeNode(data: z.infer<typeof CompleteNodeSchema>) {
     revalidatePath('/estudiante')
     return { success: true, data: updated }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al completar nodo'
+    const message = _error instanceof Error ? _error.message : 'Error al completar nodo'
     return { success: false, error: message }
   }
 }
@@ -191,7 +190,7 @@ export async function getNextNode(data: z.infer<typeof GetNextNodeSchema>) {
     // Si ninguna condición se cumple, retornar null
     return { success: true, data: { nextNode: null, isCompleted: true } }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener siguiente nodo'
+    const message = _error instanceof Error ? _error.message : 'Error al obtener siguiente nodo'
     return { success: false, error: message }
   }
 }
@@ -214,7 +213,7 @@ export async function getLearningPathProgress(learningPathId: string) {
 
     return { success: true, data: progress }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener progreso'
+    const message = _error instanceof Error ? _error.message : 'Error al obtener progreso'
     return { success: false, error: message }
   }
 }
@@ -233,7 +232,7 @@ export async function getAvailableLearningPaths() {
     const paths = await userRepository.getAvailableLearningPaths(user.id)
     return { success: true, data: paths }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener rutas'
+    const message = _error instanceof Error ? _error.message : 'Error al obtener rutas'
     return { success: false, error: message }
   }
 }
@@ -252,7 +251,7 @@ export async function getMyLearningPathsInProgress() {
     const paths = await userRepository.getStudentLearningPathsInProgress(user.id)
     return { success: true, data: paths }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener rutas'
+    const message = _error instanceof Error ? _error.message : 'Error al obtener rutas'
     return { success: false, error: message }
   }
 }
@@ -310,7 +309,7 @@ function evaluateCondition(condition: string, data: Record<string, any>): boolea
     // Si no se puede evaluar, retornar true
     return true
   } catch (_error) {
-    console.error('Error evaluating condition:', error)
+    console.error('Error evaluating condition:', _error)
     return false
   }
 }

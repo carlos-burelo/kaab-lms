@@ -2,129 +2,101 @@
  * Unlock Achievement Use Case
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { NotFoundError, DuplicateEntityError } from '@/core/shared/errors';
-import type { IAchievementRepository } from '../../domain/achievement.repository.interface';
-import type { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface';
-import type { UnlockAchievementDTO } from '../dtos';
+import { DuplicateEntityError, NotFoundError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import type { IAchievementRepository } from '../../domain/achievement.repository.interface'
+import type { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface'
+import type { UnlockAchievementDTO } from '../dtos'
 
 interface UnlockAchievementRequest {
-  dto: UnlockAchievementDTO;
-  currentUserId: string;
+  dto: UnlockAchievementDTO
+  currentUserId: string
 }
 
-export class UnlockAchievementUseCase extends BaseUseCase<
-  UnlockAchievementRequest,
-  void
-> {
+export class UnlockAchievementUseCase extends BaseUseCase<UnlockAchievementRequest, void> {
   constructor(
     private achievementRepository: IAchievementRepository,
     private userGamificationRepository: IUserGamificationRepository
   ) {
-    super();
+    super()
   }
 
   async execute(request: UnlockAchievementRequest): Promise<Result<void>> {
-    const { dto } = request;
+    const { dto } = request
 
     // Find achievement
-    const achievementResult = await this.achievementRepository.findById(
-      dto.achievementId
-    );
+    const achievementResult = await this.achievementRepository.findById(dto.achievementId)
 
     if (achievementResult.isFailure) {
-      return Result.fail(achievementResult.error);
+      return Result.fail(achievementResult.error)
     }
 
     if (!achievementResult.value) {
-      return Result.fail(new NotFoundError('Achievement', dto.achievementId));
+      return Result.fail(new NotFoundError('Achievement', dto.achievementId))
     }
 
-    const achievement = achievementResult.value;
+    const achievement = achievementResult.value
 
     // Check if user already has achievement
-    const hasAchievementResult =
-      await this.achievementRepository.userHasAchievement(
-        dto.userId,
-        dto.achievementId
-      );
+    const hasAchievementResult = await this.achievementRepository.userHasAchievement(dto.userId, dto.achievementId)
 
     if (hasAchievementResult.isFailure) {
-      return Result.fail(hasAchievementResult.error);
+      return Result.fail(hasAchievementResult.error)
     }
 
     if (hasAchievementResult.value) {
-      return Result.fail(
-        new DuplicateEntityError(
-          'User already has this achievement',
-          'achievementId',
-          dto.achievementId
-        )
-      );
+      return Result.fail(new DuplicateEntityError('User already has this achievement', 'achievementId', dto.achievementId))
     }
 
     // Unlock achievement
-    const unlockResult = achievement.unlock(dto.userId);
+    const unlockResult = achievement.unlock(dto.userId)
 
     if (unlockResult.isFailure) {
-      return Result.fail(unlockResult.error);
+      return Result.fail(unlockResult.error)
     }
 
     // Unlock achievement for user
-    const unlockForUserResult =
-      await this.achievementRepository.unlockAchievementForUser(
-        dto.userId,
-        dto.achievementId
-      );
+    const unlockForUserResult = await this.achievementRepository.unlockAchievementForUser(dto.userId, dto.achievementId)
 
     if (unlockForUserResult.isFailure) {
-      return Result.fail(unlockForUserResult.error);
+      return Result.fail(unlockForUserResult.error)
     }
 
     // Get or create user gamification profile
-    const userGamificationResult =
-      await this.userGamificationRepository.getOrCreate(dto.userId);
+    const userGamificationResult = await this.userGamificationRepository.getOrCreate(dto.userId)
 
     if (userGamificationResult.isFailure) {
-      return Result.fail(userGamificationResult.error);
+      return Result.fail(userGamificationResult.error)
     }
 
-    const userGamification = userGamificationResult.value;
+    const userGamification = userGamificationResult.value
 
     // Add XP reward
     if (achievement.xpReward > 0) {
-      const addXpResult = userGamification.addXp(
-        achievement.xpReward,
-        `Achievement unlocked: ${achievement.name}`
-      );
+      const addXpResult = userGamification.addXp(achievement.xpReward, `Achievement unlocked: ${achievement.name}`)
 
       if (addXpResult.isFailure) {
-        return Result.fail(addXpResult.error);
+        return Result.fail(addXpResult.error)
       }
     }
 
     // Add coin reward
     if (achievement.coinReward > 0) {
-      const addCoinsResult = userGamification.addCoins(
-        achievement.coinReward,
-        `Achievement unlocked: ${achievement.name}`
-      );
+      const addCoinsResult = userGamification.addCoins(achievement.coinReward, `Achievement unlocked: ${achievement.name}`)
 
       if (addCoinsResult.isFailure) {
-        return Result.fail(addCoinsResult.error);
+        return Result.fail(addCoinsResult.error)
       }
     }
 
     // Save user gamification
-    const saveResult = await this.userGamificationRepository.save(
-      userGamification
-    );
+    const saveResult = await this.userGamificationRepository.save(userGamification)
 
     if (saveResult.isFailure) {
-      return Result.fail(saveResult.error);
+      return Result.fail(saveResult.error)
     }
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 }

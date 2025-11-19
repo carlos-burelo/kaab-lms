@@ -2,8 +2,8 @@
  * Create Calendar Event DTO
  */
 
-import { z } from 'zod';
-import { EventType } from '../../domain/value-objects';
+import { z } from 'zod'
+import { EventType } from '../../domain/value-objects'
 
 export const CreateEventSchema = z.object({
   userId: z.string().min(1, 'User ID is required'),
@@ -15,7 +15,7 @@ export const CreateEventSchema = z.object({
   location: z.string().optional(),
   color: z.string().optional(),
   isAllDay: z.boolean().default(false),
-  reminder: z.number().int().positive().optional(),
-});
+  reminder: z.number().int().positive().optional()
+})
 
-export type CreateEventDTO = z.infer<typeof CreateEventSchema>;
+export type CreateEventDTO = z.infer<typeof CreateEventSchema>

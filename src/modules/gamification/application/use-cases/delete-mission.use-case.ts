@@ -2,45 +2,42 @@
  * Delete Mission Use Case
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { NotFoundError } from '@/core/shared/errors';
-import type { IMissionRepository } from '../../domain/mission.repository.interface';
+import { NotFoundError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import type { IMissionRepository } from '../../domain/mission.repository.interface'
 
 interface DeleteMissionRequest {
-  missionId: string;
-  currentUserId: string;
+  missionId: string
+  currentUserId: string
 }
 
-export class DeleteMissionUseCase extends BaseUseCase<
-  DeleteMissionRequest,
-  void
-> {
+export class DeleteMissionUseCase extends BaseUseCase<DeleteMissionRequest, void> {
   constructor(private missionRepository: IMissionRepository) {
-    super();
+    super()
   }
 
   async execute(request: DeleteMissionRequest): Promise<Result<void>> {
-    const { missionId } = request;
+    const { missionId } = request
 
     // Find mission to ensure it exists
-    const missionResult = await this.missionRepository.findById(missionId);
+    const missionResult = await this.missionRepository.findById(missionId)
 
     if (missionResult.isFailure) {
-      return Result.fail(missionResult.error);
+      return Result.fail(missionResult.error)
     }
 
     if (!missionResult.value) {
-      return Result.fail(new NotFoundError('Mission', missionId));
+      return Result.fail(new NotFoundError('Mission', missionId))
     }
 
     // Delete mission
-    const deleteResult = await this.missionRepository.delete(missionId);
+    const deleteResult = await this.missionRepository.delete(missionId)
 
     if (deleteResult.isFailure) {
-      return Result.fail(deleteResult.error);
+      return Result.fail(deleteResult.error)
     }
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 }

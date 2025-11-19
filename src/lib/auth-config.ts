@@ -24,23 +24,10 @@ export const PROTECTED_ROUTES = {
 }
 
 // Rutas públicas (sin protección)
-export const PUBLIC_ROUTES = [
-  '/sign-in',
-  '/sign-up',
-  '/forgot-password',
-  '/verify-otp',
-  '/change-password',
-  '/',
-  '/api/auth'
-]
+export const PUBLIC_ROUTES = ['/sign-in', '/sign-up', '/forgot-password', '/verify-otp', '/change-password', '/', '/api/auth']
 
 // Rutas que redirigen a dashboard si ya estás autenticado
-export const AUTH_ROUTES = [
-  '/sign-in',
-  '/sign-up',
-  '/forgot-password',
-  '/verify-otp'
-]
+export const AUTH_ROUTES = ['/sign-in', '/sign-up', '/forgot-password', '/verify-otp']
 
 /**
  * Obtiene el dashboard por defecto según el rol
@@ -62,9 +49,7 @@ export function getDefaultDashboard(role: string): string {
  * Verifica si una ruta requiere autenticación
  */
 export function isProtectedRoute(pathname: string): boolean {
-  return Object.values(PROTECTED_ROUTES).some((route) =>
-    route.paths.some((path) => pathname.startsWith(path))
-  )
+  return Object.values(PROTECTED_ROUTES).some((route) => route.paths.some((path) => pathname.startsWith(path)))
 }
 
 /**
@@ -91,10 +76,7 @@ export function hasAccessToRoute(userRole: string, pathname: string): boolean {
 /**
  * Obtiene el destino de redirección según el contexto
  */
-export function getRedirectDestination(
-  currentPath: string,
-  userRole: string | undefined
-): string {
+export function getRedirectDestination(currentPath: string, userRole: string | undefined): string {
   // Si no está autenticado, ir a login
   if (!userRole) {
     return '/sign-in'

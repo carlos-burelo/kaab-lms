@@ -4,28 +4,28 @@
  * They ensure consistency and encapsulate business rules
  */
 
-import { Entity, type EntityProps } from './entity';
-import type { DomainEvent } from './domain-event';
+import type { DomainEvent } from './domain-event'
+import { Entity, type EntityProps } from './entity'
 
 export abstract class AggregateRoot<T extends EntityProps> extends Entity<T> {
-  private _domainEvents: DomainEvent[] = [];
+  private _domainEvents: DomainEvent[] = []
 
   get domainEvents(): ReadonlyArray<DomainEvent> {
-    return this._domainEvents;
+    return this._domainEvents
   }
 
   protected addDomainEvent(event: DomainEvent): void {
-    this._domainEvents.push(event);
+    this._domainEvents.push(event)
   }
 
   public clearEvents(): void {
-    this._domainEvents = [];
+    this._domainEvents = []
   }
 
   protected removeDomainEvent(event: DomainEvent): void {
-    const index = this._domainEvents.indexOf(event);
+    const index = this._domainEvents.indexOf(event)
     if (index !== -1) {
-      this._domainEvents.splice(index, 1);
+      this._domainEvents.splice(index, 1)
     }
   }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { BookOpen, CheckCircle, Award, Brain, Trophy, Coins, Target, Zap } from 'lucide-react'
+import { Award, BookOpen, Brain, CheckCircle, Coins, Target, Trophy, Zap } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 
@@ -12,9 +12,7 @@ export function ProfileStats({ stats }: ProfileStatsProps) {
   if (!stats) {
     return (
       <Card>
-        <CardContent className='py-12 text-center text-muted-foreground'>
-          No se pudieron cargar las estadísticas
-        </CardContent>
+        <CardContent className='py-12 text-center text-muted-foreground'>No se pudieron cargar las estadísticas</CardContent>
       </Card>
     )
   }

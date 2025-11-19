@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { CheckCircle, Loader2 } from 'lucide-react'
+import { useState } from 'react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
@@ -42,9 +42,9 @@ export function NodeViewer({ node, learningPath, onComplete, isLoading }: NodeVi
     return (
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">{config.icon}</span>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-2'>
+              <span className='text-2xl'>{config.icon}</span>
               <div>
                 <CardTitle>{node.title}</CardTitle>
                 <CardDescription>{node.description}</CardDescription>
@@ -53,58 +53,50 @@ export function NodeViewer({ node, learningPath, onComplete, isLoading }: NodeVi
             <Badge className={config.color}>{config.label}</Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className='space-y-6'>
           {node.decisionCriteria && (
-            <div className="bg-muted p-4 rounded-lg">
-              <p className="text-sm font-medium mb-2">Criterio de decisión:</p>
-              <p className="text-sm text-muted-foreground">{node.decisionCriteria}</p>
+            <div className='bg-muted p-4 rounded-lg'>
+              <p className='text-sm font-medium mb-2'>Criterio de decisión:</p>
+              <p className='text-sm text-muted-foreground'>{node.decisionCriteria}</p>
             </div>
           )}
 
-          <div className="space-y-4">
+          <div className='space-y-4'>
             <div>
-              <Label htmlFor="score">Puntuación (0-100)</Label>
+              <Label htmlFor='score'>Puntuación (0-100)</Label>
               <Input
-                id="score"
-                type="number"
-                min="0"
-                max="100"
-                placeholder="Ingresa tu puntuación"
+                id='score'
+                type='number'
+                min='0'
+                max='100'
+                placeholder='Ingresa tu puntuación'
                 value={completionData.score || ''}
-                onChange={(e) =>
-                  setCompletionData({ ...completionData, score: parseInt(e.target.value, 10) || 0 })
-                }
+                onChange={(e) => setCompletionData({ ...completionData, score: parseInt(e.target.value, 10) || 0 })}
               />
             </div>
 
             <div>
-              <Label htmlFor="attempts">Intentos</Label>
+              <Label htmlFor='attempts'>Intentos</Label>
               <Input
-                id="attempts"
-                type="number"
-                min="1"
-                placeholder="Número de intentos"
+                id='attempts'
+                type='number'
+                min='1'
+                placeholder='Número de intentos'
                 value={completionData.attempts || ''}
-                onChange={(e) =>
-                  setCompletionData({ ...completionData, attempts: parseInt(e.target.value, 10) || 1 })
-                }
+                onChange={(e) => setCompletionData({ ...completionData, attempts: parseInt(e.target.value, 10) || 1 })}
               />
             </div>
           </div>
 
-          <Button
-            onClick={() => onComplete(node.id, completionData)}
-            disabled={isLoading}
-            className="w-full"
-          >
+          <Button onClick={() => onComplete(node.id, completionData)} disabled={isLoading} className='w-full'>
             {isLoading ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loader2 className='h-4 w-4 mr-2 animate-spin' />
                 Procesando...
               </>
             ) : (
               <>
-                <CheckCircle className="h-4 w-4 mr-2" />
+                <CheckCircle className='h-4 w-4 mr-2' />
                 Continuar
               </>
             )}
@@ -121,9 +113,9 @@ export function NodeViewer({ node, learningPath, onComplete, isLoading }: NodeVi
     return (
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">{config.icon}</span>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-2'>
+              <span className='text-2xl'>{config.icon}</span>
               <div>
                 <CardTitle>{node.title}</CardTitle>
                 <CardDescription>{node.description}</CardDescription>
@@ -132,34 +124,30 @@ export function NodeViewer({ node, learningPath, onComplete, isLoading }: NodeVi
             <Badge className={config.color}>{config.label}</Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className='space-y-4'>
           {course && (
-            <div className="bg-muted p-4 rounded-lg space-y-2">
-              <p className="font-medium">{course.title}</p>
-              <p className="text-sm text-muted-foreground">{course.description}</p>
+            <div className='bg-muted p-4 rounded-lg space-y-2'>
+              <p className='font-medium'>{course.title}</p>
+              <p className='text-sm text-muted-foreground'>{course.description}</p>
             </div>
           )}
 
           {node.instructions && (
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="text-sm font-medium mb-2">Instrucciones:</p>
-              <p className="text-sm">{node.instructions}</p>
+            <div className='bg-blue-50 p-4 rounded-lg'>
+              <p className='text-sm font-medium mb-2'>Instrucciones:</p>
+              <p className='text-sm'>{node.instructions}</p>
             </div>
           )}
 
-          <Button
-            onClick={() => onComplete(node.id)}
-            disabled={isLoading}
-            className="w-full"
-          >
+          <Button onClick={() => onComplete(node.id)} disabled={isLoading} className='w-full'>
             {isLoading ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loader2 className='h-4 w-4 mr-2 animate-spin' />
                 Procesando...
               </>
             ) : (
               <>
-                <CheckCircle className="h-4 w-4 mr-2" />
+                <CheckCircle className='h-4 w-4 mr-2' />
                 Marcar como Completado
               </>
             )}
@@ -174,9 +162,9 @@ export function NodeViewer({ node, learningPath, onComplete, isLoading }: NodeVi
     return (
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">{config.icon}</span>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-2'>
+              <span className='text-2xl'>{config.icon}</span>
               <div>
                 <CardTitle>{node.title}</CardTitle>
                 <CardDescription>Sincronizando progreso...</CardDescription>
@@ -186,20 +174,16 @@ export function NodeViewer({ node, learningPath, onComplete, isLoading }: NodeVi
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">{node.description}</p>
-          <Button
-            onClick={() => onComplete(node.id)}
-            disabled={isLoading}
-            className="w-full"
-          >
+          <p className='text-sm text-muted-foreground mb-4'>{node.description}</p>
+          <Button onClick={() => onComplete(node.id)} disabled={isLoading} className='w-full'>
             {isLoading ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loader2 className='h-4 w-4 mr-2 animate-spin' />
                 Sincronizando...
               </>
             ) : (
               <>
-                <CheckCircle className="h-4 w-4 mr-2" />
+                <CheckCircle className='h-4 w-4 mr-2' />
                 Continuar
               </>
             )}
@@ -213,9 +197,9 @@ export function NodeViewer({ node, learningPath, onComplete, isLoading }: NodeVi
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">{config.icon}</span>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-2'>
+            <span className='text-2xl'>{config.icon}</span>
             <div>
               <CardTitle>{node.title}</CardTitle>
               <CardDescription>{node.description}</CardDescription>
@@ -226,25 +210,25 @@ export function NodeViewer({ node, learningPath, onComplete, isLoading }: NodeVi
       </CardHeader>
       <CardContent>
         {node.nodeType === 'START' && (
-          <Button onClick={() => onComplete(node.id)} disabled={isLoading} className="w-full">
+          <Button onClick={() => onComplete(node.id)} disabled={isLoading} className='w-full'>
             {isLoading ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loader2 className='h-4 w-4 mr-2 animate-spin' />
                 Iniciando...
               </>
             ) : (
               <>
-                <CheckCircle className="h-4 w-4 mr-2" />
+                <CheckCircle className='h-4 w-4 mr-2' />
                 Comenzar
               </>
             )}
           </Button>
         )}
         {node.nodeType === 'END' && (
-          <div className="text-center space-y-2">
-            <CheckCircle className="h-12 w-12 text-green-600 mx-auto" />
-            <p className="font-medium">¡Ruta completada!</p>
-            <p className="text-sm text-muted-foreground">Has alcanzado el final de esta ruta de aprendizaje</p>
+          <div className='text-center space-y-2'>
+            <CheckCircle className='h-12 w-12 text-green-600 mx-auto' />
+            <p className='font-medium'>¡Ruta completada!</p>
+            <p className='text-sm text-muted-foreground'>Has alcanzado el final de esta ruta de aprendizaje</p>
           </div>
         )}
       </CardContent>

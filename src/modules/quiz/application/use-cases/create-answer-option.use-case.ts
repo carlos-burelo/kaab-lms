@@ -3,41 +3,38 @@
  * Creates a new answer option for a quiz question
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { prisma } from '@/lib/prisma';
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import { prisma } from '@/lib/prisma'
 
 interface CreateAnswerOptionRequest {
-  questionId: string;
-  text: string;
-  isCorrect: boolean;
-  position: number;
-  currentUserId: string;
+  questionId: string
+  text: string
+  isCorrect: boolean
+  position: number
+  currentUserId: string
 }
 
 interface AnswerOptionDTO {
-  id: string;
-  questionId: string;
-  text: string;
-  isCorrect: boolean;
-  position: number;
+  id: string
+  questionId: string
+  text: string
+  isCorrect: boolean
+  position: number
 }
 
-export class CreateAnswerOptionUseCase extends BaseUseCase<
-  CreateAnswerOptionRequest,
-  AnswerOptionDTO
-> {
+export class CreateAnswerOptionUseCase extends BaseUseCase<CreateAnswerOptionRequest, AnswerOptionDTO> {
   async execute(request: CreateAnswerOptionRequest): Promise<Result<AnswerOptionDTO>> {
-    const { questionId, text, isCorrect, position } = request;
+    const { questionId, text, isCorrect, position } = request
 
     try {
       // Verify question exists
       const question = await prisma.quizQuestion.findUnique({
-        where: { id: questionId },
-      });
+        where: { id: questionId }
+      })
 
       if (!question) {
-        return Result.fail(new Error('Question not found'));
+        return Result.fail(new Error('Question not found'))
       }
 
       // Create answer option
@@ -46,21 +43,19 @@ export class CreateAnswerOptionUseCase extends BaseUseCase<
           questionId,
           text,
           isCorrect,
-          position,
-        },
-      });
+          position
+        }
+      })
 
       return Result.ok({
         id: option.id,
         questionId: option.questionId,
         text: option.text,
         isCorrect: option.isCorrect,
-        position: option.position,
-      });
+        position: option.position
+      })
     } catch (error) {
-      return Result.fail(
-        new Error(`Failed to create answer option: ${(error as Error).message}`)
-      );
+      return Result.fail(new Error(`Failed to create answer option: ${(error as Error).message}`))
     }
   }
 }

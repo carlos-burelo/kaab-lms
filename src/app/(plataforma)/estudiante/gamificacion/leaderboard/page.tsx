@@ -88,11 +88,7 @@ export default async function LeaderboardPage() {
               <LeaderboardRow
                 key={entry.userId}
                 rank={index + 1}
-                name={
-                  entry.user?.profile?.name
-                    ? entry.user.profile.name
-                    : (entry.user?.email ?? 'Estudiante')
-                }
+                name={entry.user?.profile?.name ? entry.user.profile.name : (entry.user?.email ?? 'Estudiante')}
                 level={entry.level}
                 xp={entry.xp}
                 coins={entry.coins}

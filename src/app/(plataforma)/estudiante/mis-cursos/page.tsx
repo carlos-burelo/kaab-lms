@@ -1,8 +1,8 @@
+import { BookMarkedIcon } from 'lucide-react'
+import { redirect } from 'next/navigation'
 import { getEnrolledCourses } from '@/actions/student/enrollment.actions'
 import { EmptyState } from '@/components/ui/empty'
-import { BookMarkedIcon } from 'lucide-react'
 import { EnrolledCoursesList } from './components/EnrolledCoursesList'
-import { redirect } from 'next/navigation'
 
 export const metadata = {
   title: 'Mis Cursos - KAAB LMS',
@@ -22,9 +22,7 @@ export default async function MisCursosPage() {
     <div className='p-4 lg:p-6'>
       <div className='mb-6'>
         <h1 className='text-3xl font-bold'>Mis Cursos</h1>
-        <p className='text-muted-foreground mt-2'>
-          Gestiona tus cursos inscritos y continúa tu aprendizaje
-        </p>
+        <p className='text-muted-foreground mt-2'>Gestiona tus cursos inscritos y continúa tu aprendizaje</p>
       </div>
 
       {enrollments.length === 0 ? (

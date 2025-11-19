@@ -8,6 +8,11 @@ interface UseContentEditorProps {
   onUpdate: (contentId: string, data: Record<string, unknown>) => void
 }
 
+interface ContentEditorState {
+  isSaving: boolean
+  error: string | null
+  success: boolean
+}
 
 export function useContentEditor({ contentId, onUpdate }: UseContentEditorProps) {
   const [isPending, startTransition] = useTransition()
@@ -63,8 +68,8 @@ export function useContentEditor({ contentId, onUpdate }: UseContentEditorProps)
 
             onUpdate(contentId, data)
             resolve({ success: true })
-          } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Error al guardar el contenido'
+          } catch (_error) {
+            const errorMessage = _error instanceof Error ? _error.message : 'Error al guardar el contenido'
             resolve({
               success: false,
               error: errorMessage

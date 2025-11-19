@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getNotifications, getUnreadNotificationCount } from '@/actions/notification.actions'
 import { NotificationsList } from '@/components/notifications/NotificationsList'
-import { Card, CardContent, CardHeader, } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const metadata: Metadata = {
@@ -11,10 +11,7 @@ export const metadata: Metadata = {
 }
 
 export default async function NotificationsPage() {
-  const [notificationsResult, unreadCountResult] = await Promise.all([
-    getNotifications(50),
-    getUnreadNotificationCount()
-  ])
+  const [notificationsResult, unreadCountResult] = await Promise.all([getNotifications(50), getUnreadNotificationCount()])
 
   const notifications = notificationsResult.success ? (notificationsResult.data as any) : []
   const unreadCount = (unreadCountResult.success ? unreadCountResult.data : 0) || 0
@@ -25,7 +22,9 @@ export default async function NotificationsPage() {
         <div>
           <h1 className='text-3xl font-bold tracking-tight'>Notificaciones</h1>
           <p className='text-muted-foreground'>
-            {unreadCount > 0 ? `Tienes ${unreadCount} notificación${unreadCount > 1 ? 'es' : ''} sin leer` : 'Estás al día con tus notificaciones'}
+            {unreadCount > 0
+              ? `Tienes ${unreadCount} notificación${unreadCount > 1 ? 'es' : ''} sin leer`
+              : 'Estás al día con tus notificaciones'}
           </p>
         </div>
       </div>

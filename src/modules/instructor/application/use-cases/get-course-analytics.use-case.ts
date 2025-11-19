@@ -3,28 +3,25 @@
  * Retrieves analytics data for all instructor's courses
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { prisma } from '@/lib/prisma';
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import { prisma } from '@/lib/prisma'
 
 interface GetCourseAnalyticsRequest {
-  instructorId: string;
+  instructorId: string
 }
 
 export interface CourseAnalyticsDTO {
-  courseId: string;
-  title: string;
-  enrollments: number;
-  rating: number;
-  totalReviews: number;
+  courseId: string
+  title: string
+  enrollments: number
+  rating: number
+  totalReviews: number
 }
 
-export class GetCourseAnalyticsUseCase extends BaseUseCase<
-  GetCourseAnalyticsRequest,
-  CourseAnalyticsDTO[]
-> {
+export class GetCourseAnalyticsUseCase extends BaseUseCase<GetCourseAnalyticsRequest, CourseAnalyticsDTO[]> {
   async execute(request: GetCourseAnalyticsRequest): Promise<Result<CourseAnalyticsDTO[]>> {
-    const { instructorId } = request;
+    const { instructorId } = request
 
     try {
       const courses = await prisma.course.findMany({
@@ -33,11 +30,11 @@ export class GetCourseAnalyticsUseCase extends BaseUseCase<
           _count: {
             select: {
               enrollments: true,
-              reviews: true,
-            },
-          },
-        },
-      });
+              reviews: true
+            }
+          }
+        }
+      })
 
       const analytics: CourseAnalyticsDTO[] = courses
         .filter((c) => c.isPublished)
@@ -46,15 +43,13 @@ export class GetCourseAnalyticsUseCase extends BaseUseCase<
           title: course.title,
           enrollments: course._count.enrollments,
           rating: course.rating,
-          totalReviews: course._count.reviews,
+          totalReviews: course._count.reviews
         }))
-        .sort((a, b) => b.enrollments - a.enrollments);
+        .sort((a, b) => b.enrollments - a.enrollments)
 
-      return Result.ok(analytics);
+      return Result.ok(analytics)
     } catch (error) {
-      return Result.fail(
-        new Error(`Failed to get course analytics: ${(error as Error).message}`)
-      );
+      return Result.fail(new Error(`Failed to get course analytics: ${(error as Error).message}`))
     }
   }
 }

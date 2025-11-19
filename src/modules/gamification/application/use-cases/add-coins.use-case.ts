@@ -2,64 +2,51 @@
  * Add Coins Use Case
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import type { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface';
-import type { AddCoinsDTO } from '../dtos';
-import {
-  type UserGamificationDTO,
-  userGamificationMapper,
-} from '../../infrastructure/user-gamification.mapper';
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import type { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface'
+import { type UserGamificationDTO, userGamificationMapper } from '../../infrastructure/user-gamification.mapper'
+import type { AddCoinsDTO } from '../dtos'
 
 interface AddCoinsRequest {
-  dto: AddCoinsDTO;
-  currentUserId: string;
+  dto: AddCoinsDTO
+  currentUserId: string
 }
 
-export class AddCoinsUseCase extends BaseUseCase<
-  AddCoinsRequest,
-  UserGamificationDTO
-> {
-  constructor(
-    private userGamificationRepository: IUserGamificationRepository
-  ) {
-    super();
+export class AddCoinsUseCase extends BaseUseCase<AddCoinsRequest, UserGamificationDTO> {
+  constructor(private userGamificationRepository: IUserGamificationRepository) {
+    super()
   }
 
-  async execute(
-    request: AddCoinsRequest
-  ): Promise<Result<UserGamificationDTO>> {
-    const { dto } = request;
+  async execute(request: AddCoinsRequest): Promise<Result<UserGamificationDTO>> {
+    const { dto } = request
 
     // Get or create user gamification profile
-    const userGamificationResult =
-      await this.userGamificationRepository.getOrCreate(dto.userId);
+    const userGamificationResult = await this.userGamificationRepository.getOrCreate(dto.userId)
 
     if (userGamificationResult.isFailure) {
-      return Result.fail(userGamificationResult.error);
+      return Result.fail(userGamificationResult.error)
     }
 
-    const userGamification = userGamificationResult.value;
+    const userGamification = userGamificationResult.value
 
     // Add coins
-    const addCoinsResult = userGamification.addCoins(dto.amount, dto.reason);
+    const addCoinsResult = userGamification.addCoins(dto.amount, dto.reason)
 
     if (addCoinsResult.isFailure) {
-      return Result.fail(addCoinsResult.error);
+      return Result.fail(addCoinsResult.error)
     }
 
     // Save user gamification
-    const saveResult = await this.userGamificationRepository.save(
-      userGamification
-    );
+    const saveResult = await this.userGamificationRepository.save(userGamification)
 
     if (saveResult.isFailure) {
-      return Result.fail(saveResult.error);
+      return Result.fail(saveResult.error)
     }
 
     // Map to DTO
-    const userGamificationDTO = userGamificationMapper.toDTO(saveResult.value);
+    const userGamificationDTO = userGamificationMapper.toDTO(saveResult.value)
 
-    return Result.ok(userGamificationDTO);
+    return Result.ok(userGamificationDTO)
   }
 }

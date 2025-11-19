@@ -121,7 +121,7 @@ export async function getFileById(fileId: string): Promise<ActionResponse> {
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting file'
+      error: _error instanceof Error ? _error.message : 'Error getting file'
     }
   }
 }
@@ -166,7 +166,7 @@ export async function deleteFile(fileId: string): Promise<ActionResponse> {
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error deleting file'
+      error: _error instanceof Error ? _error.message : 'Error deleting file'
     }
   }
 }
@@ -211,7 +211,7 @@ export async function toggleFilePublic(fileId: string, isPublic: boolean): Promi
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error updating file'
+      error: _error instanceof Error ? _error.message : 'Error updating file'
     }
   }
 }
@@ -238,7 +238,7 @@ export async function getUserFileStats(): Promise<ActionResponse> {
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting statistics'
+      error: _error instanceof Error ? _error.message : 'Error getting statistics'
     }
   }
 }
@@ -265,7 +265,7 @@ export async function getAvailableFileTypes(): Promise<ActionResponse> {
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting file types'
+      error: _error instanceof Error ? _error.message : 'Error getting file types'
     }
   }
 }
@@ -299,7 +299,7 @@ export async function searchFiles(query: string): Promise<ActionResponse> {
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error searching files'
+      error: _error instanceof Error ? _error.message : 'Error searching files'
     }
   }
 }

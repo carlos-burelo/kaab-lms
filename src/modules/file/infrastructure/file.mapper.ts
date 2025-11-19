@@ -2,24 +2,24 @@
  * File Mapper
  */
 
-import type { Mapper } from '@/core/shared/mapper.interface';
-import { File, type FileProps } from '../domain/file.entity';
-import type { File as PrismaFile } from '@prisma/client';
+import type { File as PrismaFile } from '@prisma/client'
+import type { Mapper } from '@/core/shared/mapper.interface'
+import { File, type FileProps } from '../domain/file.entity'
 
 export interface FileDTO {
-  id: string;
-  filename: string;
-  originalFilename: string;
-  mimeType: string;
-  size: number;
-  path: string;
-  url: string;
-  uploadedBy: string;
-  isPublic: boolean;
-  tags: string[];
-  metadata?: Record<string, any>;
-  createdAt: Date;
-  updatedAt: Date;
+  id: string
+  filename: string
+  originalFilename: string
+  mimeType: string
+  size: number
+  path: string
+  url: string
+  uploadedBy: string
+  isPublic: boolean
+  tags: string[]
+  metadata?: Record<string, any>
+  createdAt: Date
+  updatedAt: Date
 }
 
 class FileMapper implements Mapper<File, PrismaFile, FileDTO> {
@@ -37,16 +37,16 @@ class FileMapper implements Mapper<File, PrismaFile, FileDTO> {
       metadata: raw.metadata as Record<string, any> | undefined,
       id: raw.id,
       createdAt: raw.createdAt,
-      updatedAt: raw.updatedAt,
-    };
-
-    // Use factory method instead of direct instantiation
-    const result = File.create(props);
-    if (result.isFailure) {
-      throw new Error(`Failed to create File entity: ${result.error.message}`);
+      updatedAt: raw.updatedAt
     }
 
-    return result.value;
+    // Use factory method instead of direct instantiation
+    const result = File.create(props)
+    if (result.isFailure) {
+      throw new Error(`Failed to create File entity: ${result.error.message}`)
+    }
+
+    return result.value
   }
 
   toPersistence(entity: File): Omit<PrismaFile, 'createdAt' | 'updatedAt'> {
@@ -61,8 +61,8 @@ class FileMapper implements Mapper<File, PrismaFile, FileDTO> {
       uploadedBy: entity.uploadedBy,
       isPublic: entity.isPublic,
       tags: entity.tags,
-      metadata: entity.metadata || null,
-    };
+      metadata: entity.metadata || null
+    }
   }
 
   toDTO(entity: File): FileDTO {
@@ -79,9 +79,9 @@ class FileMapper implements Mapper<File, PrismaFile, FileDTO> {
       tags: entity.tags,
       metadata: entity.metadata,
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    };
+      updatedAt: entity.updatedAt
+    }
   }
 }
 
-export const fileMapper = new FileMapper();
+export const fileMapper = new FileMapper()

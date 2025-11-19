@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
-import { userRepository, studentRepository } from '@/database/repositories'
+import { studentRepository, userRepository } from '@/database/repositories'
 import { getSession } from '@/lib/auth'
 
 // ============================================================================
@@ -40,8 +40,8 @@ export async function getProfile() {
 
     const profile = await userRepository.getProfile(user.id)
     return { success: true, data: profile }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener perfil'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al obtener perfil'
     return { success: false, error: message }
   }
 }
@@ -73,11 +73,11 @@ export async function updateProfile(data: z.infer<typeof UpdateProfileSchema>) {
     revalidatePath('/estudiante/perfil')
     revalidatePath('/estudiante')
     return { success: true, data: updated }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.issues[0].message }
+  } catch (_error) {
+    if (_error instanceof z.ZodError) {
+      return { success: false, error: _error.issues[0].message }
     }
-    const message = error instanceof Error ? error.message : 'Error al actualizar perfil'
+    const message = _error instanceof Error ? _error.message : 'Error al actualizar perfil'
     return { success: false, error: message }
   }
 }
@@ -102,11 +102,11 @@ export async function updateProfileImage(imageUrl: string) {
     revalidatePath('/estudiante/perfil')
     revalidatePath('/estudiante')
     return { success: true, data: updated }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.issues[0].message }
+  } catch (_error) {
+    if (_error instanceof z.ZodError) {
+      return { success: false, error: _error.issues[0].message }
     }
-    const message = error instanceof Error ? error.message : 'Error al actualizar imagen'
+    const message = _error instanceof Error ? _error.message : 'Error al actualizar imagen'
     return { success: false, error: message }
   }
 }
@@ -122,12 +122,7 @@ export async function getLearningStats() {
       throw new Error('No autenticado')
     }
 
-    const [
-      enrolledCourses,
-      certificates,
-      quizAttempts,
-      gamificationProfile
-    ] = await Promise.all([
+    const [enrolledCourses, certificates, quizAttempts, gamificationProfile] = await Promise.all([
       studentRepository.getEnrolledCourses(user.id),
       studentRepository.getCertificates(user.id),
       studentRepository.getQuizAttempts(user.id),
@@ -150,8 +145,8 @@ export async function getLearningStats() {
     }
 
     return { success: true, data: stats }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener estadísticas'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al obtener estadísticas'
     return { success: false, error: message }
   }
 }

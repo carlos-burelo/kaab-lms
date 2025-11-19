@@ -2,18 +2,15 @@
  * Conversation Repository Interface
  */
 
-import type { Repository } from '@/core/shared/repository.interface';
-import type { Result } from '@/core/shared/result';
-import type { Conversation } from './conversation.entity';
+import type { Repository } from '@/core/shared/repository.interface'
+import type { Result } from '@/core/shared/result'
+import type { Conversation } from './conversation.entity'
 
 export interface IConversationRepository extends Repository<Conversation> {
   /**
    * Find conversation between two participants
    */
-  findByParticipants(
-    participant1Id: string,
-    participant2Id: string
-  ): Promise<Result<Conversation | null>>;
+  findByParticipants(participant1Id: string, participant2Id: string): Promise<Result<Conversation | null>>
 
   /**
    * Find all conversations for a user
@@ -21,10 +18,10 @@ export interface IConversationRepository extends Repository<Conversation> {
   findByUser(
     userId: string,
     options?: {
-      limit?: number;
-      offset?: number;
+      limit?: number
+      offset?: number
     }
-  ): Promise<Result<Conversation[]>>;
+  ): Promise<Result<Conversation[]>>
 
   /**
    * Get conversation with messages
@@ -32,13 +29,13 @@ export interface IConversationRepository extends Repository<Conversation> {
   findByIdWithMessages(
     id: string,
     options?: {
-      limit?: number;
-      offset?: number;
+      limit?: number
+      offset?: number
     }
-  ): Promise<Result<Conversation | null>>;
+  ): Promise<Result<Conversation | null>>
 
   /**
    * Get total unread count for a user across all conversations
    */
-  getTotalUnreadCount(userId: string): Promise<Result<number>>;
+  getTotalUnreadCount(userId: string): Promise<Result<number>>
 }

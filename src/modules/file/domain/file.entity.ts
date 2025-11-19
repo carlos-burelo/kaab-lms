@@ -2,132 +2,116 @@
  * File Aggregate Root
  */
 
-import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root';
-import { Result } from '@/core/shared/result';
-import { BusinessRuleError, ValidationError } from '@/core/shared/errors';
-import { FileUploadedEvent, FileDeletedEvent } from './events';
-import { FileType } from './value-objects/file-type';
+import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root'
+import { BusinessRuleError, ValidationError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { FileDeletedEvent, FileUploadedEvent } from './events'
+import { FileType } from './value-objects/file-type'
 
 export interface FileProps extends EntityProps {
-  filename: string;
-  originalFilename: string;
-  mimeType: string;
-  size: number;
-  path: string;
-  url: string;
-  uploadedBy: string;
-  isPublic: boolean;
-  tags: string[];
-  metadata?: Record<string, any>;
+  filename: string
+  originalFilename: string
+  mimeType: string
+  size: number
+  path: string
+  url: string
+  uploadedBy: string
+  isPublic: boolean
+  tags: string[]
+  metadata?: Record<string, any>
 }
 
 export class File extends AggregateRoot<FileProps> {
   get filename(): string {
-    return this._props.filename;
+    return this._props.filename
   }
 
   get originalFilename(): string {
-    return this._props.originalFilename;
+    return this._props.originalFilename
   }
 
   get mimeType(): string {
-    return this._props.mimeType;
+    return this._props.mimeType
   }
 
   get size(): number {
-    return this._props.size;
+    return this._props.size
   }
 
   get path(): string {
-    return this._props.path;
+    return this._props.path
   }
 
   get url(): string {
-    return this._props.url;
+    return this._props.url
   }
 
   get uploadedBy(): string {
-    return this._props.uploadedBy;
+    return this._props.uploadedBy
   }
 
   get isPublic(): boolean {
-    return this._props.isPublic;
+    return this._props.isPublic
   }
 
   get tags(): string[] {
-    return [...this._props.tags];
+    return [...this._props.tags]
   }
 
   get metadata(): Record<string, any> | undefined {
-    return this._props.metadata ? { ...this._props.metadata } : undefined;
+    return this._props.metadata ? { ...this._props.metadata } : undefined
   }
 
   private constructor(props: FileProps, id?: string) {
-    super(props, id);
+    super(props, id)
   }
 
   /**
    * Create a new file
    */
-  static create(
-    props: Omit<FileProps, 'id' | 'createdAt' | 'updatedAt'>
-  ): Result<File, ValidationError> {
+  static create(props: Omit<FileProps, 'id' | 'createdAt' | 'updatedAt'>): Result<File, ValidationError> {
     // Validations
     if (!props.filename || props.filename.trim().length === 0) {
-      return Result.fail(
-        new ValidationError('Filename is required', 'filename')
-      );
+      return Result.fail(new ValidationError('Filename is required', 'filename'))
     }
 
     if (!props.originalFilename || props.originalFilename.trim().length === 0) {
-      return Result.fail(
-        new ValidationError('Original filename is required', 'originalFilename')
-      );
+      return Result.fail(new ValidationError('Original filename is required', 'originalFilename'))
     }
 
     if (!props.mimeType || props.mimeType.trim().length === 0) {
-      return Result.fail(
-        new ValidationError('MIME type is required', 'mimeType')
-      );
+      return Result.fail(new ValidationError('MIME type is required', 'mimeType'))
     }
 
     // Validate MIME type
-    const fileTypeResult = FileType.create(props.mimeType);
+    const fileTypeResult = FileType.create(props.mimeType)
     if (fileTypeResult.isFailure) {
-      return Result.fail(fileTypeResult.error);
+      return Result.fail(fileTypeResult.error)
     }
 
     if (props.size <= 0) {
-      return Result.fail(
-        new ValidationError('File size must be positive', 'size')
-      );
+      return Result.fail(new ValidationError('File size must be positive', 'size'))
     }
 
     if (!props.path || props.path.trim().length === 0) {
-      return Result.fail(
-        new ValidationError('File path is required', 'path')
-      );
+      return Result.fail(new ValidationError('File path is required', 'path'))
     }
 
     if (!props.url || props.url.trim().length === 0) {
-      return Result.fail(
-        new ValidationError('File URL is required', 'url')
-      );
+      return Result.fail(new ValidationError('File URL is required', 'url'))
     }
 
     if (!props.uploadedBy || props.uploadedBy.trim().length === 0) {
-      return Result.fail(
-        new ValidationError('Uploader ID is required', 'uploadedBy')
-      );
+      return Result.fail(new ValidationError('Uploader ID is required', 'uploadedBy'))
     }
 
     const file = new File(
       {
         ...props,
-        tags: props.tags || [],
+        tags: props.tags || []
       },
       props.id
-    );
+    )
 
     // Emit domain event
     file.addDomainEvent(
@@ -136,11 +120,11 @@ export class File extends AggregateRoot<FileProps> {
         filename: file.filename,
         uploadedBy: file.uploadedBy,
         size: file.size,
-        mimeType: file.mimeType,
+        mimeType: file.mimeType
       })
-    );
+    )
 
-    return Result.ok(file);
+    return Result.ok(file)
   }
 
   /**
@@ -148,13 +132,13 @@ export class File extends AggregateRoot<FileProps> {
    */
   markAsPublic(): Result<void, BusinessRuleError> {
     if (this._props.isPublic) {
-      return Result.fail(new BusinessRuleError('File is already public'));
+      return Result.fail(new BusinessRuleError('File is already public'))
     }
 
-    this._props.isPublic = true;
-    this.touch();
+    this._props.isPublic = true
+    this.touch()
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
@@ -162,64 +146,58 @@ export class File extends AggregateRoot<FileProps> {
    */
   markAsPrivate(): Result<void, BusinessRuleError> {
     if (!this._props.isPublic) {
-      return Result.fail(new BusinessRuleError('File is already private'));
+      return Result.fail(new BusinessRuleError('File is already private'))
     }
 
-    this._props.isPublic = false;
-    this.touch();
+    this._props.isPublic = false
+    this.touch()
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
    * Add a tag to the file
    */
   addTag(tag: string): Result<void, ValidationError> {
-    const normalizedTag = tag.trim().toLowerCase();
+    const normalizedTag = tag.trim().toLowerCase()
 
     if (normalizedTag.length === 0) {
-      return Result.fail(
-        new ValidationError('Tag cannot be empty', 'tag')
-      );
+      return Result.fail(new ValidationError('Tag cannot be empty', 'tag'))
     }
 
     if (this._props.tags.includes(normalizedTag)) {
-      return Result.fail(
-        new ValidationError('Tag already exists', 'tag')
-      );
+      return Result.fail(new ValidationError('Tag already exists', 'tag'))
     }
 
-    this._props.tags.push(normalizedTag);
-    this.touch();
+    this._props.tags.push(normalizedTag)
+    this.touch()
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
    * Remove a tag from the file
    */
   removeTag(tag: string): Result<void, ValidationError> {
-    const normalizedTag = tag.trim().toLowerCase();
-    const index = this._props.tags.indexOf(normalizedTag);
+    const normalizedTag = tag.trim().toLowerCase()
+    const index = this._props.tags.indexOf(normalizedTag)
 
     if (index === -1) {
-      return Result.fail(
-        new ValidationError('Tag does not exist', 'tag')
-      );
+      return Result.fail(new ValidationError('Tag does not exist', 'tag'))
     }
 
-    this._props.tags.splice(index, 1);
-    this.touch();
+    this._props.tags.splice(index, 1)
+    this.touch()
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
    * Update file metadata
    */
   updateMetadata(metadata: Record<string, any>): void {
-    this._props.metadata = { ...metadata };
-    this.touch();
+    this._props.metadata = { ...metadata }
+    this.touch()
   }
 
   /**
@@ -228,11 +206,11 @@ export class File extends AggregateRoot<FileProps> {
   canBeAccessedBy(userId: string): boolean {
     // Public files can be accessed by anyone
     if (this._props.isPublic) {
-      return true;
+      return true
     }
 
     // Private files can only be accessed by the uploader
-    return this._props.uploadedBy === userId;
+    return this._props.uploadedBy === userId
   }
 
   /**
@@ -241,50 +219,50 @@ export class File extends AggregateRoot<FileProps> {
   canBeDeletedBy(userId: string, isAdmin: boolean = false): boolean {
     // Admins can delete any file
     if (isAdmin) {
-      return true;
+      return true
     }
 
     // Only the uploader can delete their own files
-    return this._props.uploadedBy === userId;
+    return this._props.uploadedBy === userId
   }
 
   /**
    * Get file type
    */
   getFileType(): Result<FileType, ValidationError> {
-    return FileType.create(this._props.mimeType);
+    return FileType.create(this._props.mimeType)
   }
 
   /**
    * Check if file is an image
    */
   isImage(): boolean {
-    const fileTypeResult = this.getFileType();
-    return fileTypeResult.isSuccess && fileTypeResult.value.isImage();
+    const fileTypeResult = this.getFileType()
+    return fileTypeResult.isSuccess && fileTypeResult.value.isImage()
   }
 
   /**
    * Check if file is a video
    */
   isVideo(): boolean {
-    const fileTypeResult = this.getFileType();
-    return fileTypeResult.isSuccess && fileTypeResult.value.isVideo();
+    const fileTypeResult = this.getFileType()
+    return fileTypeResult.isSuccess && fileTypeResult.value.isVideo()
   }
 
   /**
    * Check if file is an audio file
    */
   isAudio(): boolean {
-    const fileTypeResult = this.getFileType();
-    return fileTypeResult.isSuccess && fileTypeResult.value.isAudio();
+    const fileTypeResult = this.getFileType()
+    return fileTypeResult.isSuccess && fileTypeResult.value.isAudio()
   }
 
   /**
    * Check if file is a document
    */
   isDocument(): boolean {
-    const fileTypeResult = this.getFileType();
-    return fileTypeResult.isSuccess && fileTypeResult.value.isDocument();
+    const fileTypeResult = this.getFileType()
+    return fileTypeResult.isSuccess && fileTypeResult.value.isDocument()
   }
 
   /**
@@ -295,15 +273,15 @@ export class File extends AggregateRoot<FileProps> {
       new FileDeletedEvent({
         fileId: this.id,
         filename: this.filename,
-        deletedBy,
+        deletedBy
       })
-    );
+    )
   }
 
   toObject(): FileProps & {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
+    id: string
+    createdAt: Date
+    updatedAt: Date
   } {
     return {
       id: this.id,
@@ -318,11 +296,11 @@ export class File extends AggregateRoot<FileProps> {
       tags: this.tags,
       metadata: this.metadata,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    };
+      updatedAt: this.updatedAt
+    }
   }
 
   clone(): File {
-    return new File({ ...this._props }, this._id);
+    return new File({ ...this._props }, this._id)
   }
 }

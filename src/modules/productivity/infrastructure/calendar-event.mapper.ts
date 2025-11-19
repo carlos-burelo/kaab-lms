@@ -2,25 +2,25 @@
  * CalendarEvent Mapper
  */
 
-import type { Mapper } from '@/core/shared/mapper.interface';
-import { CalendarEvent, type CalendarEventProps } from '../domain/calendar-event.entity';
-import type { EventType } from '../domain/value-objects';
-import type { CalendarEvent as PrismaCalendarEvent } from '@prisma/client';
+import type { CalendarEvent as PrismaCalendarEvent } from '@prisma/client'
+import type { Mapper } from '@/core/shared/mapper.interface'
+import { CalendarEvent, type CalendarEventProps } from '../domain/calendar-event.entity'
+import type { EventType } from '../domain/value-objects'
 
 export interface CalendarEventDTO {
-  id: string;
-  userId: string;
-  title: string;
-  description?: string;
-  type: EventType;
-  startDate: Date;
-  endDate: Date;
-  location?: string;
-  color?: string;
-  isAllDay: boolean;
-  reminder?: number;
-  createdAt: Date;
-  updatedAt: Date;
+  id: string
+  userId: string
+  title: string
+  description?: string
+  type: EventType
+  startDate: Date
+  endDate: Date
+  location?: string
+  color?: string
+  isAllDay: boolean
+  reminder?: number
+  createdAt: Date
+  updatedAt: Date
 }
 
 class CalendarEventMapper implements Mapper<CalendarEvent, PrismaCalendarEvent, CalendarEventDTO> {
@@ -38,16 +38,16 @@ class CalendarEventMapper implements Mapper<CalendarEvent, PrismaCalendarEvent, 
       reminder: raw.reminder || undefined,
       id: raw.id,
       createdAt: raw.createdAt,
-      updatedAt: raw.updatedAt,
-    };
-
-    // Use factory method instead of direct instantiation
-    const result = CalendarEvent.create(props);
-    if (result.isFailure) {
-      throw new Error(`Failed to create CalendarEvent entity: ${result.error.message}`);
+      updatedAt: raw.updatedAt
     }
 
-    return result.value;
+    // Use factory method instead of direct instantiation
+    const result = CalendarEvent.create(props)
+    if (result.isFailure) {
+      throw new Error(`Failed to create CalendarEvent entity: ${result.error.message}`)
+    }
+
+    return result.value
   }
 
   toPersistence(entity: CalendarEvent): Omit<PrismaCalendarEvent, 'createdAt' | 'updatedAt'> {
@@ -62,8 +62,8 @@ class CalendarEventMapper implements Mapper<CalendarEvent, PrismaCalendarEvent, 
       location: entity.location || null,
       color: entity.color || null,
       isAllDay: entity.isAllDay,
-      reminder: entity.reminder || null,
-    };
+      reminder: entity.reminder || null
+    }
   }
 
   toDTO(entity: CalendarEvent): CalendarEventDTO {
@@ -80,9 +80,9 @@ class CalendarEventMapper implements Mapper<CalendarEvent, PrismaCalendarEvent, 
       isAllDay: entity.isAllDay,
       reminder: entity.reminder,
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    };
+      updatedAt: entity.updatedAt
+    }
   }
 }
 
-export const calendarEventMapper = new CalendarEventMapper();
+export const calendarEventMapper = new CalendarEventMapper()

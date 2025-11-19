@@ -1,17 +1,17 @@
 import {
   AwardIcon,
   BarChart3,
+  Bell,
   BookMarkedIcon,
   Calendar,
+  DollarSign,
   FolderOpen,
   GitBranch,
-  UsersIcon,
   Megaphone,
   MessageSquare,
-  Bell,
   Star,
-  DollarSign,
-  User
+  User,
+  UsersIcon
 } from 'lucide-react'
 
 export default [

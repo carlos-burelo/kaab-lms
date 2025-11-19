@@ -90,10 +90,10 @@ export async function createEvent(params: z.infer<typeof CreateEventSchema>): Pr
       success: true,
       data: event
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error creating event'
+      error: _error instanceof Error ? _error.message : 'Error creating event'
     }
   }
 }
@@ -153,10 +153,10 @@ export async function getEvents(params: z.infer<typeof GetEventsSchema>): Promis
       success: true,
       data: events
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting events'
+      error: _error instanceof Error ? _error.message : 'Error getting events'
     }
   }
 }
@@ -186,10 +186,10 @@ export async function getEventById(eventId: string): Promise<ActionResponse> {
       success: true,
       data: event
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting event'
+      error: _error instanceof Error ? _error.message : 'Error getting event'
     }
   }
 }
@@ -232,10 +232,10 @@ export async function updateEvent(params: z.infer<typeof UpdateEventSchema>): Pr
       success: true,
       data: event
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error updating event'
+      error: _error instanceof Error ? _error.message : 'Error updating event'
     }
   }
 }
@@ -261,10 +261,10 @@ export async function deleteEvent(eventId: string): Promise<ActionResponse> {
       success: true,
       data: { id: eventId }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error deleting event'
+      error: _error instanceof Error ? _error.message : 'Error deleting event'
     }
   }
 }
@@ -295,10 +295,10 @@ export async function searchEvents(query: string): Promise<ActionResponse> {
       success: true,
       data: results
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error searching events'
+      error: _error instanceof Error ? _error.message : 'Error searching events'
     }
   }
 }
@@ -322,10 +322,10 @@ export async function getUpcomingEvents(days: number = 7): Promise<ActionRespons
       success: true,
       data: events
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting upcoming events'
+      error: _error instanceof Error ? _error.message : 'Error getting upcoming events'
     }
   }
 }
@@ -349,10 +349,10 @@ export async function getMonthStats(year: number, month: number): Promise<Action
       success: true,
       data: stats
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting statistics'
+      error: _error instanceof Error ? _error.message : 'Error getting statistics'
     }
   }
 }
@@ -376,10 +376,10 @@ export async function checkAvailability(startDate: Date, endDate: Date): Promise
       success: true,
       data: { isAvailable }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error checking availability'
+      error: _error instanceof Error ? _error.message : 'Error checking availability'
     }
   }
 }

@@ -895,12 +895,7 @@ export class InstructorRepository extends BaseRepository {
   /**
    * Crea un post en un thread de discusión
    */
-  async createDiscussionPost(data: {
-    threadId: string
-    userId: string
-    content: string
-    parentId?: string | null
-  }) {
+  async createDiscussionPost(data: { threadId: string; userId: string; content: string; parentId?: string | null }) {
     try {
       const post = await this.client.discussionPost.create({
         data: {
@@ -1034,12 +1029,7 @@ export class InstructorRepository extends BaseRepository {
   /**
    * Envía un mensaje en una conversación
    */
-  async sendMessage(data: {
-    conversationId: string
-    senderId: string
-    content: string
-    fileId?: string | null
-  }) {
+  async sendMessage(data: { conversationId: string; senderId: string; content: string; fileId?: string | null }) {
     try {
       const message = await this.client.message.create({
         data: {
@@ -1065,14 +1055,8 @@ export class InstructorRepository extends BaseRepository {
           data: {
             lastMessage: data.content,
             lastMessageAt: new Date(),
-            unreadInitiator:
-              conversation.initiatorId === data.senderId
-                ? conversation.unreadInitiator
-                : { increment: 1 },
-            unreadReceiver:
-              conversation.receiverId === data.senderId
-                ? conversation.unreadReceiver
-                : { increment: 1 }
+            unreadInitiator: conversation.initiatorId === data.senderId ? conversation.unreadInitiator : { increment: 1 },
+            unreadReceiver: conversation.receiverId === data.senderId ? conversation.unreadReceiver : { increment: 1 }
           }
         })
       }
@@ -1265,16 +1249,11 @@ export class InstructorRepository extends BaseRepository {
         }
       })
 
-      const totalRevenue = purchases.reduce(
-        (sum, p) => sum + Number(p.price),
-        0
-      )
+      const totalRevenue = purchases.reduce((sum, p) => sum + Number(p.price), 0)
       const totalPurchases = purchases.length
 
       // Revenue by month (last 12 months)
-      const revenueByMonth = await this.client.$queryRaw<
-        Array<{ month: string; total: number }>
-      >`
+      const revenueByMonth = await this.client.$queryRaw<Array<{ month: string; total: number }>>`
         SELECT
           DATE_FORMAT(p.createdAt, '%Y-%m') as month,
           SUM(p.price) as total

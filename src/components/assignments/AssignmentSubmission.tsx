@@ -52,9 +52,7 @@ export function AssignmentSubmission({ assignment, courseId, studentSubmission }
   })
 
   const isOverdue = new Date() > new Date(assignment.dueDate)
-  const daysOverdue = isOverdue
-    ? Math.floor((Date.now()- new Date(assignment.dueDate).getTime()) / (1000 * 60 * 60 * 24))
-    : null
+  const daysOverdue = isOverdue ? Math.floor((Date.now() - new Date(assignment.dueDate).getTime()) / (1000 * 60 * 60 * 24)) : null
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files

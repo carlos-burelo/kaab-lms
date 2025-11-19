@@ -3,24 +3,24 @@ import { revalidatePath } from 'next/cache'
 import z from 'zod'
 import { courseRepository } from '@/database/repositories'
 import { getSession } from '@/lib/auth'
-import { QuizRepository } from '@/modules/quiz/infrastructure/quiz.repository'
 import {
-  CreateQuizUseCase,
-  UpdateQuizUseCase,
-  GetQuizUseCase,
-  DeleteQuizUseCase,
-  CreateQuestionUseCase,
-  UpdateQuestionUseCase,
-  DeleteQuestionUseCase,
-  CreateAnswerOptionUseCase,
-  UpdateAnswerOptionUseCase,
-  DeleteAnswerOptionUseCase,
-  GetQuizQuestionsForStudentUseCase,
-  StartQuizAttemptUseCase,
-  SaveQuizAnswerUseCase,
   CompleteQuizAttemptUseCase,
+  CreateAnswerOptionUseCase,
+  CreateQuestionUseCase,
+  CreateQuizUseCase,
+  DeleteAnswerOptionUseCase,
+  DeleteQuestionUseCase,
+  DeleteQuizUseCase,
+  GetQuizQuestionsForStudentUseCase,
+  GetQuizUseCase,
   GetUserQuizAttemptsUseCase,
+  SaveQuizAnswerUseCase,
+  StartQuizAttemptUseCase,
+  UpdateAnswerOptionUseCase,
+  UpdateQuestionUseCase,
+  UpdateQuizUseCase
 } from '@/modules/quiz/application/use-cases'
+import { QuizRepository } from '@/modules/quiz/infrastructure/quiz.repository'
 
 /**
  * Quiz Actions
@@ -126,10 +126,10 @@ export async function getQuizById(quizId: string): Promise<ActionResponse> {
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting quiz'
+      error: _error instanceof Error ? _error.message : 'Error getting quiz'
     }
   }
 }
@@ -149,10 +149,10 @@ export async function getQuizByLessonId(lessonId: string): Promise<ActionRespons
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting quiz'
+      error: _error instanceof Error ? _error.message : 'Error getting quiz'
     }
   }
 }
@@ -191,7 +191,7 @@ export async function createQuiz(formData: FormData): Promise<ActionResponse> {
 
     const result = await createQuizUseCase.execute({
       dto: parsed.data,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -204,10 +204,10 @@ export async function createQuiz(formData: FormData): Promise<ActionResponse> {
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error creating quiz'
+      error: _error instanceof Error ? _error.message : 'Error creating quiz'
     }
   }
 }
@@ -239,7 +239,7 @@ export async function updateQuiz(formData: FormData): Promise<ActionResponse> {
 
     const result = await updateQuizUseCase.execute({
       dto: { id, ...updateData },
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -252,10 +252,10 @@ export async function updateQuiz(formData: FormData): Promise<ActionResponse> {
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error updating quiz'
+      error: _error instanceof Error ? _error.message : 'Error updating quiz'
     }
   }
 }
@@ -275,7 +275,7 @@ export async function deleteQuiz(quizId: string): Promise<ActionResponse> {
 
     const result = await deleteQuizUseCase.execute({
       quizId,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -288,10 +288,10 @@ export async function deleteQuiz(quizId: string): Promise<ActionResponse> {
       success: true,
       data: { id: quizId }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error deleting quiz'
+      error: _error instanceof Error ? _error.message : 'Error deleting quiz'
     }
   }
 }
@@ -325,7 +325,7 @@ export async function createQuestion(formData: FormData): Promise<ActionResponse
 
     const result = await createQuestionUseCase.execute({
       ...parsed.data,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -336,10 +336,10 @@ export async function createQuestion(formData: FormData): Promise<ActionResponse
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error creating question'
+      error: _error instanceof Error ? _error.message : 'Error creating question'
     }
   }
 }
@@ -362,7 +362,7 @@ export async function updateQuestion(questionId: string, formData: FormData): Pr
     const result = await updateQuestionUseCase.execute({
       questionId,
       data: obj,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -373,10 +373,10 @@ export async function updateQuestion(questionId: string, formData: FormData): Pr
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error updating question'
+      error: _error instanceof Error ? _error.message : 'Error updating question'
     }
   }
 }
@@ -396,7 +396,7 @@ export async function deleteQuestion(questionId: string): Promise<ActionResponse
 
     const result = await deleteQuestionUseCase.execute({
       questionId,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -407,10 +407,10 @@ export async function deleteQuestion(questionId: string): Promise<ActionResponse
       success: true,
       data: { id: questionId }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error deleting question'
+      error: _error instanceof Error ? _error.message : 'Error deleting question'
     }
   }
 }
@@ -444,7 +444,7 @@ export async function createAnswerOption(formData: FormData): Promise<ActionResp
 
     const result = await createAnswerOptionUseCase.execute({
       ...parsed.data,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -455,10 +455,10 @@ export async function createAnswerOption(formData: FormData): Promise<ActionResp
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error creating answer option'
+      error: _error instanceof Error ? _error.message : 'Error creating answer option'
     }
   }
 }
@@ -481,7 +481,7 @@ export async function updateAnswerOption(optionId: string, formData: FormData): 
     const result = await updateAnswerOptionUseCase.execute({
       optionId,
       data: obj,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -492,10 +492,10 @@ export async function updateAnswerOption(optionId: string, formData: FormData): 
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error updating answer option'
+      error: _error instanceof Error ? _error.message : 'Error updating answer option'
     }
   }
 }
@@ -515,7 +515,7 @@ export async function deleteAnswerOption(optionId: string): Promise<ActionRespon
 
     const result = await deleteAnswerOptionUseCase.execute({
       optionId,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -526,10 +526,10 @@ export async function deleteAnswerOption(optionId: string): Promise<ActionRespon
       success: true,
       data: { id: optionId }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error deleting answer option'
+      error: _error instanceof Error ? _error.message : 'Error deleting answer option'
     }
   }
 }
@@ -553,7 +553,7 @@ export async function getQuizQuestionsForStudent(quizId: string): Promise<Action
 
     const result = await getQuizQuestionsForStudentUseCase.execute({
       quizId,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -564,10 +564,10 @@ export async function getQuizQuestionsForStudent(quizId: string): Promise<Action
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting quiz questions'
+      error: _error instanceof Error ? _error.message : 'Error getting quiz questions'
     }
   }
 }
@@ -579,7 +579,7 @@ export async function startQuizAttempt(userId: string, quizId: string): Promise<
   try {
     const result = await startQuizAttemptUseCase.execute({
       userId,
-      quizId,
+      quizId
     })
 
     if (result.isFailure) {
@@ -590,10 +590,10 @@ export async function startQuizAttempt(userId: string, quizId: string): Promise<
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error starting quiz attempt'
+      error: _error instanceof Error ? _error.message : 'Error starting quiz attempt'
     }
   }
 }
@@ -618,7 +618,7 @@ export async function saveQuizAnswer(formData: FormData): Promise<ActionResponse
       questionId: obj.questionId as string,
       selectedOptionId: obj.selectedOptionId as string | undefined,
       answerText: obj.answerText as string | undefined,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -629,10 +629,10 @@ export async function saveQuizAnswer(formData: FormData): Promise<ActionResponse
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error saving answer'
+      error: _error instanceof Error ? _error.message : 'Error saving answer'
     }
   }
 }
@@ -654,7 +654,7 @@ export async function completeQuizAttempt(attemptId: string, score: number, pass
       attemptId,
       score,
       passed,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -665,10 +665,10 @@ export async function completeQuizAttempt(attemptId: string, score: number, pass
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error completing quiz attempt'
+      error: _error instanceof Error ? _error.message : 'Error completing quiz attempt'
     }
   }
 }
@@ -680,7 +680,7 @@ export async function getUserQuizAttempts(userId: string, quizId: string): Promi
   try {
     const result = await getUserQuizAttemptsUseCase.execute({
       userId,
-      quizId,
+      quizId
     })
 
     if (result.isFailure) {
@@ -691,10 +691,10 @@ export async function getUserQuizAttempts(userId: string, quizId: string): Promi
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error getting quiz attempts'
+      error: _error instanceof Error ? _error.message : 'Error getting quiz attempts'
     }
   }
 }

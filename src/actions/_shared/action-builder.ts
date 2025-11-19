@@ -1,7 +1,7 @@
-import type { z } from "zod"
-import { getServerSession } from "@/lib/auth"
-import type { Result } from "@/core/shared/result"
-import type { Session } from "next-auth"
+import type { Session } from 'next-auth'
+import type { z } from 'zod'
+import type { Result } from '@/core/shared/result'
+import { getServerSession } from '@/lib/auth'
 
 /**
  * Resultado estandarizado para todas las Server Actions
@@ -53,9 +53,7 @@ export type ActionConfig<TInput, TOutput> = {
  * })
  * ```
  */
-export const createAction = <TInput, TOutput>(
-  config: ActionConfig<TInput, TOutput>
-) => {
+export const createAction = <TInput, TOutput>(config: ActionConfig<TInput, TOutput>) => {
   return async (input: TInput): ActionResult<TOutput> => {
     try {
       // 1. Validar autenticación si es requerida
@@ -65,7 +63,7 @@ export const createAction = <TInput, TOutput>(
         if (!user) {
           return {
             success: false,
-            error: "No autorizado. Debes iniciar sesión."
+            error: 'No autorizado. Debes iniciar sesión.'
           }
         }
 
@@ -74,7 +72,7 @@ export const createAction = <TInput, TOutput>(
           if (!config.allowedRoles.includes(user.role)) {
             return {
               success: false,
-              error: "No tienes permisos para realizar esta acción."
+              error: 'No tienes permisos para realizar esta acción.'
             }
           }
         }
@@ -115,15 +113,14 @@ export const createAction = <TInput, TOutput>(
         return { success: true, data: result.value }
       }
       return { success: false, error: result.error.message }
-
-    } catch (error) {
+    } catch (_error) {
       // Log del error para debugging
-      console.error(`[Action Error: ${config.name}]`, error)
+      console.error(`[Action Error: ${config.name}]`, _error)
 
       // Retornar error user-friendly
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Error desconocido al procesar la solicitud."
+        error: _error instanceof Error ? _error.message : 'Error desconocido al procesar la solicitud.'
       }
     }
   }
@@ -133,7 +130,7 @@ export const createAction = <TInput, TOutput>(
  * Helper para crear actions públicas (sin autenticación)
  */
 export const createPublicAction = <TInput, TOutput>(
-  config: Omit<ActionConfig<TInput, TOutput>, "requireAuth" | "allowedRoles">
+  config: Omit<ActionConfig<TInput, TOutput>, 'requireAuth' | 'allowedRoles'>
 ) => {
   return createAction({
     ...config,
@@ -146,7 +143,7 @@ export const createPublicAction = <TInput, TOutput>(
  * Helper para crear actions que solo requieren autenticación (sin restricción de roles)
  */
 export const createAuthenticatedAction = <TInput, TOutput>(
-  config: Omit<ActionConfig<TInput, TOutput>, "requireAuth" | "allowedRoles">
+  config: Omit<ActionConfig<TInput, TOutput>, 'requireAuth' | 'allowedRoles'>
 ) => {
   return createAction({
     ...config,

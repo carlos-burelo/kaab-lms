@@ -2,7 +2,7 @@
  * Upload File DTO
  */
 
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const UploadFileSchema = z.object({
   filename: z.string().min(1, 'Filename is required'),
@@ -14,7 +14,7 @@ export const UploadFileSchema = z.object({
   uploadedBy: z.string().min(1, 'Uploader ID is required'),
   isPublic: z.boolean().default(false),
   tags: z.array(z.string()).default([]),
-  metadata: z.record(z.any()).optional(),
-});
+  metadata: z.record(z.any()).optional()
+})
 
-export type UploadFileDTO = z.infer<typeof UploadFileSchema>;
+export type UploadFileDTO = z.infer<typeof UploadFileSchema>

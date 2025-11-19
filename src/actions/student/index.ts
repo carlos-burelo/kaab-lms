@@ -3,23 +3,19 @@
  * Barrel export de todas las actions de estudiante
  */
 
-// Enrollment
-export * from "./enrollment.actions"
-
-// Gamification
-export * from "./gamification.actions"
+// Assignment
+export * from './assignment.actions'
+// Calendar
+export * from './calendar.actions'
 
 // Certificate
-export * from "./certificate.actions"
-
-// Assignment
-export * from "./assignment.actions"
-
+export * from './certificate.actions'
+// Enrollment
+export * from './enrollment.actions'
+// Gamification
+export * from './gamification.actions'
 // Quiz
-export * from "./quiz.actions"
-
-// Calendar
-export * from "./calendar.actions"
+export * from './quiz.actions'
 
 // Tasks
-export * from "./task.actions"
+export * from './task.actions'

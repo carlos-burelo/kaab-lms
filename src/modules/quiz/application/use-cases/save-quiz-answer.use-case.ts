@@ -3,32 +3,29 @@
  * Saves a student's answer to a quiz question
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { prisma } from '@/lib/prisma';
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import { prisma } from '@/lib/prisma'
 
 interface SaveQuizAnswerRequest {
-  attemptId: string;
-  questionId: string;
-  selectedOptionId?: string;
-  answerText?: string;
-  currentUserId: string;
+  attemptId: string
+  questionId: string
+  selectedOptionId?: string
+  answerText?: string
+  currentUserId: string
 }
 
 interface QuizAnswerDTO {
-  id: string;
-  attemptId: string;
-  questionId: string;
-  selectedOptionId?: string;
-  answerText?: string;
+  id: string
+  attemptId: string
+  questionId: string
+  selectedOptionId?: string
+  answerText?: string
 }
 
-export class SaveQuizAnswerUseCase extends BaseUseCase<
-  SaveQuizAnswerRequest,
-  QuizAnswerDTO
-> {
+export class SaveQuizAnswerUseCase extends BaseUseCase<SaveQuizAnswerRequest, QuizAnswerDTO> {
   async execute(request: SaveQuizAnswerRequest): Promise<Result<QuizAnswerDTO>> {
-    const { attemptId, questionId, selectedOptionId, answerText } = request;
+    const { attemptId, questionId, selectedOptionId, answerText } = request
 
     try {
       // Upsert answer (update if exists, create if not)
@@ -36,32 +33,30 @@ export class SaveQuizAnswerUseCase extends BaseUseCase<
         where: {
           attemptId_questionId: {
             attemptId,
-            questionId,
-          },
+            questionId
+          }
         },
         update: {
           selectedOptionId,
-          answerText,
+          answerText
         },
         create: {
           attemptId,
           questionId,
           selectedOptionId,
-          answerText,
-        },
-      });
+          answerText
+        }
+      })
 
       return Result.ok({
         id: answer.id,
         attemptId: answer.attemptId,
         questionId: answer.questionId,
         selectedOptionId: answer.selectedOptionId || undefined,
-        answerText: answer.answerText || undefined,
-      });
+        answerText: answer.answerText || undefined
+      })
     } catch (error) {
-      return Result.fail(
-        new Error(`Failed to save quiz answer: ${(error as Error).message}`)
-      );
+      return Result.fail(new Error(`Failed to save quiz answer: ${(error as Error).message}`))
     }
   }
 }

@@ -1,15 +1,13 @@
-import { BookOpen, Users, TrendingUp, Star, BarChart3, Target } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
+import { BarChart3, BookOpen, Star, Target, TrendingUp, Users } from 'lucide-react'
 import { getInstructorStats } from '@/actions/instructor.actions'
+import { Card, CardContent } from '@/components/ui/card'
 
 export async function StatsCards() {
   const result = await getInstructorStats()
 
   if (!result.success || !result.data) {
     return (
-      <div className='p-4 border rounded-md bg-card text-center text-sm text-muted-foreground'>
-        Error cargando estadísticas
-      </div>
+      <div className='p-4 border rounded-md bg-card text-center text-sm text-muted-foreground'>Error cargando estadísticas</div>
     )
   }
 

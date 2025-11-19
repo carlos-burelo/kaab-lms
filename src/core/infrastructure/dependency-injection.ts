@@ -3,44 +3,40 @@
  * Simple IoC container for managing dependencies
  */
 
-type Constructor<T> = new (...args: unknown[]) => T;
-type Factory<T> = () => T;
-type Dependency<T> = Constructor<T> | Factory<T>;
+type Constructor<T> = new (...args: unknown[]) => T
+type Factory<T> = () => T
+type Dependency<T> = Constructor<T> | Factory<T>
 
 interface Registration<T> {
-  dependency: Dependency<T>;
-  singleton: boolean;
-  instance?: T;
+  dependency: Dependency<T>
+  singleton: boolean
+  instance?: T
 }
 
 export class Container {
-  private registry: Map<string | symbol, Registration<unknown>>;
+  private registry: Map<string | symbol, Registration<unknown>>
 
   private constructor() {
-    this.registry = new Map();
+    this.registry = new Map()
   }
 
   static getInstance(): Container {
     if (!Container.instance) {
-      Container.instance = new Container();
+      Container.instance = new Container()
     }
-    return Container.instance;
+    return Container.instance
   }
 
   /**
    * Register a dependency
    */
-  register<T>(
-    token: string | symbol,
-    dependency: Dependency<T>,
-    options: { singleton?: boolean } = {}
-  ): void {
-    const { singleton = true } = options;
+  register<T>(token: string | symbol, dependency: Dependency<T>, options: { singleton?: boolean } = {}): void {
+    const { singleton = true } = options
 
     this.registry.set(token, {
       dependency,
-      singleton,
-    });
+      singleton
+    })
   }
 
   /**
@@ -50,85 +46,81 @@ export class Container {
     this.registry.set(token, {
       dependency: () => instance,
       singleton: true,
-      instance,
-    });
+      instance
+    })
   }
 
   /**
    * Resolve a dependency
    */
   resolve<T>(token: string | symbol): T {
-    const registration = this.registry.get(token) as
-      | Registration<T>
-      | undefined;
+    const registration = this.registry.get(token) as Registration<T> | undefined
 
     if (!registration) {
-      throw new Error(`Dependency not found for token: ${String(token)}`);
+      throw new Error(`Dependency not found for token: ${String(token)}`)
     }
 
     // Return cached instance if singleton
     if (registration.singleton && registration.instance) {
-      return registration.instance;
+      return registration.instance
     }
 
     // Create new instance
-    const instance = this.createInstance(registration.dependency);
+    const instance = this.createInstance(registration.dependency)
 
     // Cache if singleton
     if (registration.singleton) {
-      registration.instance = instance;
+      registration.instance = instance
     }
 
-    return instance;
+    return instance
   }
 
   /**
    * Check if a dependency is registered
    */
   has(token: string | symbol): boolean {
-    return this.registry.has(token);
+    return this.registry.has(token)
   }
 
   /**
    * Clear a specific registration
    */
   clear(token: string | symbol): void {
-    this.registry.delete(token);
+    this.registry.delete(token)
   }
 
   /**
    * Clear all registrations
    */
   clearAll(): void {
-    this.registry.clear();
+    this.registry.clear()
   }
 
   private createInstance<T>(dependency: Dependency<T>): T {
     if (this.isConstructor(dependency)) {
-      return new dependency();
+      return new dependency()
     } else {
-      return dependency();
+      return dependency()
     }
   }
 
-  private isConstructor<T>(
-    dependency: Dependency<T>
-  ): dependency is Constructor<T> {
-    return dependency.prototype !== undefined;
+  private isConstructor<T>(dependency: Dependency<T>): dependency is Constructor<T> {
+    return dependency.prototype !== undefined
   }
 
   /**
    * Get all registered tokens
    */
   getRegisteredTokens(): (string | symbol)[] {
-    return Array.from(this.registry.keys());
+    return Array.from(this.registry.keys())
   }
 }
 
 /**
  * Singleton instance
  */
-export const container = Container.getInstance();
+export const container = Container.getInstance()
 
 /**
  * Tokens for common dependencies
@@ -277,34 +269,27 @@ export const TOKENS = {
   GET_FILE_USE_CASE: Symbol.for('GetFileUseCase'),
   UPDATE_FILE_USE_CASE: Symbol.for('UpdateFileUseCase'),
   DELETE_FILE_USE_CASE: Symbol.for('DeleteFileUseCase'),
-  SEARCH_FILES_USE_CASE: Symbol.for('SearchFilesUseCase'),
-} as const;
+  SEARCH_FILES_USE_CASE: Symbol.for('SearchFilesUseCase')
+} as const
 
 /**
  * Decorator for dependency injection
  */
 export function injectable(token: string | symbol) {
-  return <T extends { new (...args: unknown[]): unknown }>(
-    ctor: T
-  ) => {
-    container.register(token, ctor);
-    return ctor;
-  };
+  return <T extends { new (...args: unknown[]): unknown }>(ctor: T) => {
+    container.register(token, ctor)
+    return ctor
+  }
 }
 
 /**
  * Decorator for injecting dependencies
  */
 export function inject(token: string | symbol) {
-  return (
-    target: unknown,
-    _propertyKey: string,
-    parameterIndex: number
-  ) => {
+  return (target: unknown, _propertyKey: string, parameterIndex: number) => {
     // Store metadata for later injection
-    const existingInjections =
-      Reflect.getMetadata('injections', target) || {};
-    existingInjections[parameterIndex] = token;
-    Reflect.defineMetadata('injections', existingInjections, target);
-  };
+    const existingInjections = Reflect.getMetadata('injections', target) || {}
+    existingInjections[parameterIndex] = token
+    Reflect.defineMetadata('injections', existingInjections, target)
+  }
 }

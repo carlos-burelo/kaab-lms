@@ -2,45 +2,36 @@
  * Create Quiz Use Case
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import {
-  DuplicateEntityError,
-} from '@/core/shared/errors';
-import { Quiz } from '../../domain/quiz.entity';
-import type { IQuizRepository } from '../../domain/quiz.repository.interface';
-import type { CreateQuizDTO } from '../dtos';
-import { type QuizDTO, quizMapper } from '../../infrastructure/quiz.mapper';
+import { DuplicateEntityError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import { Quiz } from '../../domain/quiz.entity'
+import type { IQuizRepository } from '../../domain/quiz.repository.interface'
+import { type QuizDTO, quizMapper } from '../../infrastructure/quiz.mapper'
+import type { CreateQuizDTO } from '../dtos'
 
 interface CreateQuizRequest {
-  dto: CreateQuizDTO;
-  currentUserId: string;
+  dto: CreateQuizDTO
+  currentUserId: string
 }
 
-export class CreateQuizUseCase extends BaseUseCase<
-  CreateQuizRequest,
-  QuizDTO
-> {
+export class CreateQuizUseCase extends BaseUseCase<CreateQuizRequest, QuizDTO> {
   constructor(private quizRepository: IQuizRepository) {
-    super();
+    super()
   }
 
   async execute(request: CreateQuizRequest): Promise<Result<QuizDTO>> {
-    const { dto } = request;
+    const { dto } = request
 
     // Check if lesson already has a quiz
-    const lessonHasQuizResult = await this.quizRepository.lessonHasQuiz(
-      dto.lessonId
-    );
+    const lessonHasQuizResult = await this.quizRepository.lessonHasQuiz(dto.lessonId)
 
     if (lessonHasQuizResult.isFailure) {
-      return Result.fail(lessonHasQuizResult.error);
+      return Result.fail(lessonHasQuizResult.error)
     }
 
     if (lessonHasQuizResult.value) {
-      return Result.fail(
-        new DuplicateEntityError('Quiz', 'lessonId', dto.lessonId)
-      );
+      return Result.fail(new DuplicateEntityError('Quiz', 'lessonId', dto.lessonId))
     }
 
     // Create quiz entity
@@ -53,23 +44,23 @@ export class CreateQuizUseCase extends BaseUseCase<
       passingScore: dto.passingScore,
       maxAttempts: dto.maxAttempts,
       showAnswers: dto.showAnswers,
-      shuffleQuestions: dto.shuffleQuestions,
-    });
+      shuffleQuestions: dto.shuffleQuestions
+    })
 
     if (quizResult.isFailure) {
-      return Result.fail(quizResult.error);
+      return Result.fail(quizResult.error)
     }
 
     // Save to repository
-    const savedResult = await this.quizRepository.save(quizResult.value);
+    const savedResult = await this.quizRepository.save(quizResult.value)
 
     if (savedResult.isFailure) {
-      return Result.fail(savedResult.error);
+      return Result.fail(savedResult.error)
     }
 
     // Map to DTO
-    const quizDTO = quizMapper.toDTO(savedResult.value);
+    const quizDTO = quizMapper.toDTO(savedResult.value)
 
-    return Result.ok(quizDTO);
+    return Result.ok(quizDTO)
   }
 }

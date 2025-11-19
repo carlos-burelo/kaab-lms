@@ -1,4 +1,4 @@
-import { BarChart3, Users, BookOpen, Activity, Settings } from 'lucide-react'
+import { Activity, BarChart3, BookOpen, Settings, Users } from 'lucide-react'
 
 export default [
   {

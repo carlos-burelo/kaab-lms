@@ -1,21 +1,14 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table'
+import { Lock, MessageSquare, Pin } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
+import { getDiscussionThreads } from '@/actions/instructor/forum.actions'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MessageSquare, Pin, Lock } from 'lucide-react'
-import { getDiscussionThreads } from '@/actions/instructor/forum.actions'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 type Thread = {
   id: string
@@ -50,9 +43,7 @@ export default function ForumsPage() {
     <>
       <header className='border-b border-border p-4'>
         <h1 className='text-2xl font-bold text-foreground'>Foros de Discusión</h1>
-        <p className='text-sm text-muted-foreground'>
-          Participa en las discusiones de tus cursos
-        </p>
+        <p className='text-sm text-muted-foreground'>Participa en las discusiones de tus cursos</p>
       </header>
       <main className='p-4'>
         {loading ? (
@@ -103,15 +94,9 @@ export default function ForumsPage() {
                           {thread.isClosed ? 'Cerrado' : 'Abierto'}
                         </Badge>
                       </TableCell>
+                      <TableCell>{format(new Date(thread.createdAt), 'dd/MM/yyyy', { locale: es })}</TableCell>
                       <TableCell>
-                        {format(new Date(thread.createdAt), 'dd/MM/yyyy', { locale: es })}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant='ghost'
-                          size='sm'
-                          onClick={() => router.push(`/instructor/foros/${thread.id}`)}
-                        >
+                        <Button variant='ghost' size='sm' onClick={() => router.push(`/instructor/foros/${thread.id}`)}>
                           Ver
                         </Button>
                       </TableCell>

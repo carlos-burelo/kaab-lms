@@ -2,8 +2,8 @@
  * Update Calendar Event DTO
  */
 
-import { z } from 'zod';
-import { EventType } from '../../domain/value-objects';
+import { z } from 'zod'
+import { EventType } from '../../domain/value-objects'
 
 export const UpdateEventSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200, 'Title must be less than 200 characters').optional(),
@@ -14,7 +14,7 @@ export const UpdateEventSchema = z.object({
   location: z.string().optional().nullable(),
   color: z.string().optional().nullable(),
   isAllDay: z.boolean().optional(),
-  reminder: z.number().int().positive().optional().nullable(),
-});
+  reminder: z.number().int().positive().optional().nullable()
+})
 
-export type UpdateEventDTO = z.infer<typeof UpdateEventSchema>;
+export type UpdateEventDTO = z.infer<typeof UpdateEventSchema>

@@ -1,15 +1,15 @@
 'use client'
 
-import { MessageCircleIcon, PlusIcon, MessageSquareIcon, UserIcon } from 'lucide-react'
+import { formatDistanceToNow } from 'date-fns'
+import { es } from 'date-fns/locale'
+import { MessageCircleIcon, MessageSquareIcon, PlusIcon, UserIcon } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import { getDiscussionThreads, createDiscussionThread } from '@/actions/student/discussion.actions'
+import { toast } from 'sonner'
+import { createDiscussionThread, getDiscussionThreads } from '@/actions/student/discussion.actions'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { toast } from 'sonner'
-import { formatDistanceToNow } from 'date-fns'
-import { es } from 'date-fns/locale'
 
 interface CourseDiscussionZoneProps {
   courseId: string
@@ -81,9 +81,7 @@ export function CourseDiscussionZone({ courseId }: CourseDiscussionZoneProps) {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Crear nuevo tema</DialogTitle>
-              <DialogDescription>
-                Inicia una nueva discusión con tus compañeros
-              </DialogDescription>
+              <DialogDescription>Inicia una nueva discusión con tus compañeros</DialogDescription>
             </DialogHeader>
             <div className='space-y-4'>
               <div>
@@ -114,28 +112,17 @@ export function CourseDiscussionZone({ courseId }: CourseDiscussionZoneProps) {
       {threads.length === 0 ? (
         <div className='text-center py-8'>
           <MessageCircleIcon className='h-12 w-12 mx-auto text-muted-foreground mb-2' />
-          <p className='text-sm text-muted-foreground'>
-            No hay discusiones aún. ¡Sé el primero en iniciar una!
-          </p>
+          <p className='text-sm text-muted-foreground'>No hay discusiones aún. ¡Sé el primero en iniciar una!</p>
         </div>
       ) : (
         <div className='space-y-2'>
           {threads.map((thread) => (
-            <div
-              key={thread.id}
-              className='p-3 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer'
-            >
+            <div key={thread.id} className='p-3 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer'>
               <div className='flex items-start gap-2'>
-                {thread.isPinned && (
-                  <div className='w-1 h-full bg-primary rounded-full' />
-                )}
+                {thread.isPinned && <div className='w-1 h-full bg-primary rounded-full' />}
                 <div className='flex-1 min-w-0'>
                   <h4 className='font-medium text-sm truncate'>{thread.title}</h4>
-                  {thread.description && (
-                    <p className='text-xs text-muted-foreground line-clamp-1 mt-1'>
-                      {thread.description}
-                    </p>
-                  )}
+                  {thread.description && <p className='text-xs text-muted-foreground line-clamp-1 mt-1'>{thread.description}</p>}
                   <div className='flex items-center gap-3 mt-2 text-xs text-muted-foreground'>
                     <div className='flex items-center gap-1'>
                       <UserIcon className='w-3 h-3' />

@@ -3,42 +3,42 @@
  * Retrieves all assignment submissions for a student in a specific course
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { prisma } from '@/lib/prisma';
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import { prisma } from '@/lib/prisma'
 
 interface GetStudentAssignmentSubmissionsRequest {
-  courseId: string;
-  currentUserId: string;
+  courseId: string
+  currentUserId: string
 }
 
 interface StudentSubmissionDTO {
-  id: string;
-  assignmentId: string;
-  assignmentTitle: string;
-  lessonTitle: string;
-  moduleTitle: string;
-  content?: string;
-  fileId?: string;
-  fileName?: string;
-  score?: number;
-  maxScore: number;
-  feedback?: string;
-  status: string;
-  submittedAt: Date;
-  gradedAt?: Date;
-  dueDate: Date;
-  isLate: boolean;
+  id: string
+  assignmentId: string
+  assignmentTitle: string
+  lessonTitle: string
+  moduleTitle: string
+  content?: string
+  fileId?: string
+  fileName?: string
+  score?: number
+  maxScore: number
+  feedback?: string
+  status: string
+  submittedAt: Date
+  gradedAt?: Date
+  dueDate: Date
+  isLate: boolean
 }
 
 interface StudentAssignmentSubmissionsResponse {
-  courseId: string;
-  courseTitle: string;
-  submissions: StudentSubmissionDTO[];
-  totalSubmissions: number;
-  gradedCount: number;
-  pendingCount: number;
-  averageScore: number;
+  courseId: string
+  courseTitle: string
+  submissions: StudentSubmissionDTO[]
+  totalSubmissions: number
+  gradedCount: number
+  pendingCount: number
+  averageScore: number
 }
 
 export class GetStudentAssignmentSubmissionsUseCase extends BaseUseCase<
@@ -46,17 +46,17 @@ export class GetStudentAssignmentSubmissionsUseCase extends BaseUseCase<
   StudentAssignmentSubmissionsResponse
 > {
   async execute(request: GetStudentAssignmentSubmissionsRequest): Promise<Result<StudentAssignmentSubmissionsResponse>> {
-    const { courseId, currentUserId } = request;
+    const { courseId, currentUserId } = request
 
     try {
       // Get course info
       const course = await prisma.course.findUnique({
         where: { id: courseId },
-        select: { id: true, title: true },
-      });
+        select: { id: true, title: true }
+      })
 
       if (!course) {
-        return Result.fail(new Error('Course not found'));
+        return Result.fail(new Error('Course not found'))
       }
 
       // Get all student's submissions for assignments in this course
@@ -66,29 +66,29 @@ export class GetStudentAssignmentSubmissionsUseCase extends BaseUseCase<
           assignment: {
             lesson: {
               module: {
-                courseId,
-              },
-            },
-          },
+                courseId
+              }
+            }
+          }
         },
         include: {
           assignment: {
             include: {
               lesson: {
                 include: {
-                  module: true,
-                },
-              },
-            },
+                  module: true
+                }
+              }
+            }
           },
-          files: true,
+          files: true
         },
-        orderBy: { submittedAt: 'desc' },
-      });
+        orderBy: { submittedAt: 'desc' }
+      })
 
       // Map to DTOs
       const submissionDTOs: StudentSubmissionDTO[] = submissions.map((sub) => {
-        const isLate = sub.submittedAt > sub.assignment.dueDate;
+        const isLate = sub.submittedAt > sub.assignment.dueDate
 
         return {
           id: sub.id,
@@ -106,17 +106,17 @@ export class GetStudentAssignmentSubmissionsUseCase extends BaseUseCase<
           submittedAt: sub.submittedAt,
           gradedAt: sub.gradedAt || undefined,
           dueDate: sub.assignment.dueDate,
-          isLate,
-        };
-      });
+          isLate
+        }
+      })
 
       // Calculate statistics
-      const gradedSubmissions = submissions.filter((s) => s.status === 'GRADED');
-      const pendingSubmissions = submissions.filter((s) => s.status === 'SUBMITTED' || s.status === 'IN_REVIEW');
+      const gradedSubmissions = submissions.filter((s) => s.status === 'GRADED')
+      const pendingSubmissions = submissions.filter((s) => s.status === 'SUBMITTED' || s.status === 'IN_REVIEW')
       const averageScore =
         gradedSubmissions.length > 0
           ? gradedSubmissions.reduce((sum, s) => sum + (s.score || 0), 0) / gradedSubmissions.length
-          : 0;
+          : 0
 
       return Result.ok({
         courseId: course.id,
@@ -125,12 +125,10 @@ export class GetStudentAssignmentSubmissionsUseCase extends BaseUseCase<
         totalSubmissions: submissions.length,
         gradedCount: gradedSubmissions.length,
         pendingCount: pendingSubmissions.length,
-        averageScore: Math.round(averageScore * 100) / 100,
-      });
+        averageScore: Math.round(averageScore * 100) / 100
+      })
     } catch (error) {
-      return Result.fail(
-        new Error(`Failed to get student assignment submissions: ${(error as Error).message}`)
-      );
+      return Result.fail(new Error(`Failed to get student assignment submissions: ${(error as Error).message}`))
     }
   }
 }

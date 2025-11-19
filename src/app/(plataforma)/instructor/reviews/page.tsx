@@ -1,27 +1,14 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
 import { Star } from 'lucide-react'
-import { getReviews } from '@/actions/instructor/course.actions'
-import { getMyCourses } from '@/actions/instructor/course.actions'
+import { useCallback, useEffect, useState } from 'react'
+import { getMyCourses, getReviews } from '@/actions/instructor/course.actions'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type Review = {
   id: string
@@ -45,10 +32,7 @@ export default function ReviewsPage() {
   const [loading, setLoading] = useState(true)
 
   const loadData = useCallback(async () => {
-    const [reviewsResult, coursesResult] = await Promise.all([
-      getReviews(),
-      getMyCourses()
-    ])
+    const [reviewsResult, coursesResult] = await Promise.all([getReviews(), getMyCourses()])
 
     if (reviewsResult.success && reviewsResult.data) {
       setReviews(reviewsResult.data as any)
@@ -67,24 +51,20 @@ export default function ReviewsPage() {
 
   const filteredReviews = reviews.filter((review) => {
     const courseMatch = selectedCourse === 'all' || review.course.id === selectedCourse
-    const ratingMatch =
-      selectedRating === 'all' || review.rating.toString() === selectedRating
+    const ratingMatch = selectedRating === 'all' || review.rating.toString() === selectedRating
     return courseMatch && ratingMatch
   })
 
   const averageRating =
     filteredReviews.length > 0
-      ? (
-          filteredReviews.reduce((sum, r) => sum + r.rating, 0) / filteredReviews.length
-        ).toFixed(1)
+      ? (filteredReviews.reduce((sum, r) => sum + r.rating, 0) / filteredReviews.length).toFixed(1)
       : '0.0'
 
   const ratingDistribution = [5, 4, 3, 2, 1].map((rating) => ({
     rating,
     count: filteredReviews.filter((r) => r.rating === rating).length,
     percentage: filteredReviews.length
-      ? (filteredReviews.filter((r) => r.rating === rating).length / filteredReviews.length) *
-        100
+      ? (filteredReviews.filter((r) => r.rating === rating).length / filteredReviews.length) * 100
       : 0
   }))
 
@@ -96,9 +76,7 @@ export default function ReviewsPage() {
     <>
       <header className='border-b border-border p-4'>
         <h1 className='text-2xl font-bold text-foreground'>Reseñas de Cursos</h1>
-        <p className='text-sm text-muted-foreground'>
-          Revisa el feedback de tus estudiantes
-        </p>
+        <p className='text-sm text-muted-foreground'>Revisa el feedback de tus estudiantes</p>
       </header>
       <main className='p-4 space-y-6'>
         {/* Stats Cards */}
@@ -112,9 +90,7 @@ export default function ReviewsPage() {
                 {averageRating}
                 <Star className='h-6 w-6 fill-yellow-400 text-yellow-400' />
               </div>
-              <p className='text-xs text-muted-foreground mt-1'>
-                De {filteredReviews.length} reseñas
-              </p>
+              <p className='text-xs text-muted-foreground mt-1'>De {filteredReviews.length} reseñas</p>
             </CardContent>
           </Card>
 
@@ -141,14 +117,9 @@ export default function ReviewsPage() {
                     <span className='w-3'>{item.rating}</span>
                     <Star className='h-3 w-3 fill-yellow-400 text-yellow-400' />
                     <div className='flex-1 bg-muted rounded-full h-2'>
-                      <div
-                        className='bg-yellow-400 h-2 rounded-full'
-                        style={{ width: `${item.percentage}%` }}
-                      />
+                      <div className='bg-yellow-400 h-2 rounded-full' style={{ width: `${item.percentage}%` }} />
                     </div>
-                    <span className='text-muted-foreground w-8 text-right'>
-                      {item.count}
-                    </span>
+                    <span className='text-muted-foreground w-8 text-right'>{item.count}</span>
                   </div>
                 ))}
               </div>
@@ -222,9 +193,7 @@ export default function ReviewsPage() {
                       <div className='flex items-center justify-between mb-2'>
                         <div>
                           <p className='font-medium'>{review.user.profile.name}</p>
-                          <p className='text-sm text-muted-foreground'>
-                            {review.course.title}
-                          </p>
+                          <p className='text-sm text-muted-foreground'>{review.course.title}</p>
                         </div>
                         <div className='flex items-center gap-2'>
                           <Badge variant='outline'>
@@ -241,17 +210,11 @@ export default function ReviewsPage() {
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
-                            className={`h-4 w-4 ${
-                              i < review.rating
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-muted'
-                            }`}
+                            className={`h-4 w-4 ${i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted'}`}
                           />
                         ))}
                       </div>
-                      {review.comment && (
-                        <p className='text-sm text-foreground mt-2'>{review.comment}</p>
-                      )}
+                      {review.comment && <p className='text-sm text-foreground mt-2'>{review.comment}</p>}
                     </div>
                   </div>
                 </CardContent>

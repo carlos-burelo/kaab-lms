@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
-import { getProfile, getLearningStats } from '@/actions/profile.actions'
-import { getSession } from '@/lib/auth'
+import { getLearningStats, getProfile } from '@/actions/profile.actions'
 import { ProfileForm } from '@/components/profile/ProfileForm'
 import { ProfileStats } from '@/components/profile/ProfileStats'
-import { Card, CardContent, CardHeader, } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { redirect } from 'next/navigation'
+import { getSession } from '@/lib/auth'
 
 export const metadata: Metadata = {
   title: 'Mi Perfil',

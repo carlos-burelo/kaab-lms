@@ -3,27 +3,24 @@
  * Retrieves revenue data for instructor's paid courses
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { prisma } from '@/lib/prisma';
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import { prisma } from '@/lib/prisma'
 
 interface GetRevenueDataRequest {
-  instructorId: string;
+  instructorId: string
 }
 
 export interface RevenueDataDTO {
-  courseId: string;
-  title: string;
-  revenue: number;
-  enrollments: number;
+  courseId: string
+  title: string
+  revenue: number
+  enrollments: number
 }
 
-export class GetRevenueDataUseCase extends BaseUseCase<
-  GetRevenueDataRequest,
-  RevenueDataDTO[]
-> {
+export class GetRevenueDataUseCase extends BaseUseCase<GetRevenueDataRequest, RevenueDataDTO[]> {
   async execute(request: GetRevenueDataRequest): Promise<Result<RevenueDataDTO[]>> {
-    const { instructorId } = request;
+    const { instructorId } = request
 
     try {
       const courses = await prisma.course.findMany({
@@ -31,11 +28,11 @@ export class GetRevenueDataUseCase extends BaseUseCase<
         include: {
           _count: {
             select: {
-              enrollments: true,
-            },
-          },
-        },
-      });
+              enrollments: true
+            }
+          }
+        }
+      })
 
       const revenueData: RevenueDataDTO[] = courses
         .filter((c) => c.price !== null && c.price !== undefined && Number(c.price) > 0)
@@ -43,15 +40,13 @@ export class GetRevenueDataUseCase extends BaseUseCase<
           courseId: course.id,
           title: course.title,
           revenue: course.price ? Number(course.price) * course._count.enrollments : 0,
-          enrollments: course._count.enrollments,
+          enrollments: course._count.enrollments
         }))
-        .sort((a, b) => b.revenue - a.revenue);
+        .sort((a, b) => b.revenue - a.revenue)
 
-      return Result.ok(revenueData);
+      return Result.ok(revenueData)
     } catch (error) {
-      return Result.fail(
-        new Error(`Failed to get revenue data: ${(error as Error).message}`)
-      );
+      return Result.fail(new Error(`Failed to get revenue data: ${(error as Error).message}`))
     }
   }
 }

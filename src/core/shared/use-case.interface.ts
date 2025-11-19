@@ -3,20 +3,18 @@
  * Represents an application-specific business rule
  */
 
-import { Result } from './result';
+import { Result } from './result'
 
 export interface UseCase<TRequest, TResponse> {
-  execute(request: TRequest): Promise<Result<TResponse>>;
+  execute(request: TRequest): Promise<Result<TResponse>>
 }
 
 /**
  * Base Use Case Class
  * Provides common functionality for all use cases
  */
-export abstract class BaseUseCase<TRequest, TResponse>
-  implements UseCase<TRequest, TResponse>
-{
-  abstract execute(request: TRequest): Promise<Result<TResponse>>;
+export abstract class BaseUseCase<TRequest, TResponse> implements UseCase<TRequest, TResponse> {
+  abstract execute(request: TRequest): Promise<Result<TResponse>>
 
   /**
    * Validates the request
@@ -24,6 +22,6 @@ export abstract class BaseUseCase<TRequest, TResponse>
    */
   protected async validate(_request: TRequest): Promise<Result<void>> {
     // Override in subclasses
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 }

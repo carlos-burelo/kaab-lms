@@ -1,28 +1,16 @@
 'use client'
 
-import { useCallback, useEffect, useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table'
+import { Eye, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState, useTransition } from 'react'
+import { toast } from 'sonner'
+import { deleteAnnouncement, getAnnouncements } from '@/actions/instructor/announcement.actions'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { MoreHorizontal, Pencil, Trash2, Eye } from 'lucide-react'
-import { getAnnouncements, deleteAnnouncement } from '@/actions/instructor/announcement.actions'
-import { toast } from 'sonner'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 type Announcement = {
   id: string
@@ -105,9 +93,7 @@ export function AnnouncementsDataTable() {
                 <TableCell>
                   <Badge variant='outline'>{announcement.placement}</Badge>
                 </TableCell>
-                <TableCell>
-                  {announcement.targetCourse?.title || 'Global'}
-                </TableCell>
+                <TableCell>{announcement.targetCourse?.title || 'Global'}</TableCell>
                 <TableCell>
                   {format(new Date(announcement.startDate), 'dd/MM/yyyy', {
                     locale: es
@@ -137,11 +123,7 @@ export function AnnouncementsDataTable() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align='end'>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          router.push(`/instructor/anuncios/${announcement.id}`)
-                        }
-                      >
+                      <DropdownMenuItem onClick={() => router.push(`/instructor/anuncios/${announcement.id}`)}>
                         <Pencil className='mr-2 h-4 w-4' />
                         Editar
                       </DropdownMenuItem>

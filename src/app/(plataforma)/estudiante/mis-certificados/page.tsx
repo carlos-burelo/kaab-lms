@@ -1,8 +1,8 @@
+import { BadgeCheckIcon } from 'lucide-react'
+import { redirect } from 'next/navigation'
 import { getCertificates } from '@/actions/student/certificate.actions'
 import { EmptyState } from '@/components/ui/empty'
-import { BadgeCheckIcon } from 'lucide-react'
 import { CertificatesList } from './components/CertificatesList'
-import { redirect } from 'next/navigation'
 
 export const metadata = {
   title: 'Mis Certificados - KAAB LMS',
@@ -22,9 +22,7 @@ export default async function MisCertificadosPage() {
     <div className='p-4 lg:p-6'>
       <div className='mb-6'>
         <h1 className='text-3xl font-bold'>Mis Certificados</h1>
-        <p className='text-muted-foreground mt-2'>
-          Tus logros y certificados de cursos completados
-        </p>
+        <p className='text-muted-foreground mt-2'>Tus logros y certificados de cursos completados</p>
       </div>
 
       {certificates.length === 0 ? (

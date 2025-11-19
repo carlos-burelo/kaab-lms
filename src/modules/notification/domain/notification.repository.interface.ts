@@ -2,10 +2,10 @@
  * Notification Repository Interface
  */
 
-import type { Repository } from '@/core/shared/repository.interface';
-import type { Result } from '@/core/shared/result';
-import type { Notification } from './notification.entity';
-import type { NotificationTypeEnum } from './value-objects/notification-type';
+import type { Repository } from '@/core/shared/repository.interface'
+import type { Result } from '@/core/shared/result'
+import type { Notification } from './notification.entity'
+import type { NotificationTypeEnum } from './value-objects/notification-type'
 
 export interface INotificationRepository extends Repository<Notification> {
   /**
@@ -14,28 +14,25 @@ export interface INotificationRepository extends Repository<Notification> {
   findByUserId(
     userId: string,
     options?: {
-      limit?: number;
-      offset?: number;
-      isRead?: boolean;
-      type?: NotificationTypeEnum;
+      limit?: number
+      offset?: number
+      isRead?: boolean
+      type?: NotificationTypeEnum
     }
-  ): Promise<Result<Notification[]>>;
+  ): Promise<Result<Notification[]>>
 
   /**
    * Get unread count for a user
    */
-  getUnreadCount(userId: string): Promise<Result<number>>;
+  getUnreadCount(userId: string): Promise<Result<number>>
 
   /**
    * Mark all notifications as read for a user
    */
-  markAllAsRead(userId: string): Promise<Result<void>>;
+  markAllAsRead(userId: string): Promise<Result<void>>
 
   /**
    * Delete old read notifications
    */
-  deleteOldReadNotifications(
-    userId: string,
-    daysOld: number
-  ): Promise<Result<void>>;
+  deleteOldReadNotifications(userId: string, daysOld: number): Promise<Result<void>>
 }

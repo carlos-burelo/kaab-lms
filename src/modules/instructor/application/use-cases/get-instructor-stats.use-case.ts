@@ -3,31 +3,28 @@
  * Retrieves dashboard statistics for an instructor
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { prisma } from '@/lib/prisma';
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import { prisma } from '@/lib/prisma'
 
 interface GetInstructorStatsRequest {
-  instructorId: string;
+  instructorId: string
 }
 
 export interface InstructorStatsDTO {
-  totalCourses: number;
-  publishedCourses: number;
-  draftCourses: number;
-  totalStudents: number;
-  totalEnrollments: number;
-  averageRating: number;
-  totalReviews: number;
-  activeStudentsThisMonth: number;
+  totalCourses: number
+  publishedCourses: number
+  draftCourses: number
+  totalStudents: number
+  totalEnrollments: number
+  averageRating: number
+  totalReviews: number
+  activeStudentsThisMonth: number
 }
 
-export class GetInstructorStatsUseCase extends BaseUseCase<
-  GetInstructorStatsRequest,
-  InstructorStatsDTO
-> {
+export class GetInstructorStatsUseCase extends BaseUseCase<GetInstructorStatsRequest, InstructorStatsDTO> {
   async execute(request: GetInstructorStatsRequest): Promise<Result<InstructorStatsDTO>> {
-    const { instructorId } = request;
+    const { instructorId } = request
 
     try {
       // Get all courses for the instructor
@@ -37,44 +34,42 @@ export class GetInstructorStatsUseCase extends BaseUseCase<
           _count: {
             select: {
               enrollments: true,
-              reviews: true,
-            },
-          },
-        },
-      });
+              reviews: true
+            }
+          }
+        }
+      })
 
-      const publishedCourses = courses.filter((c) => c.isPublished);
-      const draftCourses = courses.filter((c) => !c.isPublished);
+      const publishedCourses = courses.filter((c) => c.isPublished)
+      const draftCourses = courses.filter((c) => !c.isPublished)
 
       // Calculate total of unique students
       const allEnrollments = await prisma.enrollment.findMany({
         where: {
           course: {
-            instructorId,
-          },
+            instructorId
+          }
         },
         include: {
-          user: true,
-        },
-      });
+          user: true
+        }
+      })
 
-      const uniqueStudents = new Set(allEnrollments.map((e) => e.userId)).size;
-      const totalEnrollments = allEnrollments.length;
+      const uniqueStudents = new Set(allEnrollments.map((e) => e.userId)).size
+      const totalEnrollments = allEnrollments.length
 
       // Active students this month (last 30 days)
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const thirtyDaysAgo = new Date()
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
       const activeThisMonth = new Set(
-        allEnrollments
-          .filter((e) => e.lastAccessed && e.lastAccessed > thirtyDaysAgo)
-          .map((e) => e.userId)
-      ).size;
+        allEnrollments.filter((e) => e.lastAccessed && e.lastAccessed > thirtyDaysAgo).map((e) => e.userId)
+      ).size
 
       // Calculate average rating
-      const totalRating = courses.reduce((acc, c) => acc + c.rating, 0);
-      const totalReviewsCount = courses.reduce((acc, c) => acc + c._count.reviews, 0);
-      const averageRating = courses.length > 0 ? totalRating / courses.length : 0;
+      const totalRating = courses.reduce((acc, c) => acc + c.rating, 0)
+      const totalReviewsCount = courses.reduce((acc, c) => acc + c._count.reviews, 0)
+      const averageRating = courses.length > 0 ? totalRating / courses.length : 0
 
       return Result.ok({
         totalCourses: courses.length,
@@ -84,12 +79,10 @@ export class GetInstructorStatsUseCase extends BaseUseCase<
         totalEnrollments,
         averageRating: Math.round(averageRating * 100) / 100,
         totalReviews: totalReviewsCount,
-        activeStudentsThisMonth: activeThisMonth,
-      });
+        activeStudentsThisMonth: activeThisMonth
+      })
     } catch (error) {
-      return Result.fail(
-        new Error(`Failed to get instructor stats: ${(error as Error).message}`)
-      );
+      return Result.fail(new Error(`Failed to get instructor stats: ${(error as Error).message}`))
     }
   }
 }

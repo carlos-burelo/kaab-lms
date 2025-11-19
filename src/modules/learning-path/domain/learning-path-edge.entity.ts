@@ -2,112 +2,96 @@
  * Learning Path Edge Entity
  */
 
-import { Entity, type EntityProps } from '@/core/shared/entity';
-import { Result } from '@/core/shared/result';
-import { ValidationError } from '@/core/shared/errors';
+import { Entity, type EntityProps } from '@/core/shared/entity'
+import { ValidationError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
 
 export interface EdgeCondition {
-  [key: string]: unknown;
+  [key: string]: unknown
 }
 
 export interface LearningPathEdgeProps extends EntityProps {
-  learningPathId: string;
-  sourceNodeId: string;
-  targetNodeId: string;
-  condition?: EdgeCondition;
+  learningPathId: string
+  sourceNodeId: string
+  targetNodeId: string
+  condition?: EdgeCondition
 }
 
 export class LearningPathEdge extends Entity<LearningPathEdgeProps> {
   get learningPathId(): string {
-    return this._props.learningPathId;
+    return this._props.learningPathId
   }
 
   get sourceNodeId(): string {
-    return this._props.sourceNodeId;
+    return this._props.sourceNodeId
   }
 
   get targetNodeId(): string {
-    return this._props.targetNodeId;
+    return this._props.targetNodeId
   }
 
   get condition(): EdgeCondition | undefined {
-    return this._props.condition;
+    return this._props.condition
   }
 
   private constructor(props: LearningPathEdgeProps, id?: string) {
-    super(props, id);
+    super(props, id)
   }
 
   /**
    * Create a new learning path edge
    */
-  static create(
-    props: Omit<LearningPathEdgeProps, 'id' | 'createdAt' | 'updatedAt'>
-  ): Result<LearningPathEdge, ValidationError> {
+  static create(props: Omit<LearningPathEdgeProps, 'id' | 'createdAt' | 'updatedAt'>): Result<LearningPathEdge, ValidationError> {
     // Validations
     if (!props.learningPathId || props.learningPathId.trim().length === 0) {
-      return Result.fail(
-        new ValidationError(
-          'Learning path ID is required',
-          'learningPathId'
-        )
-      );
+      return Result.fail(new ValidationError('Learning path ID is required', 'learningPathId'))
     }
 
     if (!props.sourceNodeId || props.sourceNodeId.trim().length === 0) {
-      return Result.fail(
-        new ValidationError('Source node ID is required', 'sourceNodeId')
-      );
+      return Result.fail(new ValidationError('Source node ID is required', 'sourceNodeId'))
     }
 
     if (!props.targetNodeId || props.targetNodeId.trim().length === 0) {
-      return Result.fail(
-        new ValidationError('Target node ID is required', 'targetNodeId')
-      );
+      return Result.fail(new ValidationError('Target node ID is required', 'targetNodeId'))
     }
 
     // Prevent self-loops
     if (props.sourceNodeId === props.targetNodeId) {
-      return Result.fail(
-        new ValidationError(
-          'Source and target nodes cannot be the same',
-          'targetNodeId'
-        )
-      );
+      return Result.fail(new ValidationError('Source and target nodes cannot be the same', 'targetNodeId'))
     }
 
-    const edge = new LearningPathEdge(props, props.id);
+    const edge = new LearningPathEdge(props, props.id)
 
-    return Result.ok(edge);
+    return Result.ok(edge)
   }
 
   /**
    * Update edge condition
    */
   updateCondition(condition: EdgeCondition): void {
-    this._props.condition = condition;
-    this.touch();
+    this._props.condition = condition
+    this.touch()
   }
 
   /**
    * Remove edge condition
    */
   removeCondition(): void {
-    this._props.condition = undefined;
-    this.touch();
+    this._props.condition = undefined
+    this.touch()
   }
 
   /**
    * Check if edge has a condition
    */
   hasCondition(): boolean {
-    return this._props.condition !== undefined;
+    return this._props.condition !== undefined
   }
 
   toObject(): LearningPathEdgeProps & {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
+    id: string
+    createdAt: Date
+    updatedAt: Date
   } {
     return {
       id: this.id,
@@ -116,11 +100,11 @@ export class LearningPathEdge extends Entity<LearningPathEdgeProps> {
       targetNodeId: this.targetNodeId,
       condition: this.condition,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    };
+      updatedAt: this.updatedAt
+    }
   }
 
   clone(): LearningPathEdge {
-    return new LearningPathEdge({ ...this._props }, this._id);
+    return new LearningPathEdge({ ...this._props }, this._id)
   }
 }

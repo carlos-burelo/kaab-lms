@@ -45,11 +45,11 @@ export async function createCalendarEvent(data: CalendarEventInput): Promise<Cal
       data: event,
       timestamp: new Date()
     }
-  } catch (error) {
-    console.error('[createCalendarEvent]', error)
+  } catch (_error) {
+    console.error('[createCalendarEvent]', _error)
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error al crear evento',
+      error: _error instanceof Error ? _error.message : 'Error al crear evento',
       timestamp: new Date()
     }
   }
@@ -73,8 +73,8 @@ export async function getCalendarEvent(eventId: string): Promise<CalendarRespons
       data: event,
       timestamp: new Date()
     }
-  } catch (error) {
-    console.error('[getCalendarEvent]', error)
+  } catch (_error) {
+    console.error('[getCalendarEvent]', _error)
     return {
       success: false,
       error: 'Error al obtener evento',
@@ -122,8 +122,8 @@ export async function updateCalendarEvent(eventId: string, data: Partial<Calenda
       data: event,
       timestamp: new Date()
     }
-  } catch (error) {
-    console.error('[updateCalendarEvent]', error)
+  } catch (_error) {
+    console.error('[updateCalendarEvent]', _error)
     return {
       success: false,
       error: 'Error al actualizar evento',
@@ -151,8 +151,8 @@ export async function deleteCalendarEvent(eventId: string): Promise<CalendarResp
       success: true,
       timestamp: new Date()
     }
-  } catch (error) {
-    console.error('[deleteCalendarEvent]', error)
+  } catch (_error) {
+    console.error('[deleteCalendarEvent]', _error)
     return {
       success: false,
       error: 'Error al eliminar evento',
@@ -192,8 +192,8 @@ export async function getCalendarEvents(fromDate: Date | string, toDate: Date | 
       limit: 0,
       timestamp: new Date()
     }
-  } catch (error) {
-    console.error('[getCalendarEvents]', error)
+  } catch (_error) {
+    console.error('[getCalendarEvents]', _error)
     return {
       success: false,
       data: [],
@@ -233,8 +233,8 @@ export async function getMonthCalendarEvents(year: number, month: number): Promi
       limit: 0,
       timestamp: new Date()
     }
-  } catch (error) {
-    console.error('[getMonthCalendarEvents]', error)
+  } catch (_error) {
+    console.error('[getMonthCalendarEvents]', _error)
     return {
       success: false,
       data: [],
@@ -276,8 +276,8 @@ export async function searchCalendarEvents(query: string): Promise<CalendarListR
       limit: 0,
       timestamp: new Date()
     }
-  } catch (error) {
-    console.error('[searchCalendarEvents]', error)
+  } catch (_error) {
+    console.error('[searchCalendarEvents]', _error)
     return {
       success: false,
       data: [],
@@ -319,8 +319,8 @@ export async function filterCalendarEventsByType(type: string): Promise<Calendar
       limit: 0,
       timestamp: new Date()
     }
-  } catch (error) {
-    console.error('[filterCalendarEventsByType]', error)
+  } catch (_error) {
+    console.error('[filterCalendarEventsByType]', _error)
     return {
       success: false,
       data: [],
@@ -366,8 +366,8 @@ export async function getUpcomingCalendarEvents(): Promise<CalendarListResponse<
       limit: 0,
       timestamp: new Date()
     }
-  } catch (error) {
-    console.error('[getUpcomingCalendarEvents]', error)
+  } catch (_error) {
+    console.error('[getUpcomingCalendarEvents]', _error)
     return {
       success: false,
       data: [],
@@ -411,8 +411,8 @@ export async function addCalendarReminder(eventId: string, type: string): Promis
       data: updated,
       timestamp: new Date()
     }
-  } catch (error) {
-    console.error('[addCalendarReminder]', error)
+  } catch (_error) {
+    console.error('[addCalendarReminder]', _error)
     return {
       success: false,
       error: 'Error al agregar recordatorio',

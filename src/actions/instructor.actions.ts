@@ -2,14 +2,14 @@
 
 import { getSession } from '@/lib/auth'
 import {
-  GetInstructorStatsUseCase,
-  GetCourseAnalyticsUseCase,
-  GetEnrollmentTrendUseCase,
-  GetRevenueDataUseCase,
-  type InstructorStatsDTO,
   type CourseAnalyticsDTO,
   type EnrollmentTrendDTO,
-  type RevenueDataDTO,
+  GetCourseAnalyticsUseCase,
+  GetEnrollmentTrendUseCase,
+  GetInstructorStatsUseCase,
+  GetRevenueDataUseCase,
+  type InstructorStatsDTO,
+  type RevenueDataDTO
 } from '@/modules/instructor/application/use-cases'
 
 /**
@@ -53,7 +53,7 @@ export async function getInstructorStats(): Promise<{ success: boolean; data?: I
     }
 
     const result = await getInstructorStatsUseCase.execute({
-      instructorId: session.id,
+      instructorId: session.id
     })
 
     if (result.isFailure) {
@@ -64,10 +64,10 @@ export async function getInstructorStats(): Promise<{ success: boolean; data?: I
       success: true,
       data: result.value
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error obteniendo estadísticas'
+      error: _error instanceof Error ? _error.message : 'Error obteniendo estadísticas'
     }
   }
 }
@@ -87,7 +87,7 @@ export async function getCourseAnalytics(): Promise<{ success: boolean; data?: C
     }
 
     const result = await getCourseAnalyticsUseCase.execute({
-      instructorId: session.id,
+      instructorId: session.id
     })
 
     if (result.isFailure) {
@@ -95,10 +95,10 @@ export async function getCourseAnalytics(): Promise<{ success: boolean; data?: C
     }
 
     return { success: true, data: result.value }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error obteniendo análisis'
+      error: _error instanceof Error ? _error.message : 'Error obteniendo análisis'
     }
   }
 }
@@ -122,7 +122,7 @@ export async function getEnrollmentTrend(): Promise<{
     }
 
     const result = await getEnrollmentTrendUseCase.execute({
-      instructorId: session.id,
+      instructorId: session.id
     })
 
     if (result.isFailure) {
@@ -130,10 +130,10 @@ export async function getEnrollmentTrend(): Promise<{
     }
 
     return { success: true, data: result.value }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error obteniendo tendencias'
+      error: _error instanceof Error ? _error.message : 'Error obteniendo tendencias'
     }
   }
 }
@@ -153,7 +153,7 @@ export async function getRevenueData(): Promise<{ success: boolean; data?: Reven
     }
 
     const result = await getRevenueDataUseCase.execute({
-      instructorId: session.id,
+      instructorId: session.id
     })
 
     if (result.isFailure) {
@@ -161,10 +161,10 @@ export async function getRevenueData(): Promise<{ success: boolean; data?: Reven
     }
 
     return { success: true, data: result.value }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error obteniendo ingresos'
+      error: _error instanceof Error ? _error.message : 'Error obteniendo ingresos'
     }
   }
 }

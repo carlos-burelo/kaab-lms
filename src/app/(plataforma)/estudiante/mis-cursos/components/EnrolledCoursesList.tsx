@@ -1,15 +1,15 @@
 'use client'
 
 import type { Prisma } from '@prisma/client'
-import { BookOpenIcon, ClockIcon, TrophyIcon, CalendarIcon } from 'lucide-react'
+import { BookOpenIcon, CalendarIcon, ClockIcon, TrophyIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useMemo, useState } from 'react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 type EnrollmentWithCourse = Prisma.EnrollmentGetPayload<{
   include: {
@@ -61,18 +61,10 @@ export function EnrolledCoursesList({ enrollments }: EnrolledCoursesListProps) {
     <div>
       <Tabs defaultValue='all' value={activeTab} onValueChange={setActiveTab}>
         <TabsList className='mb-6'>
-          <TabsTrigger value='all'>
-            Todos ({stats.all})
-          </TabsTrigger>
-          <TabsTrigger value='in-progress'>
-            En progreso ({stats.inProgress})
-          </TabsTrigger>
-          <TabsTrigger value='not-started'>
-            Sin comenzar ({stats.notStarted})
-          </TabsTrigger>
-          <TabsTrigger value='completed'>
-            Completados ({stats.completed})
-          </TabsTrigger>
+          <TabsTrigger value='all'>Todos ({stats.all})</TabsTrigger>
+          <TabsTrigger value='in-progress'>En progreso ({stats.inProgress})</TabsTrigger>
+          <TabsTrigger value='not-started'>Sin comenzar ({stats.notStarted})</TabsTrigger>
+          <TabsTrigger value='completed'>Completados ({stats.completed})</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className='mt-0'>
@@ -110,10 +102,18 @@ function EnrolledCourseCard({ enrollment }: { enrollment: EnrollmentWithCourse }
 
   const getStatusBadge = () => {
     if (enrollment.isCompleted) {
-      return <Badge variant='default' className='bg-green-500'>Completado</Badge>
+      return (
+        <Badge variant='default' className='bg-green-500'>
+          Completado
+        </Badge>
+      )
     }
     if (enrollment.progress > 0) {
-      return <Badge variant='default' className='bg-blue-500'>En progreso</Badge>
+      return (
+        <Badge variant='default' className='bg-blue-500'>
+          En progreso
+        </Badge>
+      )
     }
     return <Badge variant='secondary'>Sin comenzar</Badge>
   }
@@ -122,12 +122,7 @@ function EnrolledCourseCard({ enrollment }: { enrollment: EnrollmentWithCourse }
     <Card className='overflow-hidden hover:shadow-lg transition-shadow'>
       <Link href={`/estudiante/cursos/${course.id}`}>
         <div className='relative aspect-video'>
-          <Image
-            src={imageUrl}
-            alt={course.title}
-            fill
-            className='object-cover'
-          />
+          <Image src={imageUrl} alt={course.title} fill className='object-cover' />
           {enrollment.isCompleted && (
             <div className='absolute top-2 right-2 bg-green-500 text-white p-2 rounded-full'>
               <TrophyIcon className='w-4 h-4' />
@@ -143,14 +138,10 @@ function EnrolledCourseCard({ enrollment }: { enrollment: EnrollmentWithCourse }
         </div>
 
         <Link href={`/estudiante/cursos/${course.id}`}>
-          <h3 className='font-semibold text-lg mb-2 line-clamp-2 hover:text-primary transition-colors'>
-            {course.title}
-          </h3>
+          <h3 className='font-semibold text-lg mb-2 line-clamp-2 hover:text-primary transition-colors'>{course.title}</h3>
         </Link>
 
-        <p className='text-sm text-muted-foreground mb-4 line-clamp-2'>
-          {course.description || 'Sin descripción'}
-        </p>
+        <p className='text-sm text-muted-foreground mb-4 line-clamp-2'>{course.description || 'Sin descripción'}</p>
 
         <div className='space-y-3'>
           <div>
@@ -185,11 +176,7 @@ function EnrolledCourseCard({ enrollment }: { enrollment: EnrollmentWithCourse }
         <div className='mt-4'>
           <Button asChild className='w-full' variant={enrollment.progress > 0 ? 'default' : 'outline'}>
             <Link href={`/estudiante/cursos/${course.id}`}>
-              {enrollment.isCompleted
-                ? 'Revisar curso'
-                : enrollment.progress > 0
-                  ? 'Continuar aprendiendo'
-                  : 'Comenzar curso'}
+              {enrollment.isCompleted ? 'Revisar curso' : enrollment.progress > 0 ? 'Continuar aprendiendo' : 'Comenzar curso'}
             </Link>
           </Button>
         </div>

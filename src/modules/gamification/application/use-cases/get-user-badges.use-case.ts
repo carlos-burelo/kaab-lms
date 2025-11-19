@@ -2,39 +2,34 @@
  * Get User Badges Use Case
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import type { IBadgeRepository } from '../../domain/badge.repository.interface';
-import { type BadgeDTO, badgeMapper } from '../../infrastructure/badge.mapper';
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import type { IBadgeRepository } from '../../domain/badge.repository.interface'
+import { type BadgeDTO, badgeMapper } from '../../infrastructure/badge.mapper'
 
 interface GetUserBadgesRequest {
-  userId: string;
-  currentUserId: string;
+  userId: string
+  currentUserId: string
 }
 
-export class GetUserBadgesUseCase extends BaseUseCase<
-  GetUserBadgesRequest,
-  BadgeDTO[]
-> {
+export class GetUserBadgesUseCase extends BaseUseCase<GetUserBadgesRequest, BadgeDTO[]> {
   constructor(private badgeRepository: IBadgeRepository) {
-    super();
+    super()
   }
 
   async execute(request: GetUserBadgesRequest): Promise<Result<BadgeDTO[]>> {
-    const { userId } = request;
+    const { userId } = request
 
     // Get user badges
-    const badgesResult = await this.badgeRepository.getUserBadges(userId);
+    const badgesResult = await this.badgeRepository.getUserBadges(userId)
 
     if (badgesResult.isFailure) {
-      return Result.fail(badgesResult.error);
+      return Result.fail(badgesResult.error)
     }
 
     // Map to DTOs
-    const badgeDTOs = badgesResult.value.map((badge) =>
-      badgeMapper.toDTO(badge)
-    );
+    const badgeDTOs = badgesResult.value.map((badge) => badgeMapper.toDTO(badge))
 
-    return Result.ok(badgeDTOs);
+    return Result.ok(badgeDTOs)
   }
 }

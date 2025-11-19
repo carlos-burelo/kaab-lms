@@ -1,10 +1,10 @@
-"use server"
+'use server'
 
-import { z } from "zod"
-import { createAction } from "@/actions/_shared/action-builder"
-import { idSchema } from "@/actions/_shared/validators"
-import { studentRepository } from "@/database/repositories/student.repository"
-import { ok, err } from "@/core/shared/result"
+import { z } from 'zod'
+import { createAction } from '@/actions/_shared/action-builder'
+import { idSchema } from '@/actions/_shared/validators'
+import { err, ok } from '@/core/shared/result'
+import { studentRepository } from '@/database/repositories/student.repository'
 
 // ============ SCHEMAS ============
 
@@ -48,20 +48,20 @@ const leaderboardSchema = z.object({
  * Obtiene el perfil de gamificación del estudiante (XP, nivel, coins)
  */
 export const getGamificationProfile = createAction({
-  name: "student.getGamificationProfile",
+  name: 'student.getGamificationProfile',
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (_, context) => {
     try {
       const profile = await studentRepository.getGamificationProfile(context.userId)
 
       if (!profile) {
-        return err(new Error("Perfil de gamificación no encontrado"))
+        return err(new Error('Perfil de gamificación no encontrado'))
       }
 
       return ok(profile)
     } catch (_error) {
-      return err(new Error("Error al obtener perfil de gamificación"))
+      return err(new Error('Error al obtener perfil de gamificación'))
     }
   }
 })
@@ -72,20 +72,20 @@ export const getGamificationProfile = createAction({
  * Obtiene el XP requerido para el siguiente nivel
  */
 export const getXpForNextLevel = createAction({
-  name: "student.getXpForNextLevel",
+  name: 'student.getXpForNextLevel',
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (_, context) => {
     try {
       const xpInfo = await studentRepository.getXpForNextLevel(context.userId)
 
       if (!xpInfo) {
-        return err(new Error("No se pudo calcular XP para el siguiente nivel"))
+        return err(new Error('No se pudo calcular XP para el siguiente nivel'))
       }
 
       return ok(xpInfo)
     } catch (_error) {
-      return err(new Error("Error al calcular XP para siguiente nivel"))
+      return err(new Error('Error al calcular XP para siguiente nivel'))
     }
   }
 })
@@ -96,15 +96,15 @@ export const getXpForNextLevel = createAction({
  * Obtiene todos los logros del estudiante
  */
 export const getAchievements = createAction({
-  name: "student.getAchievements",
+  name: 'student.getAchievements',
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (_, context) => {
     try {
       const achievements = await studentRepository.getAchievements(context.userId)
       return ok(achievements || [])
     } catch (_error) {
-      return err(new Error("Error al obtener logros"))
+      return err(new Error('Error al obtener logros'))
     }
   }
 })
@@ -115,15 +115,15 @@ export const getAchievements = createAction({
  * Obtiene todas las insignias del estudiante
  */
 export const getBadges = createAction({
-  name: "student.getBadges",
+  name: 'student.getBadges',
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (_, context) => {
     try {
       const badges = await studentRepository.getBadges(context.userId)
       return ok(badges || [])
     } catch (_error) {
-      return err(new Error("Error al obtener insignias"))
+      return err(new Error('Error al obtener insignias'))
     }
   }
 })
@@ -134,15 +134,15 @@ export const getBadges = createAction({
  * Obtiene misiones activas disponibles para el estudiante
  */
 export const getActiveMissions = createAction({
-  name: "student.getActiveMissions",
+  name: 'student.getActiveMissions',
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (_, context) => {
     try {
       const missions = await studentRepository.getActiveMissions(context.userId)
       return ok(missions || [])
     } catch (_error) {
-      return err(new Error("Error al obtener misiones activas"))
+      return err(new Error('Error al obtener misiones activas'))
     }
   }
 })
@@ -153,15 +153,15 @@ export const getActiveMissions = createAction({
  * Obtiene misiones completadas por el estudiante
  */
 export const getCompletedMissions = createAction({
-  name: "student.getCompletedMissions",
+  name: 'student.getCompletedMissions',
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (_, context) => {
     try {
       const missions = await studentRepository.getCompletedMissions(context.userId)
       return ok(missions || [])
     } catch (_error) {
-      return err(new Error("Error al obtener misiones completadas"))
+      return err(new Error('Error al obtener misiones completadas'))
     }
   }
 })
@@ -172,10 +172,10 @@ export const getCompletedMissions = createAction({
  * Acepta una misión
  */
 export const acceptMission = createAction({
-  name: "student.acceptMission",
+  name: 'student.acceptMission',
   schema: acceptMissionSchema,
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (input, context) => {
     try {
       const result = await studentRepository.acceptMission(context.userId, input.missionId)
@@ -186,7 +186,7 @@ export const acceptMission = createAction({
 
       return ok({ message: result.message })
     } catch (_error) {
-      return err(new Error("Error al aceptar misión"))
+      return err(new Error('Error al aceptar misión'))
     }
   }
 })
@@ -197,10 +197,10 @@ export const acceptMission = createAction({
  * Completa una misión y recibe recompensas
  */
 export const completeMission = createAction({
-  name: "student.completeMission",
+  name: 'student.completeMission',
   schema: completeMissionSchema,
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (input, context) => {
     try {
       const result = await studentRepository.completeMission(context.userId, input.missionId)
@@ -211,7 +211,7 @@ export const completeMission = createAction({
 
       return ok({ message: result.message })
     } catch (_error) {
-      return err(new Error("Error al completar misión"))
+      return err(new Error('Error al completar misión'))
     }
   }
 })
@@ -222,15 +222,15 @@ export const completeMission = createAction({
  * Obtiene recompensas disponibles en la tienda
  */
 export const getAvailableRewards = createAction({
-  name: "student.getAvailableRewards",
+  name: 'student.getAvailableRewards',
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (_, context) => {
     try {
       const rewards = await studentRepository.getAvailableRewards(context.userId)
       return ok(rewards || [])
     } catch (_error) {
-      return err(new Error("Error al obtener recompensas disponibles"))
+      return err(new Error('Error al obtener recompensas disponibles'))
     }
   }
 })
@@ -241,15 +241,15 @@ export const getAvailableRewards = createAction({
  * Obtiene recompensas reclamadas por el estudiante
  */
 export const getClaimedRewards = createAction({
-  name: "student.getClaimedRewards",
+  name: 'student.getClaimedRewards',
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (_, context) => {
     try {
       const rewards = await studentRepository.getClaimedRewards(context.userId)
       return ok(rewards || [])
     } catch (_error) {
-      return err(new Error("Error al obtener recompensas reclamadas"))
+      return err(new Error('Error al obtener recompensas reclamadas'))
     }
   }
 })
@@ -260,10 +260,10 @@ export const getClaimedRewards = createAction({
  * Reclama una recompensa gastando coins
  */
 export const claimReward = createAction({
-  name: "student.claimReward",
+  name: 'student.claimReward',
   schema: claimRewardSchema,
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (input, context) => {
     try {
       const result = await studentRepository.claimReward(context.userId, input.rewardId)
@@ -274,7 +274,7 @@ export const claimReward = createAction({
 
       return ok({ message: result.message })
     } catch (_error) {
-      return err(new Error("Error al reclamar recompensa"))
+      return err(new Error('Error al reclamar recompensa'))
     }
   }
 })
@@ -285,16 +285,13 @@ export const claimReward = createAction({
  * Marca un logro como completado
  */
 export const completeAchievement = createAction({
-  name: "student.completeAchievement",
+  name: 'student.completeAchievement',
   schema: completeAchievementSchema,
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (input, context) => {
     try {
-      const result = await studentRepository.completeAchievement(
-        context.userId,
-        input.achievementId
-      )
+      const result = await studentRepository.completeAchievement(context.userId, input.achievementId)
 
       if (!result.success) {
         return err(new Error(result.message))
@@ -302,7 +299,7 @@ export const completeAchievement = createAction({
 
       return ok({ message: result.message })
     } catch (_error) {
-      return err(new Error("Error al completar logro"))
+      return err(new Error('Error al completar logro'))
     }
   }
 })
@@ -313,10 +310,10 @@ export const completeAchievement = createAction({
  * Otorga una insignia al estudiante (normalmente llamado por el sistema)
  */
 export const awardBadge = createAction({
-  name: "student.awardBadge",
+  name: 'student.awardBadge',
   schema: awardBadgeSchema,
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (input, context) => {
     try {
       const result = await studentRepository.awardBadge(context.userId, input.badgeId)
@@ -327,7 +324,7 @@ export const awardBadge = createAction({
 
       return ok({ message: result.message })
     } catch (_error) {
-      return err(new Error("Error al otorgar insignia"))
+      return err(new Error('Error al otorgar insignia'))
     }
   }
 })
@@ -338,7 +335,7 @@ export const awardBadge = createAction({
  * Obtiene el ranking de estudiantes
  */
 export const getLeaderboard = createAction({
-  name: "student.getLeaderboard",
+  name: 'student.getLeaderboard',
   schema: leaderboardSchema.optional(),
   requireAuth: false, // Público
   execute: async (input) => {
@@ -348,7 +345,7 @@ export const getLeaderboard = createAction({
 
       return ok(leaderboard || [])
     } catch (_error) {
-      return err(new Error("Error al obtener ranking"))
+      return err(new Error('Error al obtener ranking'))
     }
   }
 })

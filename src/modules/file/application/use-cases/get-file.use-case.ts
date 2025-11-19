@@ -2,48 +2,46 @@
  * Get File Use Case
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { NotFoundError, ForbiddenError } from '@/core/shared/errors';
-import type { IFileRepository } from '../../domain/file.repository.interface';
-import { type FileDTO, fileMapper } from '../../infrastructure/file.mapper';
+import { ForbiddenError, NotFoundError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import type { IFileRepository } from '../../domain/file.repository.interface'
+import { type FileDTO, fileMapper } from '../../infrastructure/file.mapper'
 
 interface GetFileRequest {
-  fileId: string;
-  currentUserId: string;
+  fileId: string
+  currentUserId: string
 }
 
 export class GetFileUseCase extends BaseUseCase<GetFileRequest, FileDTO> {
   constructor(private fileRepository: IFileRepository) {
-    super();
+    super()
   }
 
   async execute(request: GetFileRequest): Promise<Result<FileDTO>> {
-    const { fileId, currentUserId } = request;
+    const { fileId, currentUserId } = request
 
     // Find file
-    const fileResult = await this.fileRepository.findById(fileId);
+    const fileResult = await this.fileRepository.findById(fileId)
 
     if (fileResult.isFailure) {
-      return Result.fail(fileResult.error);
+      return Result.fail(fileResult.error)
     }
 
     if (!fileResult.value) {
-      return Result.fail(new NotFoundError('File', fileId));
+      return Result.fail(new NotFoundError('File', fileId))
     }
 
-    const file = fileResult.value;
+    const file = fileResult.value
 
     // Check access permission
     if (!file.canBeAccessedBy(currentUserId)) {
-      return Result.fail(
-        new ForbiddenError('You do not have permission to access this file')
-      );
+      return Result.fail(new ForbiddenError('You do not have permission to access this file'))
     }
 
     // Map to DTO
-    const fileDTO = fileMapper.toDTO(file);
+    const fileDTO = fileMapper.toDTO(file)
 
-    return Result.ok(fileDTO);
+    return Result.ok(fileDTO)
   }
 }

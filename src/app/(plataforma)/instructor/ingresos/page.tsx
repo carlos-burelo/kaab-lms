@@ -1,25 +1,12 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
-import { DollarSign, TrendingUp, ShoppingCart } from 'lucide-react'
+import { DollarSign, ShoppingCart, TrendingUp } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
 import { getMyPurchases, getRevenueStats } from '@/actions/instructor/revenue.actions'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 type Purchase = {
   id: string
@@ -42,10 +29,7 @@ export default function RevenuePage() {
   const [loading, setLoading] = useState(true)
 
   const loadData = useCallback(async () => {
-    const [purchasesResult, statsResult] = await Promise.all([
-      getMyPurchases({}),
-      getRevenueStats({})
-    ])
+    const [purchasesResult, statsResult] = await Promise.all([getMyPurchases({}), getRevenueStats({})])
 
     if (purchasesResult.success && purchasesResult.data) {
       setPurchases(purchasesResult.data as any)
@@ -70,9 +54,7 @@ export default function RevenuePage() {
     <>
       <header className='border-b border-border p-4'>
         <h1 className='text-2xl font-bold text-foreground'>Ingresos y Pagos</h1>
-        <p className='text-sm text-muted-foreground'>
-          Gestiona tus ingresos y revisa el historial de transacciones
-        </p>
+        <p className='text-sm text-muted-foreground'>Gestiona tus ingresos y revisa el historial de transacciones</p>
       </header>
       <main className='p-4 space-y-6'>
         {/* Stats Cards */}
@@ -83,9 +65,7 @@ export default function RevenuePage() {
               <DollarSign className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
             <CardContent>
-              <div className='text-2xl font-bold'>
-                ${stats?.totalRevenue.toFixed(2)} MXN
-              </div>
+              <div className='text-2xl font-bold'>${stats?.totalRevenue.toFixed(2)} MXN</div>
             </CardContent>
           </Card>
 
@@ -106,11 +86,7 @@ export default function RevenuePage() {
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold'>
-                $
-                {stats?.totalPurchases
-                  ? (stats.totalRevenue / stats.totalPurchases).toFixed(2)
-                  : '0.00'}{' '}
-                MXN
+                ${stats?.totalPurchases ? (stats.totalRevenue / stats.totalPurchases).toFixed(2) : '0.00'} MXN
               </div>
             </CardContent>
           </Card>

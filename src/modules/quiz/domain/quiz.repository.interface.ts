@@ -2,36 +2,34 @@
  * Quiz Repository Interface
  */
 
-import type { Repository } from '@/core/shared/repository.interface';
-import type { Result } from '@/core/shared/result';
-import type { Quiz } from './quiz.entity';
+import type { Repository } from '@/core/shared/repository.interface'
+import type { Result } from '@/core/shared/result'
+import type { Quiz } from './quiz.entity'
 
 export interface IQuizRepository extends Repository<Quiz> {
   /**
    * Find quiz by lesson ID
    */
-  findByLesson(lessonId: string): Promise<Result<Quiz | null>>;
+  findByLesson(lessonId: string): Promise<Result<Quiz | null>>
 
   /**
    * Find all quizzes with questions
    */
-  findByIdWithQuestions(id: string): Promise<Result<Quiz | null>>;
+  findByIdWithQuestions(id: string): Promise<Result<Quiz | null>>
 
   /**
    * Check if lesson already has a quiz
    */
-  lessonHasQuiz(lessonId: string): Promise<Result<boolean>>;
+  lessonHasQuiz(lessonId: string): Promise<Result<boolean>>
 
   /**
    * Get quiz statistics
    */
-  getQuizStats(
-    quizId: string
-  ): Promise<
+  getQuizStats(quizId: string): Promise<
     Result<{
-      totalAttempts: number;
-      averageScore: number;
-      passRate: number;
+      totalAttempts: number
+      averageScore: number
+      passRate: number
     }>
-  >;
+  >
 }

@@ -2,24 +2,24 @@
  * Quiz Mapper
  */
 
-import type { Mapper } from '@/core/shared/mapper.interface';
-import { Quiz, type QuizProps } from '../domain/quiz.entity';
-import type { Quiz as PrismaQuiz } from '@prisma/client';
+import type { Quiz as PrismaQuiz } from '@prisma/client'
+import type { Mapper } from '@/core/shared/mapper.interface'
+import { Quiz, type QuizProps } from '../domain/quiz.entity'
 
 export interface QuizDTO {
-  id: string;
-  title: string;
-  description?: string;
-  instructions?: string;
-  lessonId: string;
-  durationMinutes?: number;
-  passingScore: number;
-  maxAttempts?: number;
-  showAnswers: boolean;
-  shuffleQuestions: boolean;
-  isPublished: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  id: string
+  title: string
+  description?: string
+  instructions?: string
+  lessonId: string
+  durationMinutes?: number
+  passingScore: number
+  maxAttempts?: number
+  showAnswers: boolean
+  shuffleQuestions: boolean
+  isPublished: boolean
+  createdAt: Date
+  updatedAt: Date
 }
 
 class QuizMapper implements Mapper<Quiz, PrismaQuiz, QuizDTO> {
@@ -37,16 +37,16 @@ class QuizMapper implements Mapper<Quiz, PrismaQuiz, QuizDTO> {
       isPublished: false, // Not in Prisma schema, default to false
       id: raw.id,
       createdAt: raw.createdAt,
-      updatedAt: raw.updatedAt,
-    };
-
-    // Use factory method instead of direct instantiation
-    const result = Quiz.create(props);
-    if (result.isFailure) {
-      throw new Error(`Failed to create Quiz entity: ${result.error.message}`);
+      updatedAt: raw.updatedAt
     }
 
-    return result.value;
+    // Use factory method instead of direct instantiation
+    const result = Quiz.create(props)
+    if (result.isFailure) {
+      throw new Error(`Failed to create Quiz entity: ${result.error.message}`)
+    }
+
+    return result.value
   }
 
   toPersistence(entity: Quiz): Omit<PrismaQuiz, 'createdAt' | 'updatedAt'> {
@@ -60,8 +60,8 @@ class QuizMapper implements Mapper<Quiz, PrismaQuiz, QuizDTO> {
       passingScore: entity.passingScore,
       maxAttempts: entity.maxAttempts || null,
       showAnswers: entity.showAnswers,
-      shuffleQuestions: entity.shuffleQuestions,
-    };
+      shuffleQuestions: entity.shuffleQuestions
+    }
   }
 
   toDTO(entity: Quiz): QuizDTO {
@@ -78,9 +78,9 @@ class QuizMapper implements Mapper<Quiz, PrismaQuiz, QuizDTO> {
       shuffleQuestions: entity.shuffleQuestions,
       isPublished: entity.isPublished,
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    };
+      updatedAt: entity.updatedAt
+    }
   }
 }
 
-export const quizMapper = new QuizMapper();
+export const quizMapper = new QuizMapper()

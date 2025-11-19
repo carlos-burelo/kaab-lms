@@ -11,27 +11,22 @@ export interface Toast {
 }
 
 export function useToast() {
-  const toast = ({
-    title,
-    description,
-    variant = 'default',
-    ...props
-  }: Omit<Toast, 'id'>) => {
+  const toast = ({ title, description, variant = 'default', ...props }: Omit<Toast, 'id'>) => {
     if (variant === 'destructive') {
       return sonnerToast.error(title || description || '', {
         description: title ? description : undefined,
-        ...props,
+        ...props
       })
     }
 
     return sonnerToast.success(title || description || '', {
       description: title ? description : undefined,
-      ...props,
+      ...props
     })
   }
 
   return {
     toast,
-    dismiss: (toastId?: string) => sonnerToast.dismiss(toastId),
+    dismiss: (toastId?: string) => sonnerToast.dismiss(toastId)
   }
 }

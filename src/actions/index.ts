@@ -4,21 +4,18 @@
  */
 
 // ============ SHARED UTILITIES ============
-export * from "./_shared/action-builder"
-export * from "./_shared/session"
-export * from "./_shared/validators"
-
-// ============ STUDENT ACTIONS ============
-export * as StudentActions from "./student"
+export * from './_shared/action-builder'
+export * from './_shared/session'
+export * from './_shared/validators'
+// ============ ADMIN ACTIONS ============
+export * as AdminActions from './admin'
 
 // ============ INSTRUCTOR ACTIONS ============
-export * as InstructorActions from "./instructor"
-
-// ============ ADMIN ACTIONS ============
-export * as AdminActions from "./admin"
-
+export * as InstructorActions from './instructor'
 // ============ PUBLIC ACTIONS ============
-export * as PublicActions from "./public"
+export * as PublicActions from './public'
+// ============ STUDENT ACTIONS ============
+export * as StudentActions from './student'
 
 /**
  * USAGE EXAMPLES:

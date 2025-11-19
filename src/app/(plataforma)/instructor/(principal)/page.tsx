@@ -1,13 +1,13 @@
-import { Separator } from '@/components/ui/separator'
-import { TaskList } from '@/components/tasks/TaskList'
-import { getSession } from '@/lib/auth'
 import { getCourseAnalytics, getEnrollmentTrend, getRevenueData } from '@/actions/instructor.actions'
-import { CourseFeatures } from './components/CourseFeatures'
-import { QuickActions } from './components/QuickActions'
-import { StatsCards } from './components/StatsCards'
-import { EnrollmentChart } from './components/EnrollmentChart'
+import { TaskList } from '@/components/tasks/TaskList'
+import { Separator } from '@/components/ui/separator'
+import { getSession } from '@/lib/auth'
 import { CourseAnalyticsChart } from './components/CourseAnalyticsChart'
+import { CourseFeatures } from './components/CourseFeatures'
+import { EnrollmentChart } from './components/EnrollmentChart'
+import { QuickActions } from './components/QuickActions'
 import { RevenueChart } from './components/RevenueChart'
+import { StatsCards } from './components/StatsCards'
 
 export default async function Page() {
   const session = await getSession()
@@ -41,20 +41,14 @@ export default async function Page() {
       {/* Gráficos principales */}
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
         {/* Gráfico de inscripciones */}
-        {enrollmentTrendResult.success && enrollmentTrendResult.data && (
-          <EnrollmentChart data={enrollmentTrendResult.data} />
-        )}
+        {enrollmentTrendResult.success && enrollmentTrendResult.data && <EnrollmentChart data={enrollmentTrendResult.data} />}
 
         {/* Gráfico de ingresos */}
-        {revenueDataResult.success && revenueDataResult.data && (
-          <RevenueChart data={revenueDataResult.data} />
-        )}
+        {revenueDataResult.success && revenueDataResult.data && <RevenueChart data={revenueDataResult.data} />}
       </div>
 
       {/* Análisis de cursos */}
-      {courseAnalyticsResult.success && courseAnalyticsResult.data && (
-        <CourseAnalyticsChart data={courseAnalyticsResult.data} />
-      )}
+      {courseAnalyticsResult.success && courseAnalyticsResult.data && <CourseAnalyticsChart data={courseAnalyticsResult.data} />}
 
       <Separator />
 

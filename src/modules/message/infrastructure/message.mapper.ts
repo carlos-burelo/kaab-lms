@@ -2,19 +2,19 @@
  * Message Mapper
  */
 
-import type { Mapper } from '@/core/shared/mapper.interface';
-import { Message, type MessageProps } from '../domain/message.entity';
-import type { Message as PrismaMessage } from '@prisma/client';
+import type { Message as PrismaMessage } from '@prisma/client'
+import type { Mapper } from '@/core/shared/mapper.interface'
+import { Message, type MessageProps } from '../domain/message.entity'
 
 export interface MessageDTO {
-  id: string;
-  conversationId: string;
-  senderId: string;
-  content: string;
-  isRead: boolean;
-  readAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  id: string
+  conversationId: string
+  senderId: string
+  content: string
+  isRead: boolean
+  readAt?: Date
+  createdAt: Date
+  updatedAt: Date
 }
 
 class MessageMapper implements Mapper<Message, PrismaMessage, MessageDTO> {
@@ -27,16 +27,16 @@ class MessageMapper implements Mapper<Message, PrismaMessage, MessageDTO> {
       readAt: raw.readAt || undefined,
       id: raw.id,
       createdAt: raw.createdAt,
-      updatedAt: raw.createdAt, // Prisma Message doesn't have updatedAt, using createdAt
-    };
-
-    // Use factory method instead of direct instantiation
-    const result = Message.create(props);
-    if (result.isFailure) {
-      throw new Error(`Failed to create Message entity: ${result.error.message}`);
+      updatedAt: raw.createdAt // Prisma Message doesn't have updatedAt, using createdAt
     }
 
-    return result.value;
+    // Use factory method instead of direct instantiation
+    const result = Message.create(props)
+    if (result.isFailure) {
+      throw new Error(`Failed to create Message entity: ${result.error.message}`)
+    }
+
+    return result.value
   }
 
   toPersistence(entity: Message): Omit<PrismaMessage, 'createdAt'> {
@@ -46,8 +46,8 @@ class MessageMapper implements Mapper<Message, PrismaMessage, MessageDTO> {
       senderId: entity.senderId,
       content: entity.content,
       isRead: entity.isRead,
-      readAt: entity.readAt || null,
-    };
+      readAt: entity.readAt || null
+    }
   }
 
   toDTO(entity: Message): MessageDTO {
@@ -59,9 +59,9 @@ class MessageMapper implements Mapper<Message, PrismaMessage, MessageDTO> {
       isRead: entity.isRead,
       readAt: entity.readAt,
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    };
+      updatedAt: entity.updatedAt
+    }
   }
 }
 
-export const messageMapper = new MessageMapper();
+export const messageMapper = new MessageMapper()

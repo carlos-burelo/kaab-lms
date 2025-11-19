@@ -2,51 +2,46 @@
  * Get Personal Task Use Case
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { NotFoundError, ForbiddenError } from '@/core/shared/errors';
-import type { IPersonalTaskRepository } from '../../domain/personal-task.repository.interface';
-import { type PersonalTaskDTO, personalTaskMapper } from '../../infrastructure/personal-task.mapper';
+import { ForbiddenError, NotFoundError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import type { IPersonalTaskRepository } from '../../domain/personal-task.repository.interface'
+import { type PersonalTaskDTO, personalTaskMapper } from '../../infrastructure/personal-task.mapper'
 
 interface GetTaskRequest {
-  taskId: string;
-  currentUserId: string;
+  taskId: string
+  currentUserId: string
 }
 
-export class GetTaskUseCase extends BaseUseCase<
-  GetTaskRequest,
-  PersonalTaskDTO
-> {
+export class GetTaskUseCase extends BaseUseCase<GetTaskRequest, PersonalTaskDTO> {
   constructor(private taskRepository: IPersonalTaskRepository) {
-    super();
+    super()
   }
 
   async execute(request: GetTaskRequest): Promise<Result<PersonalTaskDTO>> {
-    const { taskId, currentUserId } = request;
+    const { taskId, currentUserId } = request
 
     // Find task
-    const taskResult = await this.taskRepository.findById(taskId);
+    const taskResult = await this.taskRepository.findById(taskId)
 
     if (taskResult.isFailure) {
-      return Result.fail(taskResult.error);
+      return Result.fail(taskResult.error)
     }
 
     if (!taskResult.value) {
-      return Result.fail(new NotFoundError('PersonalTask', taskId));
+      return Result.fail(new NotFoundError('PersonalTask', taskId))
     }
 
-    const task = taskResult.value;
+    const task = taskResult.value
 
     // Check permissions
     if (!task.canBeEditedBy(currentUserId)) {
-      return Result.fail(
-        new ForbiddenError('You do not have permission to view this task')
-      );
+      return Result.fail(new ForbiddenError('You do not have permission to view this task'))
     }
 
     // Map to DTO
-    const taskDTO = personalTaskMapper.toDTO(task);
+    const taskDTO = personalTaskMapper.toDTO(task)
 
-    return Result.ok(taskDTO);
+    return Result.ok(taskDTO)
   }
 }

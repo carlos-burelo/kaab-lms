@@ -1,10 +1,10 @@
-"use server"
+'use server'
 
-import { z } from "zod"
-import { createAction } from "@/actions/_shared/action-builder"
-import { idSchema } from "@/actions/_shared/validators"
-import { studentRepository } from "@/database/repositories/student.repository"
-import { ok, err } from "@/core/shared/result"
+import { z } from 'zod'
+import { createAction } from '@/actions/_shared/action-builder'
+import { idSchema } from '@/actions/_shared/validators'
+import { err, ok } from '@/core/shared/result'
+import { studentRepository } from '@/database/repositories/student.repository'
 
 // ============ SCHEMAS ============
 
@@ -24,20 +24,17 @@ const submitAssignmentSchema = z.object({
  * Obtiene todas las entregas de asignaciones del estudiante en un curso
  */
 export const getAssignmentSubmissions = createAction({
-  name: "student.getAssignmentSubmissions",
+  name: 'student.getAssignmentSubmissions',
   schema: getAssignmentSubmissionsSchema,
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (input, context) => {
     try {
-      const submissions = await studentRepository.getStudentAssignmentSubmissions(
-        context.userId,
-        input.courseId
-      )
+      const submissions = await studentRepository.getStudentAssignmentSubmissions(context.userId, input.courseId)
 
       return ok(submissions || [])
     } catch (_error) {
-      return err(new Error("Error al obtener entregas de asignaciones"))
+      return err(new Error('Error al obtener entregas de asignaciones'))
     }
   }
 })
@@ -48,10 +45,10 @@ export const getAssignmentSubmissions = createAction({
  * Envía una asignación
  */
 export const submitAssignment = createAction({
-  name: "student.submitAssignment",
+  name: 'student.submitAssignment',
   schema: submitAssignmentSchema,
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (input, context) => {
     try {
       const submission = await studentRepository.submitAssignment({
@@ -62,12 +59,12 @@ export const submitAssignment = createAction({
       })
 
       if (!submission) {
-        return err(new Error("No se pudo enviar la asignación"))
+        return err(new Error('No se pudo enviar la asignación'))
       }
 
       return ok(submission)
     } catch (_error) {
-      return err(new Error("Error al enviar asignación"))
+      return err(new Error('Error al enviar asignación'))
     }
   }
 })

@@ -290,12 +290,8 @@ export function PublishCourseForm({ course }: PublishCourseFormProps) {
                     />
                   </div>
                   <p className='text-xs text-muted-foreground'>Precio normal del curso</p>
-                  {price && Number.isNaN(priceNum!) && (
-                    <p className='text-xs text-red-500 font-medium'>Número inválido</p>
-                  )}
-                  {price && priceNum! < 0 && (
-                    <p className='text-xs text-red-500 font-medium'>No puede ser negativo</p>
-                  )}
+                  {price && Number.isNaN(priceNum!) && <p className='text-xs text-red-500 font-medium'>Número inválido</p>}
+                  {price && priceNum! < 0 && <p className='text-xs text-red-500 font-medium'>No puede ser negativo</p>}
                 </div>
 
                 {/* Precio con descuento */}
@@ -390,8 +386,7 @@ export function PublishCourseForm({ course }: PublishCourseFormProps) {
                     <div className='flex justify-between text-sm'>
                       <span className='text-muted-foreground'>Ahorro:</span>
                       <span className='font-medium text-green-600'>
-                        ${(priceNum! - discountPriceNum!).toFixed(2)} (
-                        {((1 - discountPriceNum! / priceNum!) * 100).toFixed(0)}%)
+                        ${(priceNum! - discountPriceNum!).toFixed(2)} ({((1 - discountPriceNum! / priceNum!) * 100).toFixed(0)}%)
                       </span>
                     </div>
                   )}
@@ -463,7 +458,9 @@ export function PublishCourseForm({ course }: PublishCourseFormProps) {
                     <Timer className='w-4 h-4 text-muted-foreground' />
                     <div>
                       <p className='text-xs text-muted-foreground'>Duración</p>
-                      <p className='font-semibold text-sm'>{Math.floor(course.durationMinutes / 60)}h {course.durationMinutes % 60}m</p>
+                      <p className='font-semibold text-sm'>
+                        {Math.floor(course.durationMinutes / 60)}h {course.durationMinutes % 60}m
+                      </p>
                     </div>
                   </div>
                 )}

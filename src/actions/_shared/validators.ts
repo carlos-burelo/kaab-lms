@@ -1,11 +1,11 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 /**
  * Validators comunes reutilizables en múltiples Server Actions
  */
 
 // ============ IDs ============
-export const idSchema = z.string().min(1, "ID requerido")
+export const idSchema = z.string().min(1, 'ID requerido')
 
 export const optionalIdSchema = z.string().optional()
 
@@ -28,14 +28,14 @@ export const dateRangeSchema = z.object({
 
 // ============ Búsqueda ============
 export const searchSchema = z.object({
-  query: z.string().min(1, "Consulta de búsqueda requerida"),
+  query: z.string().min(1, 'Consulta de búsqueda requerida'),
   filters: z.record(z.string(), z.any()).optional()
 })
 
 // ============ Ordenamiento ============
 export const sortSchema = z.object({
   field: z.string(),
-  order: z.enum(["asc", "desc"]).default("asc")
+  order: z.enum(['asc', 'desc']).default('asc')
 })
 
 // ============ Archivos ============
@@ -64,13 +64,9 @@ export const userIdSchema = z.object({
   userId: idSchema
 })
 
-export const emailSchema = z.string().email("Email inválido")
+export const emailSchema = z.string().email('Email inválido')
 
-export const roleSchema = z.enum([
-  "STUDENT",
-  "INSTRUCTOR",
-  "ADMIN"
-])
+export const roleSchema = z.enum(['STUDENT', 'INSTRUCTOR', 'ADMIN'])
 
 // ============ Enrollment Related ============
 export const enrollmentIdSchema = z.object({
@@ -94,25 +90,27 @@ export const progressSchema = z.object({
 // ============ Quiz Related ============
 export const quizAttemptSchema = z.object({
   quizId: idSchema,
-  answers: z.array(z.object({
-    questionId: idSchema,
-    answerId: idSchema.or(z.array(idSchema)), // Múltiple opción o única
-    textAnswer: z.string().optional() // Para preguntas abiertas
-  }))
+  answers: z.array(
+    z.object({
+      questionId: idSchema,
+      answerId: idSchema.or(z.array(idSchema)), // Múltiple opción o única
+      textAnswer: z.string().optional() // Para preguntas abiertas
+    })
+  )
 })
 
 // ============ Assignment Related ============
 export const assignmentSubmissionSchema = z.object({
   assignmentId: idSchema,
-  content: z.string().min(1, "Contenido requerido"),
+  content: z.string().min(1, 'Contenido requerido'),
   attachments: z.array(fileUploadSchema).optional()
 })
 
 // ============ Common Filters ============
 export const courseFiltersSchema = z.object({
   category: z.string().optional(),
-  level: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"]).optional(),
-  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
+  level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).optional(),
+  status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional(),
   search: z.string().optional()
 })
 
@@ -126,7 +124,7 @@ export function formDataToObject(formData: FormData): Record<string, any> {
 
   formData.forEach((value, key) => {
     // Manejar arrays (keys que terminan en [])
-    if (key.endsWith("[]")) {
+    if (key.endsWith('[]')) {
       const arrayKey = key.slice(0, -2)
       if (!obj[arrayKey]) {
         obj[arrayKey] = []
@@ -162,10 +160,10 @@ export function validateFormData<T>(
       success: true,
       data: result.data
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Error de validación"
+      error: _error instanceof Error ? _error.message : 'Error de validación'
     }
   }
 }

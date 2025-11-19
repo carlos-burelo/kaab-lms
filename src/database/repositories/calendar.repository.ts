@@ -21,7 +21,6 @@ interface CalendarFilters {
   search?: string
 }
 
-
 export class CalendarRepository {
   /**
    * Create a new calendar event

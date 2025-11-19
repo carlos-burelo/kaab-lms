@@ -1,22 +1,22 @@
-"use server"
+'use server'
 
-import { createAction } from "@/actions/_shared/action-builder"
-import { instructorRepository } from "@/database/repositories/instructor.repository"
-import { ok, err } from "@/core/shared/result"
-import { z } from "zod"
+import { z } from 'zod'
+import { createAction } from '@/actions/_shared/action-builder'
+import { err, ok } from '@/core/shared/result'
+import { instructorRepository } from '@/database/repositories/instructor.repository'
 
 // ============ GET INSTRUCTOR PROFILE ============
 
 export const getInstructorProfile = createAction({
-  name: "instructor.getProfile",
+  name: 'instructor.getProfile',
   requireAuth: true,
-  allowedRoles: ["INSTRUCTOR"],
+  allowedRoles: ['INSTRUCTOR'],
   execute: async (_, context) => {
     try {
       const profile = await instructorRepository.getProfile(context.userId)
       return ok(profile)
     } catch (_error) {
-      return err(new Error("Error al obtener perfil"))
+      return err(new Error('Error al obtener perfil'))
     }
   }
 })
@@ -24,9 +24,9 @@ export const getInstructorProfile = createAction({
 // ============ UPDATE INSTRUCTOR PROFILE ============
 
 export const updateInstructorProfile = createAction({
-  name: "instructor.updateProfile",
+  name: 'instructor.updateProfile',
   requireAuth: true,
-  allowedRoles: ["INSTRUCTOR"],
+  allowedRoles: ['INSTRUCTOR'],
   schema: z.object({
     publicBio: z.string().optional().nullable(),
     qualifications: z.any().optional(),
@@ -34,18 +34,15 @@ export const updateInstructorProfile = createAction({
   }),
   execute: async (input, context) => {
     try {
-      const profile = await instructorRepository.updateInstructorProfile(
-        context.userId,
-        {
-          publicBio: input.publicBio,
-          qualifications: input.qualifications,
-          payoutDetails: input.payoutDetails
-        }
-      )
+      const profile = await instructorRepository.updateInstructorProfile(context.userId, {
+        publicBio: input.publicBio,
+        qualifications: input.qualifications,
+        payoutDetails: input.payoutDetails
+      })
 
       return ok(profile)
     } catch (_error) {
-      return err(new Error("Error al actualizar perfil"))
+      return err(new Error('Error al actualizar perfil'))
     }
   }
 })
@@ -53,15 +50,15 @@ export const updateInstructorProfile = createAction({
 // ============ GET INSTRUCTOR STATISTICS ============
 
 export const getInstructorStatistics = createAction({
-  name: "instructor.getStatistics",
+  name: 'instructor.getStatistics',
   requireAuth: true,
-  allowedRoles: ["INSTRUCTOR"],
+  allowedRoles: ['INSTRUCTOR'],
   execute: async (_, context) => {
     try {
       const stats = await instructorRepository.getStatistics(context.userId)
       return ok(stats)
     } catch (_error) {
-      return err(new Error("Error al obtener estadísticas"))
+      return err(new Error('Error al obtener estadísticas'))
     }
   }
 })

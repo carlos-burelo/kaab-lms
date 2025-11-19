@@ -94,9 +94,9 @@ export function DocumentEditor({ content, onUpdate }: ContentEditorProps) {
           }))
 
           toast.success('Archivo subido correctamente')
-        } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Error al subir el archivo'
-          console.error('Error uploading file:', error)
+        } catch (_error) {
+          const errorMessage = _error instanceof Error ? _error.message : 'Error al subir el archivo'
+          console.error('Error uploading file:', _error)
           toast.error(errorMessage)
         }
       })

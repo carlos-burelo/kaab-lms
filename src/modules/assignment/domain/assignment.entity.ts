@@ -2,94 +2,82 @@
  * Assignment Aggregate Root
  */
 
-import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root';
-import { Result } from '@/core/shared/result';
-import { BusinessRuleError, ValidationError } from '@/core/shared/errors';
-import {
-  AssignmentCreatedEvent,
-  AssignmentSubmittedEvent,
-  AssignmentGradedEvent,
-} from './events';
+import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root'
+import { BusinessRuleError, ValidationError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { AssignmentCreatedEvent, AssignmentGradedEvent, AssignmentSubmittedEvent } from './events'
 
 export interface AssignmentProps extends EntityProps {
-  title: string;
-  description?: string;
-  instructions?: string;
-  dueDate?: Date;
-  maxScore: number;
-  lessonId: string;
-  allowLateSubmission?: boolean;
-  latePenaltyPercent?: number | null;
+  title: string
+  description?: string
+  instructions?: string
+  dueDate?: Date
+  maxScore: number
+  lessonId: string
+  allowLateSubmission?: boolean
+  latePenaltyPercent?: number | null
 }
 
 export class Assignment extends AggregateRoot<AssignmentProps> {
   get title(): string {
-    return this._props.title;
+    return this._props.title
   }
 
   get description(): string | undefined {
-    return this._props.description;
+    return this._props.description
   }
 
   get instructions(): string | undefined {
-    return this._props.instructions;
+    return this._props.instructions
   }
 
   get dueDate(): Date | undefined {
-    return this._props.dueDate;
+    return this._props.dueDate
   }
 
   get maxScore(): number {
-    return this._props.maxScore;
+    return this._props.maxScore
   }
 
   get lessonId(): string {
-    return this._props.lessonId;
+    return this._props.lessonId
   }
 
   get allowLateSubmission(): boolean {
-    return this._props.allowLateSubmission ?? false;
+    return this._props.allowLateSubmission ?? false
   }
 
   get latePenaltyPercent(): number | null | undefined {
-    return this._props.latePenaltyPercent;
+    return this._props.latePenaltyPercent
   }
 
   private constructor(props: AssignmentProps, id?: string) {
-    super(props, id);
+    super(props, id)
   }
 
   /**
    * Create a new assignment
    */
-  static create(
-    props: Omit<AssignmentProps, 'id' | 'createdAt' | 'updatedAt'>
-  ): Result<Assignment, ValidationError> {
+  static create(props: Omit<AssignmentProps, 'id' | 'createdAt' | 'updatedAt'>): Result<Assignment, ValidationError> {
     // Validations
     if (props.title.trim().length < 3) {
-      return Result.fail(
-        new ValidationError('Title must be at least 3 characters', 'title')
-      );
+      return Result.fail(new ValidationError('Title must be at least 3 characters', 'title'))
     }
 
     if (props.maxScore <= 0) {
-      return Result.fail(
-        new ValidationError('Max score must be positive', 'maxScore')
-      );
+      return Result.fail(new ValidationError('Max score must be positive', 'maxScore'))
     }
 
     if (props.dueDate && props.dueDate < new Date()) {
-      return Result.fail(
-        new ValidationError('Due date must be in the future', 'dueDate')
-      );
+      return Result.fail(new ValidationError('Due date must be in the future', 'dueDate'))
     }
 
     const assignment = new Assignment(
       {
-        ...props,
+        ...props
       },
       props.id
-    );
+    )
 
     // Emit domain event
     assignment.addDomainEvent(
@@ -97,11 +85,11 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
         assignmentId: assignment.id,
         lessonId: assignment.lessonId,
         title: assignment.title,
-        dueDate: assignment.dueDate,
+        dueDate: assignment.dueDate
       })
-    );
+    )
 
-    return Result.ok(assignment);
+    return Result.ok(assignment)
   }
 
   /**
@@ -109,23 +97,21 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
    */
   updateTitle(newTitle: string): Result<void, ValidationError> {
     if (newTitle.trim().length < 3) {
-      return Result.fail(
-        new ValidationError('Title must be at least 3 characters', 'title')
-      );
+      return Result.fail(new ValidationError('Title must be at least 3 characters', 'title'))
     }
 
-    this._props.title = newTitle;
-    this.touch();
+    this._props.title = newTitle
+    this.touch()
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
    * Update assignment description
    */
   updateDescription(description: string): void {
-    this._props.description = description;
-    this.touch();
+    this._props.description = description
+    this.touch()
   }
 
   /**
@@ -133,15 +119,13 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
    */
   updateDueDate(dueDate: Date): Result<void, ValidationError> {
     if (dueDate < new Date()) {
-      return Result.fail(
-        new ValidationError('Due date must be in the future', 'dueDate')
-      );
+      return Result.fail(new ValidationError('Due date must be in the future', 'dueDate'))
     }
 
-    this._props.dueDate = dueDate;
-    this.touch();
+    this._props.dueDate = dueDate
+    this.touch()
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
@@ -149,23 +133,21 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
    */
   updateMaxScore(score: number): Result<void, ValidationError> {
     if (score <= 0) {
-      return Result.fail(
-        new ValidationError('Max score must be positive', 'maxScore')
-      );
+      return Result.fail(new ValidationError('Max score must be positive', 'maxScore'))
     }
 
-    this._props.maxScore = score;
-    this.touch();
+    this._props.maxScore = score
+    this.touch()
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
    * Check if assignment is overdue
    */
   isOverdue(): boolean {
-    if (!this._props.dueDate) return false;
-    return this._props.dueDate < new Date();
+    if (!this._props.dueDate) return false
+    return this._props.dueDate < new Date()
   }
 
   /**
@@ -173,21 +155,19 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
    */
   canSubmit(): Result<void, BusinessRuleError> {
     if (this.isOverdue() && !this.allowLateSubmission) {
-      return Result.fail(
-        new BusinessRuleError('Cannot submit assignment after due date')
-      );
+      return Result.fail(new BusinessRuleError('Cannot submit assignment after due date'))
     }
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
    * Submit assignment
    */
   submit(userId: string, content?: string, fileId?: string): Result<void, BusinessRuleError> {
-    const canSubmitResult = this.canSubmit();
+    const canSubmitResult = this.canSubmit()
     if (canSubmitResult.isFailure) {
-      return Result.fail(canSubmitResult.error);
+      return Result.fail(canSubmitResult.error)
     }
 
     // Emit domain event
@@ -197,28 +177,19 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
         userId,
         content,
         fileId,
-        submittedAt: new Date(),
+        submittedAt: new Date()
       })
-    );
+    )
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
    * Grade assignment submission
    */
-  grade(
-    submissionId: string,
-    score: number,
-    feedback?: string
-  ): Result<void, ValidationError> {
+  grade(submissionId: string, score: number, feedback?: string): Result<void, ValidationError> {
     if (score < 0 || score > this._props.maxScore) {
-      return Result.fail(
-        new ValidationError(
-          `Score must be between 0 and ${this._props.maxScore}`,
-          'score'
-        )
-      );
+      return Result.fail(new ValidationError(`Score must be between 0 and ${this._props.maxScore}`, 'score'))
     }
 
     // Emit domain event
@@ -228,11 +199,11 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
         submissionId,
         score,
         feedback,
-        gradedAt: new Date(),
+        gradedAt: new Date()
       })
-    );
+    )
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
@@ -241,13 +212,13 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
   canBeEditedBy(_userId: string): boolean {
     // Business rule: assignments can be edited by instructors
     // This is a placeholder - actual implementation would check user role
-    return true;
+    return true
   }
 
   toObject(): AssignmentProps & {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
+    id: string
+    createdAt: Date
+    updatedAt: Date
   } {
     return {
       id: this.id,
@@ -260,11 +231,11 @@ export class Assignment extends AggregateRoot<AssignmentProps> {
       allowLateSubmission: this.allowLateSubmission,
       latePenaltyPercent: this.latePenaltyPercent,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    };
+      updatedAt: this.updatedAt
+    }
   }
 
   clone(): Assignment {
-    return new Assignment({ ...this._props }, this._id);
+    return new Assignment({ ...this._props }, this._id)
   }
 }

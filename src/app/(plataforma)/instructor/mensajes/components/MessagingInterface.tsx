@@ -1,15 +1,15 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { Send } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import { getConversationDetail, getConversations, sendMessage } from '@/actions/instructor/messaging.actions'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Send } from 'lucide-react'
-import { getConversations, getConversationDetail, sendMessage } from '@/actions/instructor/messaging.actions'
-import { toast } from 'sonner'
 
 type Conversation = {
   id: string
@@ -89,9 +89,7 @@ export function MessagingInterface() {
       <div className='w-80 border-r'>
         <ScrollArea className='h-full'>
           {conversations.length === 0 ? (
-            <div className='p-4 text-center text-muted-foreground'>
-              No hay conversaciones
-            </div>
+            <div className='p-4 text-center text-muted-foreground'>No hay conversaciones</div>
           ) : (
             conversations.map((conv) => {
               // TODO: Should compare with current user ID to determine other user
@@ -109,9 +107,7 @@ export function MessagingInterface() {
                     </Avatar>
                     <div className='flex-1 min-w-0'>
                       <p className='font-medium truncate'>{otherUser.profile?.name}</p>
-                      <p className='text-sm text-muted-foreground truncate'>
-                        {conv.lastMessage}
-                      </p>
+                      <p className='text-sm text-muted-foreground truncate'>{conv.lastMessage}</p>
                     </div>
                   </div>
                 </div>
@@ -135,9 +131,7 @@ export function MessagingInterface() {
                     </Avatar>
                     <div>
                       <div className='flex items-center gap-2'>
-                        <span className='font-medium text-sm'>
-                          {message.sender.profile?.name}
-                        </span>
+                        <span className='font-medium text-sm'>{message.sender.profile?.name}</span>
                         <span className='text-xs text-muted-foreground'>
                           {format(new Date(message.createdAt), 'HH:mm', { locale: es })}
                         </span>

@@ -2,7 +2,7 @@
  * Create Course DTO
  */
 
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const CreateCourseSchema = z.object({
   instructorId: z.string().min(1, 'Instructor ID is required'),
@@ -13,7 +13,7 @@ export const CreateCourseSchema = z.object({
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT']).optional(),
   categoryId: z.string().optional(),
   requirements: z.array(z.string()).optional(),
-  objectives: z.array(z.string()).optional(),
-});
+  objectives: z.array(z.string()).optional()
+})
 
-export type CreateCourseDTO = z.infer<typeof CreateCourseSchema>;
+export type CreateCourseDTO = z.infer<typeof CreateCourseSchema>

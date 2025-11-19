@@ -2,83 +2,73 @@
  * User Learning Path Progress Entity
  */
 
-import { Entity, type EntityProps } from '@/core/shared/entity';
-import { Result } from '@/core/shared/result';
-import { ValidationError, BusinessRuleError } from '@/core/shared/errors';
+import { Entity, type EntityProps } from '@/core/shared/entity'
+import { BusinessRuleError, ValidationError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
 
 export interface UserLearningPathProgressProps extends EntityProps {
-  userId: string;
-  learningPathId: string;
-  currentNodeId?: string;
-  completedNodes: string[];
-  isCompleted: boolean;
-  completedAt?: Date;
+  userId: string
+  learningPathId: string
+  currentNodeId?: string
+  completedNodes: string[]
+  isCompleted: boolean
+  completedAt?: Date
 }
 
 export class UserLearningPathProgress extends Entity<UserLearningPathProgressProps> {
   get userId(): string {
-    return this._props.userId;
+    return this._props.userId
   }
 
   get learningPathId(): string {
-    return this._props.learningPathId;
+    return this._props.learningPathId
   }
 
   get currentNodeId(): string | undefined {
-    return this._props.currentNodeId;
+    return this._props.currentNodeId
   }
 
   get completedNodes(): string[] {
-    return [...this._props.completedNodes];
+    return [...this._props.completedNodes]
   }
 
   get isCompleted(): boolean {
-    return this._props.isCompleted;
+    return this._props.isCompleted
   }
 
   get completedAt(): Date | undefined {
-    return this._props.completedAt;
+    return this._props.completedAt
   }
 
   private constructor(props: UserLearningPathProgressProps, id?: string) {
-    super(props, id);
+    super(props, id)
   }
 
   /**
    * Create new progress
    */
   static create(
-    props: Omit<
-      UserLearningPathProgressProps,
-      'id' | 'completedNodes' | 'isCompleted' | 'createdAt' | 'updatedAt'
-    >
+    props: Omit<UserLearningPathProgressProps, 'id' | 'completedNodes' | 'isCompleted' | 'createdAt' | 'updatedAt'>
   ): Result<UserLearningPathProgress, ValidationError> {
     // Validations
     if (!props.userId || props.userId.trim().length === 0) {
-      return Result.fail(
-        new ValidationError('User ID is required', 'userId')
-      );
+      return Result.fail(new ValidationError('User ID is required', 'userId'))
     }
 
     if (!props.learningPathId || props.learningPathId.trim().length === 0) {
-      return Result.fail(
-        new ValidationError(
-          'Learning path ID is required',
-          'learningPathId'
-        )
-      );
+      return Result.fail(new ValidationError('Learning path ID is required', 'learningPathId'))
     }
 
     const progress = new UserLearningPathProgress(
       {
         ...props,
         completedNodes: [],
-        isCompleted: false,
+        isCompleted: false
       },
       props.id
-    );
+    )
 
-    return Result.ok(progress);
+    return Result.ok(progress)
   }
 
   /**
@@ -86,15 +76,13 @@ export class UserLearningPathProgress extends Entity<UserLearningPathProgressPro
    */
   startPath(startNodeId: string): Result<void, ValidationError> {
     if (!startNodeId || startNodeId.trim().length === 0) {
-      return Result.fail(
-        new ValidationError('Start node ID is required', 'startNodeId')
-      );
+      return Result.fail(new ValidationError('Start node ID is required', 'startNodeId'))
     }
 
-    this._props.currentNodeId = startNodeId;
-    this.touch();
+    this._props.currentNodeId = startNodeId
+    this.touch()
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
@@ -102,21 +90,17 @@ export class UserLearningPathProgress extends Entity<UserLearningPathProgressPro
    */
   completeNode(nodeId: string): Result<void, BusinessRuleError> {
     if (this._props.isCompleted) {
-      return Result.fail(
-        new BusinessRuleError('Learning path is already completed')
-      );
+      return Result.fail(new BusinessRuleError('Learning path is already completed'))
     }
 
     if (this._props.completedNodes.includes(nodeId)) {
-      return Result.fail(
-        new BusinessRuleError('Node is already completed')
-      );
+      return Result.fail(new BusinessRuleError('Node is already completed'))
     }
 
-    this._props.completedNodes.push(nodeId);
-    this.touch();
+    this._props.completedNodes.push(nodeId)
+    this.touch()
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
@@ -124,15 +108,13 @@ export class UserLearningPathProgress extends Entity<UserLearningPathProgressPro
    */
   moveToNode(nextNodeId: string): Result<void, ValidationError> {
     if (!nextNodeId || nextNodeId.trim().length === 0) {
-      return Result.fail(
-        new ValidationError('Next node ID is required', 'nextNodeId')
-      );
+      return Result.fail(new ValidationError('Next node ID is required', 'nextNodeId'))
     }
 
-    this._props.currentNodeId = nextNodeId;
-    this.touch();
+    this._props.currentNodeId = nextNodeId
+    this.touch()
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
@@ -140,16 +122,14 @@ export class UserLearningPathProgress extends Entity<UserLearningPathProgressPro
    */
   completePath(): Result<void, BusinessRuleError> {
     if (this._props.isCompleted) {
-      return Result.fail(
-        new BusinessRuleError('Learning path is already completed')
-      );
+      return Result.fail(new BusinessRuleError('Learning path is already completed'))
     }
 
-    this._props.isCompleted = true;
-    this._props.completedAt = new Date();
-    this.touch();
+    this._props.isCompleted = true
+    this._props.completedAt = new Date()
+    this.touch()
 
-    return Result.ok(undefined);
+    return Result.ok(undefined)
   }
 
   /**
@@ -157,32 +137,30 @@ export class UserLearningPathProgress extends Entity<UserLearningPathProgressPro
    */
   calculateProgress(totalNodes: number): number {
     if (totalNodes === 0) {
-      return 0;
+      return 0
     }
 
-    return Math.round(
-      (this._props.completedNodes.length / totalNodes) * 100
-    );
+    return Math.round((this._props.completedNodes.length / totalNodes) * 100)
   }
 
   /**
    * Check if a node is completed
    */
   isNodeCompleted(nodeId: string): boolean {
-    return this._props.completedNodes.includes(nodeId);
+    return this._props.completedNodes.includes(nodeId)
   }
 
   /**
    * Get next node (placeholder - actual logic would be in use case)
    */
   getNextNode(): string | undefined {
-    return this._props.currentNodeId;
+    return this._props.currentNodeId
   }
 
   toObject(): UserLearningPathProgressProps & {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
+    id: string
+    createdAt: Date
+    updatedAt: Date
   } {
     return {
       id: this.id,
@@ -193,11 +171,11 @@ export class UserLearningPathProgress extends Entity<UserLearningPathProgressPro
       isCompleted: this.isCompleted,
       completedAt: this.completedAt,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    };
+      updatedAt: this.updatedAt
+    }
   }
 
   clone(): UserLearningPathProgress {
-    return new UserLearningPathProgress({ ...this._props }, this._id);
+    return new UserLearningPathProgress({ ...this._props }, this._id)
   }
 }

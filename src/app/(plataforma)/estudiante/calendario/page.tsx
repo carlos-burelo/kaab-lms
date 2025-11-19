@@ -1,10 +1,10 @@
+import { endOfMonth, startOfMonth } from 'date-fns'
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getCalendarEvents } from '@/actions/student/calendar.actions'
 import { CalendarView } from '@/components/calendar/CalendarView'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { startOfMonth, endOfMonth } from 'date-fns'
 
 export const metadata: Metadata = {
   title: 'Mi Calendario',

@@ -1,10 +1,10 @@
 import type { UserRole } from '@prisma/client'
 import { compare } from 'bcryptjs'
+import { redirect } from 'next/navigation'
 import NextAuth, { type Session } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { cache } from 'react'
 import { verifyAccount } from '@/database/contexts/global'
-import { redirect } from 'next/navigation'
 
 export type AuthUser = Session['user'] & { id: string }
 
@@ -57,7 +57,6 @@ export const getSession = cache(async () => {
   const session = await auth()
   if (!session || !session.user) {
     redirect('/sign-in')
-
   }
   return session!.user as Required<AuthUser>
 })

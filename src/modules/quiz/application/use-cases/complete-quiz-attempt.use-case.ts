@@ -3,34 +3,31 @@
  * Completes a quiz attempt and calculates the score
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { prisma } from '@/lib/prisma';
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import { prisma } from '@/lib/prisma'
 
 interface CompleteQuizAttemptRequest {
-  attemptId: string;
-  score: number;
-  passed: boolean;
-  currentUserId: string;
+  attemptId: string
+  score: number
+  passed: boolean
+  currentUserId: string
 }
 
 interface QuizAttemptDTO {
-  id: string;
-  userId: string;
-  quizId: string;
-  attemptNumber: number;
-  score: number;
-  passed: boolean;
-  startedAt: Date;
-  completedAt: Date;
+  id: string
+  userId: string
+  quizId: string
+  attemptNumber: number
+  score: number
+  passed: boolean
+  startedAt: Date
+  completedAt: Date
 }
 
-export class CompleteQuizAttemptUseCase extends BaseUseCase<
-  CompleteQuizAttemptRequest,
-  QuizAttemptDTO
-> {
+export class CompleteQuizAttemptUseCase extends BaseUseCase<CompleteQuizAttemptRequest, QuizAttemptDTO> {
   async execute(request: CompleteQuizAttemptRequest): Promise<Result<QuizAttemptDTO>> {
-    const { attemptId, score, passed } = request;
+    const { attemptId, score, passed } = request
 
     try {
       const attempt = await prisma.quizAttempt.update({
@@ -38,9 +35,9 @@ export class CompleteQuizAttemptUseCase extends BaseUseCase<
         data: {
           score,
           passed,
-          completedAt: new Date(),
-        },
-      });
+          completedAt: new Date()
+        }
+      })
 
       return Result.ok({
         id: attempt.id,
@@ -50,12 +47,10 @@ export class CompleteQuizAttemptUseCase extends BaseUseCase<
         score: attempt.score!,
         passed: attempt.passed!,
         startedAt: attempt.startedAt,
-        completedAt: attempt.completedAt!,
-      });
+        completedAt: attempt.completedAt!
+      })
     } catch (error) {
-      return Result.fail(
-        new Error(`Failed to complete quiz attempt: ${(error as Error).message}`)
-      );
+      return Result.fail(new Error(`Failed to complete quiz attempt: ${(error as Error).message}`))
     }
   }
 }

@@ -1,14 +1,14 @@
-"use server"
+'use server'
 
-import { createAction } from "@/actions/_shared/action-builder"
-import { instructorRepository } from "@/database/repositories/instructor.repository"
-import { ok, err } from "@/core/shared/result"
-import { z } from "zod"
+import { z } from 'zod'
+import { createAction } from '@/actions/_shared/action-builder'
+import { err, ok } from '@/core/shared/result'
+import { instructorRepository } from '@/database/repositories/instructor.repository'
 
 // ============ GET NOTIFICATIONS ============
 
 export const getNotifications = createAction({
-  name: "instructor.getNotifications",
+  name: 'instructor.getNotifications',
   requireAuth: true,
   schema: z
     .object({
@@ -17,13 +17,10 @@ export const getNotifications = createAction({
     .optional(),
   execute: async (input, context) => {
     try {
-      const notifications = await instructorRepository.getNotifications(
-        context.userId,
-        input?.limit
-      )
+      const notifications = await instructorRepository.getNotifications(context.userId, input?.limit)
       return ok(notifications || [])
     } catch (_error) {
-      return err(new Error("Error al obtener notificaciones"))
+      return err(new Error('Error al obtener notificaciones'))
     }
   }
 })
@@ -31,7 +28,7 @@ export const getNotifications = createAction({
 // ============ MARK NOTIFICATIONS AS READ ============
 
 export const markNotificationsAsRead = createAction({
-  name: "instructor.markNotificationsAsRead",
+  name: 'instructor.markNotificationsAsRead',
   requireAuth: true,
   schema: z
     .object({
@@ -40,13 +37,10 @@ export const markNotificationsAsRead = createAction({
     .optional(),
   execute: async (input, context) => {
     try {
-      await instructorRepository.markNotificationsAsRead(
-        context.userId,
-        input?.notificationIds
-      )
+      await instructorRepository.markNotificationsAsRead(context.userId, input?.notificationIds)
       return ok({ success: true })
     } catch (_error) {
-      return err(new Error("Error al marcar notificaciones"))
+      return err(new Error('Error al marcar notificaciones'))
     }
   }
 })
@@ -54,16 +48,14 @@ export const markNotificationsAsRead = createAction({
 // ============ COUNT UNREAD NOTIFICATIONS ============
 
 export const countUnreadNotifications = createAction({
-  name: "instructor.countUnreadNotifications",
+  name: 'instructor.countUnreadNotifications',
   requireAuth: true,
   execute: async (_, context) => {
     try {
-      const count = await instructorRepository.countUnreadNotifications(
-        context.userId
-      )
+      const count = await instructorRepository.countUnreadNotifications(context.userId)
       return ok(count)
     } catch (_error) {
-      return err(new Error("Error al contar notificaciones"))
+      return err(new Error('Error al contar notificaciones'))
     }
   }
 })

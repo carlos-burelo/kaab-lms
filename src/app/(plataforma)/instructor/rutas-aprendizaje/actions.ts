@@ -19,11 +19,11 @@ export async function createLearningPath(data: {
       revalidatePath('/instructor/rutas-aprendizaje')
     }
     return result
-  } catch (error) {
-    console.error(error)
+  } catch (_error) {
+    console.error(_error)
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error desconocido'
+      error: _error instanceof Error ? _error.message : 'Error desconocido'
     }
   }
 }
@@ -41,9 +41,9 @@ export async function saveLearningPathDesign(learningPathId: string, nodes: Desi
     revalidatePath('/instructor/rutas-aprendizaje')
 
     return { success: true }
-  } catch (error) {
-    console.error(error)
-    throw error
+  } catch (_error) {
+    console.error(_error)
+    throw _error
   }
 }
 
@@ -59,8 +59,8 @@ export async function deleteLearningPath(learningPathId: string) {
     revalidatePath('/instructor/rutas-aprendizaje')
 
     return { success: true }
-  } catch (error) {
-    console.error(error)
-    throw error
+  } catch (_error) {
+    console.error(_error)
+    throw _error
   }
 }

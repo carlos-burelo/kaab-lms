@@ -1,23 +1,21 @@
-"use server"
+'use server'
 
-import { createAction } from "@/actions/_shared/action-builder"
-import { instructorRepository } from "@/database/repositories/instructor.repository"
-import { ok, err } from "@/core/shared/result"
-import { z } from "zod"
+import { z } from 'zod'
+import { createAction } from '@/actions/_shared/action-builder'
+import { err, ok } from '@/core/shared/result'
+import { instructorRepository } from '@/database/repositories/instructor.repository'
 
 // ============ GET CONVERSATIONS ============
 
 export const getConversations = createAction({
-  name: "instructor.getConversations",
+  name: 'instructor.getConversations',
   requireAuth: true,
   execute: async (_, context) => {
     try {
-      const conversations = await instructorRepository.getConversations(
-        context.userId
-      )
+      const conversations = await instructorRepository.getConversations(context.userId)
       return ok(conversations || [])
     } catch (_error) {
-      return err(new Error("Error al obtener conversaciones"))
+      return err(new Error('Error al obtener conversaciones'))
     }
   }
 })
@@ -25,25 +23,22 @@ export const getConversations = createAction({
 // ============ GET CONVERSATION DETAIL ============
 
 export const getConversationDetail = createAction({
-  name: "instructor.getConversationDetail",
+  name: 'instructor.getConversationDetail',
   requireAuth: true,
   schema: z.object({
     conversationId: z.string()
   }),
   execute: async (input, context) => {
     try {
-      const conversation = await instructorRepository.getConversationDetail(
-        input.conversationId,
-        context.userId
-      )
+      const conversation = await instructorRepository.getConversationDetail(input.conversationId, context.userId)
 
       if (!conversation) {
-        return err(new Error("Conversación no encontrada"))
+        return err(new Error('Conversación no encontrada'))
       }
 
       return ok(conversation)
     } catch (_error) {
-      return err(new Error("Error al obtener conversación"))
+      return err(new Error('Error al obtener conversación'))
     }
   }
 })
@@ -51,11 +46,11 @@ export const getConversationDetail = createAction({
 // ============ SEND MESSAGE ============
 
 export const sendMessage = createAction({
-  name: "instructor.sendMessage",
+  name: 'instructor.sendMessage',
   requireAuth: true,
   schema: z.object({
     conversationId: z.string(),
-    content: z.string().min(1, "El mensaje no puede estar vacío"),
+    content: z.string().min(1, 'El mensaje no puede estar vacío'),
     fileId: z.string().optional().nullable()
   }),
   execute: async (input, context) => {
@@ -69,7 +64,7 @@ export const sendMessage = createAction({
 
       return ok(message)
     } catch (_error) {
-      return err(new Error("Error al enviar mensaje"))
+      return err(new Error('Error al enviar mensaje'))
     }
   }
 })
@@ -77,21 +72,18 @@ export const sendMessage = createAction({
 // ============ GET OR CREATE CONVERSATION ============
 
 export const getOrCreateConversation = createAction({
-  name: "instructor.getOrCreateConversation",
+  name: 'instructor.getOrCreateConversation',
   requireAuth: true,
   schema: z.object({
     receiverId: z.string()
   }),
   execute: async (input, context) => {
     try {
-      const conversation = await instructorRepository.getOrCreateConversation(
-        context.userId,
-        input.receiverId
-      )
+      const conversation = await instructorRepository.getOrCreateConversation(context.userId, input.receiverId)
 
       return ok(conversation)
     } catch (_error) {
-      return err(new Error("Error al crear conversación"))
+      return err(new Error('Error al crear conversación'))
     }
   }
 })

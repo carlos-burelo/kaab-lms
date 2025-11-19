@@ -1,5 +1,5 @@
-import { auth, type AuthUser } from "@/lib/auth"
-import type { Session } from "next-auth"
+import type { Session } from 'next-auth'
+import { type AuthUser, auth } from '@/lib/auth'
 
 /**
  * Obtiene la sesión del servidor usando NextAuth v5
@@ -15,7 +15,7 @@ export async function requireSession(): Promise<Session> {
   const session = await getServerSession()
 
   if (!session || !session.user) {
-    throw new Error("No autorizado. Debes iniciar sesión.")
+    throw new Error('No autorizado. Debes iniciar sesión.')
   }
 
   return session
@@ -91,6 +91,6 @@ export async function requireAnyRole(roles: string[]): Promise<void> {
   const userRole = await getCurrentUserRole()
 
   if (!roles.includes(userRole)) {
-    throw new Error(`Esta acción requiere uno de los siguientes roles: ${roles.join(", ")}`)
+    throw new Error(`Esta acción requiere uno de los siguientes roles: ${roles.join(', ')}`)
   }
 }

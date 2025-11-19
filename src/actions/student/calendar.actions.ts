@@ -1,19 +1,21 @@
-"use server"
+'use server'
 
-import { z } from "zod"
-import { createAction } from "@/actions/_shared/action-builder"
-import { studentRepository } from "@/database/repositories/student.repository"
-import { ok, err } from "@/core/shared/result"
+import { z } from 'zod'
+import { createAction } from '@/actions/_shared/action-builder'
+import { err, ok } from '@/core/shared/result'
+import { studentRepository } from '@/database/repositories/student.repository'
 
 // ============ SCHEMAS ============
 
 const getCalendarEventsSchema = z.object({
-  startDate: z.string().or(z.date()).transform((val) =>
-    typeof val === "string" ? new Date(val) : val
-  ),
-  endDate: z.string().or(z.date()).transform((val) =>
-    typeof val === "string" ? new Date(val) : val
-  )
+  startDate: z
+    .string()
+    .or(z.date())
+    .transform((val) => (typeof val === 'string' ? new Date(val) : val)),
+  endDate: z
+    .string()
+    .or(z.date())
+    .transform((val) => (typeof val === 'string' ? new Date(val) : val))
 })
 
 // ============ GET CALENDAR EVENTS ============
@@ -22,21 +24,17 @@ const getCalendarEventsSchema = z.object({
  * Obtiene eventos del calendario del estudiante en un rango de fechas
  */
 export const getCalendarEvents = createAction({
-  name: "student.getCalendarEvents",
+  name: 'student.getCalendarEvents',
   schema: getCalendarEventsSchema,
   requireAuth: true,
-  allowedRoles: ["STUDENT"],
+  allowedRoles: ['STUDENT'],
   execute: async (input, context) => {
     try {
-      const events = await studentRepository.getCalendarEvents(
-        context.userId,
-        input.startDate,
-        input.endDate
-      )
+      const events = await studentRepository.getCalendarEvents(context.userId, input.startDate, input.endDate)
 
       return ok(events || [])
     } catch (_error) {
-      return err(new Error("Error al obtener eventos del calendario"))
+      return err(new Error('Error al obtener eventos del calendario'))
     }
   }
 })

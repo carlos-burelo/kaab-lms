@@ -1,18 +1,18 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Facebook, Github, Globe, Linkedin, Save, Twitter, User } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { User, Save, Facebook, Twitter, Linkedin, Github, Globe } from 'lucide-react'
 import { updateProfile } from '@/actions/profile.actions'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
 
 const profileSchema = z.object({
@@ -110,13 +110,7 @@ export function ProfileForm({ initialProfile, userEmail }: ProfileFormProps) {
 
           <div className='space-y-2'>
             <Label htmlFor='bio'>Biografía</Label>
-            <Textarea
-              id='bio'
-              placeholder='Cuéntanos sobre ti...'
-              rows={4}
-              {...register('bio')}
-              className='resize-none'
-            />
+            <Textarea id='bio' placeholder='Cuéntanos sobre ti...' rows={4} {...register('bio')} className='resize-none' />
             {errors.bio && <p className='text-sm text-destructive'>{errors.bio.message}</p>}
           </div>
         </CardContent>
@@ -133,14 +127,8 @@ export function ProfileForm({ initialProfile, userEmail }: ProfileFormProps) {
               <Facebook className='h-4 w-4' />
               Facebook
             </Label>
-            <Input
-              id='facebook'
-              placeholder='https://facebook.com/tu-perfil'
-              {...register('socialLinks.facebook')}
-            />
-            {errors.socialLinks?.facebook && (
-              <p className='text-sm text-destructive'>{errors.socialLinks.facebook.message}</p>
-            )}
+            <Input id='facebook' placeholder='https://facebook.com/tu-perfil' {...register('socialLinks.facebook')} />
+            {errors.socialLinks?.facebook && <p className='text-sm text-destructive'>{errors.socialLinks.facebook.message}</p>}
           </div>
 
           <div className='space-y-2'>
@@ -148,14 +136,8 @@ export function ProfileForm({ initialProfile, userEmail }: ProfileFormProps) {
               <Twitter className='h-4 w-4' />
               Twitter
             </Label>
-            <Input
-              id='twitter'
-              placeholder='https://twitter.com/tu-perfil'
-              {...register('socialLinks.twitter')}
-            />
-            {errors.socialLinks?.twitter && (
-              <p className='text-sm text-destructive'>{errors.socialLinks.twitter.message}</p>
-            )}
+            <Input id='twitter' placeholder='https://twitter.com/tu-perfil' {...register('socialLinks.twitter')} />
+            {errors.socialLinks?.twitter && <p className='text-sm text-destructive'>{errors.socialLinks.twitter.message}</p>}
           </div>
 
           <div className='space-y-2'>
@@ -163,14 +145,8 @@ export function ProfileForm({ initialProfile, userEmail }: ProfileFormProps) {
               <Linkedin className='h-4 w-4' />
               LinkedIn
             </Label>
-            <Input
-              id='linkedin'
-              placeholder='https://linkedin.com/in/tu-perfil'
-              {...register('socialLinks.linkedin')}
-            />
-            {errors.socialLinks?.linkedin && (
-              <p className='text-sm text-destructive'>{errors.socialLinks.linkedin.message}</p>
-            )}
+            <Input id='linkedin' placeholder='https://linkedin.com/in/tu-perfil' {...register('socialLinks.linkedin')} />
+            {errors.socialLinks?.linkedin && <p className='text-sm text-destructive'>{errors.socialLinks.linkedin.message}</p>}
           </div>
 
           <div className='space-y-2'>
@@ -179,9 +155,7 @@ export function ProfileForm({ initialProfile, userEmail }: ProfileFormProps) {
               GitHub
             </Label>
             <Input id='github' placeholder='https://github.com/tu-usuario' {...register('socialLinks.github')} />
-            {errors.socialLinks?.github && (
-              <p className='text-sm text-destructive'>{errors.socialLinks.github.message}</p>
-            )}
+            {errors.socialLinks?.github && <p className='text-sm text-destructive'>{errors.socialLinks.github.message}</p>}
           </div>
 
           <div className='space-y-2'>
@@ -190,9 +164,7 @@ export function ProfileForm({ initialProfile, userEmail }: ProfileFormProps) {
               Sitio Web
             </Label>
             <Input id='website' placeholder='https://tu-sitio.com' {...register('socialLinks.website')} />
-            {errors.socialLinks?.website && (
-              <p className='text-sm text-destructive'>{errors.socialLinks.website.message}</p>
-            )}
+            {errors.socialLinks?.website && <p className='text-sm text-destructive'>{errors.socialLinks.website.message}</p>}
           </div>
         </CardContent>
       </Card>

@@ -2,23 +2,23 @@
  * Mission Mapper
  */
 
-import type { Mapper } from '@/core/shared/mapper.interface';
-import { Mission, type MissionProps } from '../domain/mission.entity';
-import type { MissionType, MissionDifficulty } from '../domain/value-objects';
-import type { Mission as PrismaMission } from '@prisma/client';
+import type { Mission as PrismaMission } from '@prisma/client'
+import type { Mapper } from '@/core/shared/mapper.interface'
+import { Mission, type MissionProps } from '../domain/mission.entity'
+import type { MissionDifficulty, MissionType } from '../domain/value-objects'
 
 export interface MissionDTO {
-  id: string;
-  title: string;
-  description: string;
-  type: MissionType;
-  difficulty: MissionDifficulty;
-  xpReward: number;
-  coinReward: number;
-  startDate?: Date;
-  endDate?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  id: string
+  title: string
+  description: string
+  type: MissionType
+  difficulty: MissionDifficulty
+  xpReward: number
+  coinReward: number
+  startDate?: Date
+  endDate?: Date
+  createdAt: Date
+  updatedAt: Date
 }
 
 class MissionMapper implements Mapper<Mission, PrismaMission, MissionDTO> {
@@ -34,18 +34,16 @@ class MissionMapper implements Mapper<Mission, PrismaMission, MissionDTO> {
       endDate: raw.endDate || undefined,
       id: raw.id,
       createdAt: raw.createdAt,
-      updatedAt: raw.createdAt, // Prisma Mission doesn't have updatedAt
-    };
-
-    // Use factory method instead of direct instantiation
-    const result = Mission.create(props);
-    if (result.isFailure) {
-      throw new Error(
-        `Failed to create Mission entity: ${result.error.message}`
-      );
+      updatedAt: raw.createdAt // Prisma Mission doesn't have updatedAt
     }
 
-    return result.value;
+    // Use factory method instead of direct instantiation
+    const result = Mission.create(props)
+    if (result.isFailure) {
+      throw new Error(`Failed to create Mission entity: ${result.error.message}`)
+    }
+
+    return result.value
   }
 
   toPersistence(entity: Mission): Omit<PrismaMission, 'createdAt'> {
@@ -58,8 +56,8 @@ class MissionMapper implements Mapper<Mission, PrismaMission, MissionDTO> {
       xpReward: entity.xpReward,
       coinReward: entity.coinReward,
       startDate: entity.startDate || null,
-      endDate: entity.endDate || null,
-    };
+      endDate: entity.endDate || null
+    }
   }
 
   toDTO(entity: Mission): MissionDTO {
@@ -74,9 +72,9 @@ class MissionMapper implements Mapper<Mission, PrismaMission, MissionDTO> {
       startDate: entity.startDate,
       endDate: entity.endDate,
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    };
+      updatedAt: entity.updatedAt
+    }
   }
 }
 
-export const missionMapper = new MissionMapper();
+export const missionMapper = new MissionMapper()

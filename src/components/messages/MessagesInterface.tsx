@@ -1,40 +1,28 @@
 'use client'
 
-import { useCallback, useState, useEffect, useRef } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { Send, Search, MoreVertical, User, Trash2, MessageSquare } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { MessageSquare, MoreVertical, Search, Send, Trash2, User } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  deleteConversation,
+  getConversationMessages,
+  getOrCreateConversation,
+  markConversationAsRead,
+  searchUsersForChat,
+  sendMessage
+} from '@/actions/message.actions'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import {
-  sendMessage,
-  getConversationMessages,
-  markConversationAsRead,
-  deleteConversation,
-  searchUsersForChat,
-  getOrCreateConversation
-} from '@/actions/message.actions'
-import { useRouter } from 'next/navigation'
+import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog'
 
 type Conversation = {
   id: string
@@ -220,10 +208,7 @@ export function MessagesInterface({ initialConversations }: MessagesInterfacePro
                 <DialogDescription>Busca un usuario para iniciar una conversación</DialogDescription>
               </DialogHeader>
               <div className='space-y-4'>
-                <Input
-                  placeholder='Buscar por nombre o email...'
-                  onChange={(e) => handleSearchUsers(e.target.value)}
-                />
+                <Input placeholder='Buscar por nombre o email...' onChange={(e) => handleSearchUsers(e.target.value)} />
                 <ScrollArea className='h-[300px]'>
                   {searchResults.map((user) => (
                     <div
@@ -283,9 +268,7 @@ export function MessagesInterface({ initialConversations }: MessagesInterfacePro
                           </Avatar>
                           <div className='flex-1 min-w-0'>
                             <div className='flex items-center gap-2'>
-                              <CardTitle className='text-sm truncate'>
-                                {otherUser.profile?.name || otherUser.email}
-                              </CardTitle>
+                              <CardTitle className='text-sm truncate'>{otherUser.profile?.name || otherUser.email}</CardTitle>
                               {unreadCount > 0 && (
                                 <Badge variant='default' className='text-xs'>
                                   {unreadCount}
@@ -348,12 +331,9 @@ export function MessagesInterface({ initialConversations }: MessagesInterfacePro
                 </Avatar>
                 <div>
                   <CardTitle className='text-lg'>
-                    {getOtherUser(selectedConversation).profile?.name ||
-                      getOtherUser(selectedConversation).email}
+                    {getOtherUser(selectedConversation).profile?.name || getOtherUser(selectedConversation).email}
                   </CardTitle>
-                  <CardDescription className='text-sm'>
-                    {getOtherUser(selectedConversation).email}
-                  </CardDescription>
+                  <CardDescription className='text-sm'>{getOtherUser(selectedConversation).email}</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -365,18 +345,10 @@ export function MessagesInterface({ initialConversations }: MessagesInterfacePro
                   return (
                     <div key={message.id} className={cn('flex', isOwn ? 'justify-end' : 'justify-start')}>
                       <div
-                        className={cn(
-                          'max-w-[70%] rounded-lg p-3',
-                          isOwn ? 'bg-primary text-primary-foreground' : 'bg-muted'
-                        )}
+                        className={cn('max-w-[70%] rounded-lg p-3', isOwn ? 'bg-primary text-primary-foreground' : 'bg-muted')}
                       >
                         <p className='text-sm whitespace-pre-wrap break-words'>{message.content}</p>
-                        <p
-                          className={cn(
-                            'text-xs mt-1',
-                            isOwn ? 'text-primary-foreground/70' : 'text-muted-foreground'
-                          )}
-                        >
+                        <p className={cn('text-xs mt-1', isOwn ? 'text-primary-foreground/70' : 'text-muted-foreground')}>
                           {formatDistanceToNow(new Date(message.createdAt), {
                             addSuffix: true,
                             locale: es
@@ -415,9 +387,7 @@ export function MessagesInterface({ initialConversations }: MessagesInterfacePro
           <Card className='h-full'>
             <CardContent className='flex flex-col items-center justify-center h-full'>
               <MessageSquare className='h-16 w-16 text-muted-foreground mb-4' />
-              <p className='text-muted-foreground text-center'>
-                Selecciona una conversación para ver los mensajes
-              </p>
+              <p className='text-muted-foreground text-center'>Selecciona una conversación para ver los mensajes</p>
             </CardContent>
           </Card>
         )}

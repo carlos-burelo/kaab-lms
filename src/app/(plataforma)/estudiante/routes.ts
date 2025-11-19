@@ -1,16 +1,16 @@
 import {
   BadgeCheckIcon,
+  BellIcon,
   BookCopyIcon,
   BookMarkedIcon,
-  HomeIcon,
-  TrophyIcon,
-  RouteIcon,
-  UserIcon,
-  CheckSquareIcon,
   CalendarIcon,
+  CheckSquareIcon,
+  HomeIcon,
+  ListChecksIcon,
   MessageSquareIcon,
-  BellIcon,
-  ListChecksIcon
+  RouteIcon,
+  TrophyIcon,
+  UserIcon
 } from 'lucide-react'
 
 export default [

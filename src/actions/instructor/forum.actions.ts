@@ -1,24 +1,22 @@
-"use server"
+'use server'
 
-import { createAction } from "@/actions/_shared/action-builder"
-import { instructorRepository } from "@/database/repositories/instructor.repository"
-import { ok, err } from "@/core/shared/result"
-import { z } from "zod"
+import { z } from 'zod'
+import { createAction } from '@/actions/_shared/action-builder'
+import { err, ok } from '@/core/shared/result'
+import { instructorRepository } from '@/database/repositories/instructor.repository'
 
 // ============ GET DISCUSSION THREADS ============
 
 export const getDiscussionThreads = createAction({
-  name: "instructor.getDiscussionThreads",
+  name: 'instructor.getDiscussionThreads',
   requireAuth: true,
-  allowedRoles: ["INSTRUCTOR"],
+  allowedRoles: ['INSTRUCTOR'],
   execute: async (_, context) => {
     try {
-      const threads = await instructorRepository.getDiscussionThreads(
-        context.userId
-      )
+      const threads = await instructorRepository.getDiscussionThreads(context.userId)
       return ok(threads || [])
     } catch (_error) {
-      return err(new Error("Error al obtener threads"))
+      return err(new Error('Error al obtener threads'))
     }
   }
 })
@@ -26,7 +24,7 @@ export const getDiscussionThreads = createAction({
 // ============ GET THREAD DETAIL ============
 
 export const getThreadDetail = createAction({
-  name: "instructor.getThreadDetail",
+  name: 'instructor.getThreadDetail',
   requireAuth: true,
   schema: z.object({
     threadId: z.string()
@@ -36,12 +34,12 @@ export const getThreadDetail = createAction({
       const thread = await instructorRepository.getThreadDetail(input.threadId)
 
       if (!thread) {
-        return err(new Error("Thread no encontrado"))
+        return err(new Error('Thread no encontrado'))
       }
 
       return ok(thread)
     } catch (_error) {
-      return err(new Error("Error al obtener thread"))
+      return err(new Error('Error al obtener thread'))
     }
   }
 })
@@ -49,11 +47,11 @@ export const getThreadDetail = createAction({
 // ============ CREATE DISCUSSION POST ============
 
 export const createDiscussionPost = createAction({
-  name: "instructor.createDiscussionPost",
+  name: 'instructor.createDiscussionPost',
   requireAuth: true,
   schema: z.object({
     threadId: z.string(),
-    content: z.string().min(1, "El contenido es requerido"),
+    content: z.string().min(1, 'El contenido es requerido'),
     parentId: z.string().optional().nullable()
   }),
   execute: async (input, context) => {
@@ -67,7 +65,7 @@ export const createDiscussionPost = createAction({
 
       return ok(post)
     } catch (_error) {
-      return err(new Error("Error al crear post"))
+      return err(new Error('Error al crear post'))
     }
   }
 })
@@ -75,9 +73,9 @@ export const createDiscussionPost = createAction({
 // ============ UPDATE DISCUSSION THREAD ============
 
 export const updateDiscussionThread = createAction({
-  name: "instructor.updateDiscussionThread",
+  name: 'instructor.updateDiscussionThread',
   requireAuth: true,
-  allowedRoles: ["INSTRUCTOR"],
+  allowedRoles: ['INSTRUCTOR'],
   schema: z.object({
     threadId: z.string(),
     isClosed: z.boolean().optional(),
@@ -86,14 +84,11 @@ export const updateDiscussionThread = createAction({
   execute: async (input, _context) => {
     try {
       const { threadId, ...data } = input
-      const thread = await instructorRepository.updateDiscussionThread(
-        threadId,
-        data
-      )
+      const thread = await instructorRepository.updateDiscussionThread(threadId, data)
 
       return ok(thread)
     } catch (_error) {
-      return err(new Error("Error al actualizar thread"))
+      return err(new Error('Error al actualizar thread'))
     }
   }
 })

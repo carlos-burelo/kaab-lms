@@ -7,18 +7,18 @@
  * Base application error
  */
 export abstract class AppError extends Error {
-  public readonly timestamp: Date;
-  public readonly code: string;
+  public readonly timestamp: Date
+  public readonly code: string
 
   constructor(message: string, code?: string) {
-    super(message);
-    this.name = this.constructor.name;
-    this.code = code || this.constructor.name;
-    this.timestamp = new Date();
-    Error.captureStackTrace(this, this.constructor);
+    super(message)
+    this.name = this.constructor.name
+    this.code = code || this.constructor.name
+    this.timestamp = new Date()
+    Error.captureStackTrace(this, this.constructor)
   }
 
-  abstract get statusCode(): number;
+  abstract get statusCode(): number
 
   toJSON() {
     return {
@@ -26,8 +26,8 @@ export abstract class AppError extends Error {
       code: this.code,
       message: this.message,
       timestamp: this.timestamp,
-      statusCode: this.statusCode,
-    };
+      statusCode: this.statusCode
+    }
   }
 }
 
@@ -36,7 +36,7 @@ export abstract class AppError extends Error {
  */
 export class DomainError extends AppError {
   get statusCode(): number {
-    return 400;
+    return 400
   }
 }
 
@@ -46,21 +46,21 @@ export class ValidationError extends DomainError {
     public readonly field?: string,
     public readonly constraints?: Record<string, string>
   ) {
-    super(message, 'VALIDATION_ERROR');
+    super(message, 'VALIDATION_ERROR')
   }
 
   override toJSON() {
     return {
       ...super.toJSON(),
       field: this.field,
-      constraints: this.constraints,
-    };
+      constraints: this.constraints
+    }
   }
 }
 
 export class BusinessRuleError extends DomainError {
   constructor(message: string) {
-    super(message, 'BUSINESS_RULE_ERROR');
+    super(message, 'BUSINESS_RULE_ERROR')
   }
 }
 
@@ -72,19 +72,19 @@ export class EntityNotFoundError extends DomainError {
     super(
       `${entityName} with ${typeof identifier === 'string' ? `id ${identifier}` : `criteria ${JSON.stringify(identifier)}`} not found`,
       'ENTITY_NOT_FOUND'
-    );
+    )
   }
 
   get statusCode(): number {
-    return 404;
+    return 404
   }
 
   override toJSON() {
     return {
       ...super.toJSON(),
       entityName: this.entityName,
-      identifier: this.identifier,
-    };
+      identifier: this.identifier
+    }
   }
 }
 
@@ -94,14 +94,11 @@ export class DuplicateEntityError extends DomainError {
     public readonly field: string,
     public readonly value: string
   ) {
-    super(
-      `${entityName} with ${field} '${value}' already exists`,
-      'DUPLICATE_ENTITY'
-    );
+    super(`${entityName} with ${field} '${value}' already exists`, 'DUPLICATE_ENTITY')
   }
 
   get statusCode(): number {
-    return 409;
+    return 409
   }
 
   override toJSON() {
@@ -109,8 +106,8 @@ export class DuplicateEntityError extends DomainError {
       ...super.toJSON(),
       entityName: this.entityName,
       field: this.field,
-      value: this.value,
-    };
+      value: this.value
+    }
   }
 }
 
@@ -119,47 +116,47 @@ export class DuplicateEntityError extends DomainError {
  */
 export class ApplicationError extends AppError {
   get statusCode(): number {
-    return 500;
+    return 500
   }
 }
 
 export class UnauthorizedError extends ApplicationError {
   constructor(message: string = 'Unauthorized access') {
-    super(message, 'UNAUTHORIZED');
+    super(message, 'UNAUTHORIZED')
   }
 
   get statusCode(): number {
-    return 401;
+    return 401
   }
 }
 
 export class ForbiddenError extends ApplicationError {
   constructor(message: string = 'Forbidden access') {
-    super(message, 'FORBIDDEN');
+    super(message, 'FORBIDDEN')
   }
 
   get statusCode(): number {
-    return 403;
+    return 403
   }
 }
 
 export class InvalidCredentialsError extends ApplicationError {
   constructor(message: string = 'Invalid credentials') {
-    super(message, 'INVALID_CREDENTIALS');
+    super(message, 'INVALID_CREDENTIALS')
   }
 
   get statusCode(): number {
-    return 401;
+    return 401
   }
 }
 
 export class TokenExpiredError extends ApplicationError {
   constructor(message: string = 'Token has expired') {
-    super(message, 'TOKEN_EXPIRED');
+    super(message, 'TOKEN_EXPIRED')
   }
 
   get statusCode(): number {
-    return 401;
+    return 401
   }
 }
 
@@ -168,7 +165,7 @@ export class TokenExpiredError extends ApplicationError {
  */
 export class InfrastructureError extends AppError {
   get statusCode(): number {
-    return 500;
+    return 500
   }
 }
 
@@ -177,14 +174,14 @@ export class DatabaseError extends InfrastructureError {
     message: string,
     public readonly originalError?: Error
   ) {
-    super(message, 'DATABASE_ERROR');
+    super(message, 'DATABASE_ERROR')
   }
 
   override toJSON() {
     return {
       ...super.toJSON(),
-      originalError: this.originalError?.message,
-    };
+      originalError: this.originalError?.message
+    }
   }
 }
 
@@ -194,15 +191,15 @@ export class ExternalServiceError extends InfrastructureError {
     message: string,
     public readonly originalError?: Error
   ) {
-    super(`${serviceName}: ${message}`, 'EXTERNAL_SERVICE_ERROR');
+    super(`${serviceName}: ${message}`, 'EXTERNAL_SERVICE_ERROR')
   }
 
   override toJSON() {
     return {
       ...super.toJSON(),
       serviceName: this.serviceName,
-      originalError: this.originalError?.message,
-    };
+      originalError: this.originalError?.message
+    }
   }
 }
 
@@ -211,14 +208,14 @@ export class FileOperationError extends InfrastructureError {
     public readonly operation: 'read' | 'write' | 'delete' | 'upload',
     message: string
   ) {
-    super(`File ${operation} failed: ${message}`, 'FILE_OPERATION_ERROR');
+    super(`File ${operation} failed: ${message}`, 'FILE_OPERATION_ERROR')
   }
 
   override toJSON() {
     return {
       ...super.toJSON(),
-      operation: this.operation,
-    };
+      operation: this.operation
+    }
   }
 }
 
@@ -227,7 +224,7 @@ export class FileOperationError extends InfrastructureError {
  */
 export class PresentationError extends AppError {
   get statusCode(): number {
-    return 400;
+    return 400
   }
 }
 
@@ -236,14 +233,14 @@ export class InvalidInputError extends PresentationError {
     message: string,
     public readonly errors?: Array<{ field: string; message: string }>
   ) {
-    super(message, 'INVALID_INPUT');
+    super(message, 'INVALID_INPUT')
   }
 
   override toJSON() {
     return {
       ...super.toJSON(),
-      errors: this.errors,
-    };
+      errors: this.errors
+    }
   }
 }
 
@@ -252,18 +249,18 @@ export class RateLimitError extends PresentationError {
     public readonly retryAfter: number,
     message: string = 'Rate limit exceeded'
   ) {
-    super(message, 'RATE_LIMIT_EXCEEDED');
+    super(message, 'RATE_LIMIT_EXCEEDED')
   }
 
   get statusCode(): number {
-    return 429;
+    return 429
   }
 
   override toJSON() {
     return {
       ...super.toJSON(),
-      retryAfter: this.retryAfter,
-    };
+      retryAfter: this.retryAfter
+    }
   }
 }
 
@@ -271,57 +268,39 @@ export class RateLimitError extends PresentationError {
  * Error Factory
  */
 export class ErrorFactory {
-  static validation(
-    message: string,
-    field?: string,
-    constraints?: Record<string, string>
-  ): ValidationError {
-    return new ValidationError(message, field, constraints);
+  static validation(message: string, field?: string, constraints?: Record<string, string>): ValidationError {
+    return new ValidationError(message, field, constraints)
   }
 
   static businessRule(message: string): BusinessRuleError {
-    return new BusinessRuleError(message);
+    return new BusinessRuleError(message)
   }
 
-  static notFound(
-    entityName: string,
-    identifier: string | Record<string, unknown>
-  ): EntityNotFoundError {
-    return new EntityNotFoundError(entityName, identifier);
+  static notFound(entityName: string, identifier: string | Record<string, unknown>): EntityNotFoundError {
+    return new EntityNotFoundError(entityName, identifier)
   }
 
-  static duplicate(
-    entityName: string,
-    field: string,
-    value: string
-  ): DuplicateEntityError {
-    return new DuplicateEntityError(entityName, field, value);
+  static duplicate(entityName: string, field: string, value: string): DuplicateEntityError {
+    return new DuplicateEntityError(entityName, field, value)
   }
 
   static unauthorized(message?: string): UnauthorizedError {
-    return new UnauthorizedError(message);
+    return new UnauthorizedError(message)
   }
 
   static forbidden(message?: string): ForbiddenError {
-    return new ForbiddenError(message);
+    return new ForbiddenError(message)
   }
 
   static database(message: string, error?: Error): DatabaseError {
-    return new DatabaseError(message, error);
+    return new DatabaseError(message, error)
   }
 
-  static externalService(
-    serviceName: string,
-    message: string,
-    error?: Error
-  ): ExternalServiceError {
-    return new ExternalServiceError(serviceName, message, error);
+  static externalService(serviceName: string, message: string, error?: Error): ExternalServiceError {
+    return new ExternalServiceError(serviceName, message, error)
   }
 
-  static invalidInput(
-    message: string,
-    errors?: Array<{ field: string; message: string }>
-  ): InvalidInputError {
-    return new InvalidInputError(message, errors);
+  static invalidInput(message: string, errors?: Array<{ field: string; message: string }>): InvalidInputError {
+    return new InvalidInputError(message, errors)
   }
 }

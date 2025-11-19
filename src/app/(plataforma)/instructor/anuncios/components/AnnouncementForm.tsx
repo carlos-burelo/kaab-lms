@@ -1,43 +1,24 @@
 'use client'
 
-import { useTransition } from 'react'
-import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
-import { createAnnouncement } from '@/actions/instructor/announcement.actions'
+import { useRouter } from 'next/navigation'
+import { useTransition } from 'react'
+import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { z } from 'zod'
+import { createAnnouncement } from '@/actions/instructor/announcement.actions'
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 
 const formSchema = z.object({
   title: z.string().min(1, 'El título es requerido'),
   content: z.string().min(1, 'El contenido es requerido'),
   ctaLink: z.string().optional(),
   ctaText: z.string().optional(),
-  placement: z.enum([
-    'DASHBOARD_BANNER',
-    'COURSE_BANNER',
-    'GLOBAL_MODAL',
-    'INLINE_FEED',
-    'LOGIN_PAGE'
-  ]),
+  placement: z.enum(['DASHBOARD_BANNER', 'COURSE_BANNER', 'GLOBAL_MODAL', 'INLINE_FEED', 'LOGIN_PAGE']),
   startDate: z.string(),
   endDate: z.string(),
   priority: z.coerce.number().default(0),
@@ -105,11 +86,7 @@ export function AnnouncementForm() {
             <FormItem>
               <FormLabel>Contenido</FormLabel>
               <FormControl>
-                <Textarea
-                  {...field}
-                  placeholder='Contenido del anuncio'
-                  rows={5}
-                />
+                <Textarea {...field} placeholder='Contenido del anuncio' rows={5} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -242,12 +219,7 @@ export function AnnouncementForm() {
           <Button type='submit' disabled={isPending}>
             {isPending ? 'Creando...' : 'Crear Anuncio'}
           </Button>
-          <Button
-            type='button'
-            variant='outline'
-            onClick={() => router.back()}
-            disabled={isPending}
-          >
+          <Button type='button' variant='outline' onClick={() => router.back()} disabled={isPending}>
             Cancelar
           </Button>
         </div>

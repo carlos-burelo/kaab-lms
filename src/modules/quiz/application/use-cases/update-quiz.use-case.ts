@@ -2,89 +2,86 @@
  * Update Quiz Use Case
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { EntityNotFoundError, } from '@/core/shared/errors';
-import type { IQuizRepository } from '../../domain/quiz.repository.interface';
-import type { UpdateQuizDTO } from '../dtos';
-import { type QuizDTO, quizMapper } from '../../infrastructure/quiz.mapper';
+import { EntityNotFoundError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import type { IQuizRepository } from '../../domain/quiz.repository.interface'
+import { type QuizDTO, quizMapper } from '../../infrastructure/quiz.mapper'
+import type { UpdateQuizDTO } from '../dtos'
 
 interface UpdateQuizRequest {
-  dto: UpdateQuizDTO;
-  currentUserId: string;
+  dto: UpdateQuizDTO
+  currentUserId: string
 }
 
-export class UpdateQuizUseCase extends BaseUseCase<
-  UpdateQuizRequest,
-  QuizDTO
-> {
+export class UpdateQuizUseCase extends BaseUseCase<UpdateQuizRequest, QuizDTO> {
   constructor(private quizRepository: IQuizRepository) {
-    super();
+    super()
   }
 
   async execute(request: UpdateQuizRequest): Promise<Result<QuizDTO>> {
-    const { dto } = request;
+    const { dto } = request
 
     // Find quiz
-    const quizResult = await this.quizRepository.findById(dto.id);
+    const quizResult = await this.quizRepository.findById(dto.id)
 
     if (quizResult.isFailure) {
-      return Result.fail(quizResult.error);
+      return Result.fail(quizResult.error)
     }
 
     if (!quizResult.value) {
-      return Result.fail(new EntityNotFoundError('Quiz', dto.id));
+      return Result.fail(new EntityNotFoundError('Quiz', dto.id))
     }
 
-    const quiz = quizResult.value;
+    const quiz = quizResult.value
 
     // Update quiz properties
     if (dto.title) {
-      const titleResult = quiz.updateTitle(dto.title);
+      const titleResult = quiz.updateTitle(dto.title)
       if (titleResult.isFailure) {
-        return Result.fail(titleResult.error);
+        return Result.fail(titleResult.error)
       }
     }
 
     if (dto.description !== undefined) {
-      quiz.updateDescription(dto.description);
+      quiz.updateDescription(dto.description)
     }
 
     if (dto.instructions !== undefined) {
-      quiz.updateInstructions(dto.instructions);
+      quiz.updateInstructions(dto.instructions)
     }
 
     if (dto.passingScore !== undefined) {
-      const scoreResult = quiz.updatePassingScore(dto.passingScore);
+      const scoreResult = quiz.updatePassingScore(dto.passingScore)
       if (scoreResult.isFailure) {
-        return Result.fail(scoreResult.error);
+        return Result.fail(scoreResult.error)
       }
     }
 
     if (dto.durationMinutes !== undefined) {
-      const durationResult = quiz.updateDuration(dto.durationMinutes);
+      const durationResult = quiz.updateDuration(dto.durationMinutes)
       if (durationResult.isFailure) {
-        return Result.fail(durationResult.error);
+        return Result.fail(durationResult.error)
       }
     }
 
     if (dto.maxAttempts !== undefined) {
-      const attemptsResult = quiz.updateMaxAttempts(dto.maxAttempts);
+      const attemptsResult = quiz.updateMaxAttempts(dto.maxAttempts)
       if (attemptsResult.isFailure) {
-        return Result.fail(attemptsResult.error);
+        return Result.fail(attemptsResult.error)
       }
     }
 
     // Save to repository
-    const savedResult = await this.quizRepository.save(quiz);
+    const savedResult = await this.quizRepository.save(quiz)
 
     if (savedResult.isFailure) {
-      return Result.fail(savedResult.error);
+      return Result.fail(savedResult.error)
     }
 
     // Map to DTO
-    const quizDTO = quizMapper.toDTO(savedResult.value);
+    const quizDTO = quizMapper.toDTO(savedResult.value)
 
-    return Result.ok(quizDTO);
+    return Result.ok(quizDTO)
   }
 }

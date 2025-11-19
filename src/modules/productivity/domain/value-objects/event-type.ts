@@ -8,11 +8,11 @@ export enum EventType {
   MEETING = 'MEETING',
   SUBMISSION = 'SUBMISSION',
   EXAM = 'EXAM',
-  OTHER = 'OTHER',
+  OTHER = 'OTHER'
 }
 
 export function isValidEventType(value: string): value is EventType {
-  return Object.values(EventType).includes(value as EventType);
+  return Object.values(EventType).includes(value as EventType)
 }
 
 export function getEventTypeColor(type: EventType): string {
@@ -22,7 +22,7 @@ export function getEventTypeColor(type: EventType): string {
     [EventType.MEETING]: '#8b5cf6', // purple
     [EventType.SUBMISSION]: '#f59e0b', // amber
     [EventType.EXAM]: '#ef4444', // red
-    [EventType.OTHER]: '#6b7280', // gray
-  };
-  return colors[type];
+    [EventType.OTHER]: '#6b7280' // gray
+  }
+  return colors[type]
 }

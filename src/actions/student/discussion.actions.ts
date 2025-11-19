@@ -1,10 +1,10 @@
-"use server"
+'use server'
 
-import { z } from "zod"
-import { createAction } from "@/actions/_shared/action-builder"
-import { idSchema } from "@/actions/_shared/validators"
-import { prisma } from "@/database/client"
-import { ok, err } from "@/core/shared/result"
+import { z } from 'zod'
+import { createAction } from '@/actions/_shared/action-builder'
+import { idSchema } from '@/actions/_shared/validators'
+import { err, ok } from '@/core/shared/result'
+import { prisma } from '@/database/client'
 
 // ============ SCHEMAS ============
 
@@ -14,13 +14,13 @@ const getThreadsSchema = z.object({
 
 const createThreadSchema = z.object({
   courseId: idSchema,
-  title: z.string().min(3, "El título debe tener al menos 3 caracteres"),
+  title: z.string().min(3, 'El título debe tener al menos 3 caracteres'),
   description: z.string().optional()
 })
 
 const createPostSchema = z.object({
   threadId: idSchema,
-  content: z.string().min(1, "El contenido no puede estar vacío"),
+  content: z.string().min(1, 'El contenido no puede estar vacío'),
   parentId: z.string().optional()
 })
 
@@ -30,10 +30,10 @@ const createPostSchema = z.object({
  * Obtiene todos los hilos de discusión de un curso
  */
 export const getDiscussionThreads = createAction({
-  name: "student.getDiscussionThreads",
+  name: 'student.getDiscussionThreads',
   schema: getThreadsSchema,
   requireAuth: true,
-  allowedRoles: ["STUDENT", "INSTRUCTOR"],
+  allowedRoles: ['STUDENT', 'INSTRUCTOR'],
   execute: async (input) => {
     try {
       const threads = await prisma.discussionThread.findMany({
@@ -46,15 +46,12 @@ export const getDiscussionThreads = createAction({
             select: { posts: true }
           }
         },
-        orderBy: [
-          { isPinned: 'desc' },
-          { updatedAt: 'desc' }
-        ]
+        orderBy: [{ isPinned: 'desc' }, { updatedAt: 'desc' }]
       })
 
       return ok(threads || [])
     } catch (_error) {
-      return err(new Error("Error al obtener hilos de discusión"))
+      return err(new Error('Error al obtener hilos de discusión'))
     }
   }
 })
@@ -65,10 +62,10 @@ export const getDiscussionThreads = createAction({
  * Obtiene un hilo con todos sus posts
  */
 export const getThreadWithPosts = createAction({
-  name: "student.getThreadWithPosts",
+  name: 'student.getThreadWithPosts',
   schema: z.object({ threadId: idSchema }),
   requireAuth: true,
-  allowedRoles: ["STUDENT", "INSTRUCTOR"],
+  allowedRoles: ['STUDENT', 'INSTRUCTOR'],
   execute: async (input) => {
     try {
       const thread = await prisma.discussionThread.findUnique({
@@ -98,7 +95,7 @@ export const getThreadWithPosts = createAction({
       })
 
       if (!thread) {
-        return err(new Error("Hilo no encontrado"))
+        return err(new Error('Hilo no encontrado'))
       }
 
       // Increment views
@@ -109,7 +106,7 @@ export const getThreadWithPosts = createAction({
 
       return ok(thread)
     } catch (_error) {
-      return err(new Error("Error al obtener hilo de discusión"))
+      return err(new Error('Error al obtener hilo de discusión'))
     }
   }
 })
@@ -120,13 +117,14 @@ export const getThreadWithPosts = createAction({
  * Crea un nuevo hilo de discusión
  */
 export const createDiscussionThread = createAction({
-  name: "student.createDiscussionThread",
+  name: 'student.createDiscussionThread',
   schema: createThreadSchema,
   requireAuth: true,
-  allowedRoles: ["STUDENT", "INSTRUCTOR"],
+  allowedRoles: ['STUDENT', 'INSTRUCTOR'],
   execute: async (input, context) => {
     try {
-      const slug = input.title.toLowerCase()
+      const slug = input.title
+        .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '')
 
@@ -147,7 +145,7 @@ export const createDiscussionThread = createAction({
 
       return ok(thread)
     } catch (_error) {
-      return err(new Error("Error al crear hilo de discusión"))
+      return err(new Error('Error al crear hilo de discusión'))
     }
   }
 })
@@ -158,10 +156,10 @@ export const createDiscussionThread = createAction({
  * Crea un post en un hilo de discusión
  */
 export const createDiscussionPost = createAction({
-  name: "student.createDiscussionPost",
+  name: 'student.createDiscussionPost',
   schema: createPostSchema,
   requireAuth: true,
-  allowedRoles: ["STUDENT", "INSTRUCTOR"],
+  allowedRoles: ['STUDENT', 'INSTRUCTOR'],
   execute: async (input, context) => {
     try {
       const post = await prisma.discussionPost.create({
@@ -187,7 +185,7 @@ export const createDiscussionPost = createAction({
 
       return ok(post)
     } catch (_error) {
-      return err(new Error("Error al crear post"))
+      return err(new Error('Error al crear post'))
     }
   }
 })

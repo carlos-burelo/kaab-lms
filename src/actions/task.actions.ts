@@ -49,8 +49,8 @@ export async function getPersonalTasks() {
 
     const tasks = await userRepository.getPersonalTasks(user.id)
     return { success: true, data: tasks }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener tareas'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al obtener tareas'
     return { success: false, error: message }
   }
 }
@@ -79,11 +79,11 @@ export async function createPersonalTask(data: z.infer<typeof CreateTaskSchema>)
 
     revalidatePath('/estudiante/tareas')
     return { success: true, data: task }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.issues[0].message }
+  } catch (_error) {
+    if (_error instanceof z.ZodError) {
+      return { success: false, error: _error.issues[0].message }
     }
-    const message = error instanceof Error ? error.message : 'Error al crear tarea'
+    const message = _error instanceof Error ? _error.message : 'Error al crear tarea'
     return { success: false, error: message }
   }
 }
@@ -126,11 +126,11 @@ export async function updatePersonalTask(data: z.infer<typeof UpdateTaskSchema>)
 
     revalidatePath('/estudiante/tareas')
     return { success: true, data: updated }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.issues[0].message }
+  } catch (_error) {
+    if (_error instanceof z.ZodError) {
+      return { success: false, error: _error.issues[0].message }
     }
-    const message = error instanceof Error ? error.message : 'Error al actualizar tarea'
+    const message = _error instanceof Error ? _error.message : 'Error al actualizar tarea'
     return { success: false, error: message }
   }
 }
@@ -161,8 +161,8 @@ export async function toggleTaskCompletion(taskId: string) {
 
     revalidatePath('/estudiante/tareas')
     return { success: true, data: updated }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al actualizar tarea'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al actualizar tarea'
     return { success: false, error: message }
   }
 }
@@ -187,8 +187,8 @@ export async function deletePersonalTask(taskId: string) {
 
     revalidatePath('/estudiante/tareas')
     return { success: true }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al eliminar tarea'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al eliminar tarea'
     return { success: false, error: message }
   }
 }

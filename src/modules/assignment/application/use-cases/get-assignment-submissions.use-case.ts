@@ -3,68 +3,65 @@
  * Retrieves all submissions for a specific assignment (instructor only)
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { EntityNotFoundError } from '@/core/shared/errors';
-import type { IAssignmentRepository } from '../../domain/assignment.repository.interface';
-import { prisma } from '@/lib/prisma';
+import { EntityNotFoundError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import { prisma } from '@/lib/prisma'
+import type { IAssignmentRepository } from '../../domain/assignment.repository.interface'
 
 interface GetAssignmentSubmissionsRequest {
-  assignmentId: string;
-  currentUserId: string;
+  assignmentId: string
+  currentUserId: string
 }
 
 interface SubmissionDTO {
-  id: string;
-  assignmentId: string;
-  userId: string;
-  userName: string;
-  userEmail: string;
-  userAvatar?: string;
-  content?: string;
-  fileId?: string;
-  fileName?: string;
-  score?: number;
-  feedback?: string;
-  status: string;
-  submittedAt: Date;
-  gradedAt?: Date;
+  id: string
+  assignmentId: string
+  userId: string
+  userName: string
+  userEmail: string
+  userAvatar?: string
+  content?: string
+  fileId?: string
+  fileName?: string
+  score?: number
+  feedback?: string
+  status: string
+  submittedAt: Date
+  gradedAt?: Date
 }
 
 interface AssignmentSubmissionsResponse {
-  assignmentId: string;
-  assignmentTitle: string;
-  maxScore: number;
-  submissions: SubmissionDTO[];
-  totalSubmissions: number;
-  gradedCount: number;
-  pendingCount: number;
-  averageScore: number;
+  assignmentId: string
+  assignmentTitle: string
+  maxScore: number
+  submissions: SubmissionDTO[]
+  totalSubmissions: number
+  gradedCount: number
+  pendingCount: number
+  averageScore: number
 }
 
-export class GetAssignmentSubmissionsUseCase extends BaseUseCase<
-  GetAssignmentSubmissionsRequest,
-  AssignmentSubmissionsResponse
-> {
+export class GetAssignmentSubmissionsUseCase extends BaseUseCase<GetAssignmentSubmissionsRequest, AssignmentSubmissionsResponse> {
   constructor(private assignmentRepository: IAssignmentRepository) {
-    super();
+    super()
   }
 
   async execute(request: GetAssignmentSubmissionsRequest): Promise<Result<AssignmentSubmissionsResponse>> {
-    const { assignmentId } = request;
+    const { assignmentId } = request
 
     // Verify assignment exists
-    const assignmentResult = await this.assignmentRepository.findById(assignmentId);
+    const assignmentResult = await this.assignmentRepository.findById(assignmentId)
 
     if (assignmentResult.isFailure) {
-      return Result.fail(assignmentResult.error);
+      return Result.fail(assignmentResult.error)
     }
 
     if (!assignmentResult.value) {
-      return Result.fail(new EntityNotFoundError('Assignment', assignmentId));
+      return Result.fail(new EntityNotFoundError('Assignment', assignmentId))
     }
 
-    const assignment = assignmentResult.value;
+    const assignment = assignmentResult.value
 
     try {
       // Get all submissions for this assignment
@@ -73,13 +70,13 @@ export class GetAssignmentSubmissionsUseCase extends BaseUseCase<
         include: {
           user: {
             include: {
-              profile: true,
-            },
+              profile: true
+            }
           },
-          files: true,
+          files: true
         },
-        orderBy: { submittedAt: 'desc' },
-      });
+        orderBy: { submittedAt: 'desc' }
+      })
 
       // Map to DTOs
       const submissionDTOs: SubmissionDTO[] = submissions.map((sub) => ({
@@ -96,16 +93,16 @@ export class GetAssignmentSubmissionsUseCase extends BaseUseCase<
         feedback: sub.feedback || undefined,
         status: sub.status,
         submittedAt: sub.submittedAt,
-        gradedAt: sub.gradedAt || undefined,
-      }));
+        gradedAt: sub.gradedAt || undefined
+      }))
 
       // Calculate statistics
-      const gradedSubmissions = submissions.filter((s) => s.status === 'GRADED');
-      const pendingSubmissions = submissions.filter((s) => s.status === 'SUBMITTED' || s.status === 'IN_REVIEW');
+      const gradedSubmissions = submissions.filter((s) => s.status === 'GRADED')
+      const pendingSubmissions = submissions.filter((s) => s.status === 'SUBMITTED' || s.status === 'IN_REVIEW')
       const averageScore =
         gradedSubmissions.length > 0
           ? gradedSubmissions.reduce((sum, s) => sum + (s.score || 0), 0) / gradedSubmissions.length
-          : 0;
+          : 0
 
       return Result.ok({
         assignmentId: assignment.id,
@@ -115,12 +112,10 @@ export class GetAssignmentSubmissionsUseCase extends BaseUseCase<
         totalSubmissions: submissions.length,
         gradedCount: gradedSubmissions.length,
         pendingCount: pendingSubmissions.length,
-        averageScore: Math.round(averageScore * 100) / 100,
-      });
+        averageScore: Math.round(averageScore * 100) / 100
+      })
     } catch (error) {
-      return Result.fail(
-        new Error(`Failed to get assignment submissions: ${(error as Error).message}`)
-      );
+      return Result.fail(new Error(`Failed to get assignment submissions: ${(error as Error).message}`))
     }
   }
 }

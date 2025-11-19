@@ -1,26 +1,14 @@
 'use client'
 
-import { useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
-import {
-  Bell,
-  BookOpen,
-  MessageSquare,
-  Trophy,
-  Award,
-  Target,
-  CreditCard,
-  Clock,
-  Users,
-  CheckCheck,
-  Trash2,
-} from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { markNotificationAsRead, markAllNotificationsAsRead, deleteNotification } from '@/actions/notification.actions'
+import { Award, Bell, BookOpen, CheckCheck, Clock, CreditCard, MessageSquare, Target, Trash2, Trophy, Users } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { deleteNotification, markAllNotificationsAsRead, markNotificationAsRead } from '@/actions/notification.actions'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
 type Notification = {
@@ -76,9 +64,7 @@ export function NotificationsList({ initialNotifications }: NotificationsListPro
   const handleMarkAsRead = async (notificationId: string) => {
     const result = await markNotificationAsRead(notificationId)
     if (result.success) {
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === notificationId ? { ...n, isRead: true, readAt: new Date() } : n))
-      )
+      setNotifications((prev) => prev.map((n) => (n.id === notificationId ? { ...n, isRead: true, readAt: new Date() } : n)))
       router.refresh()
     }
   }

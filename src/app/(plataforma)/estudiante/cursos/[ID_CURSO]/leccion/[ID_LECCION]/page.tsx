@@ -1,19 +1,19 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { getQuizByLessonId, getQuizQuestionsForStudent } from '@/actions/quiz.actions'
+import { AssignmentSubmission } from '@/components/assignments/AssignmentSubmission'
 import { CourseContent } from '@/components/course/CourseContent'
 import { CourseAttachmentZone } from '@/components/course/viewer/CourseAttachmentZone'
 import { CourseDiscussionZone } from '@/components/course/viewer/CourseDiscussionZone'
 import { CourseLessonNavigator } from '@/components/course/viewer/CourseLessonNavigator'
 import { CourseLessonsZone } from '@/components/course/viewer/CourseLessonsZone'
 import { TabsList } from '@/components/extensions/tab-list'
+import { QuizViewer } from '@/components/quiz/student/QuizViewer'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent } from '@/components/ui/tabs'
-import { courseRepository } from '@/database/repositories'
-import { getQuizByLessonId, getQuizQuestionsForStudent } from '@/actions/quiz.actions'
-import { QuizViewer } from '@/components/quiz/student/QuizViewer'
-import { getSession } from '@/lib/auth'
 import { prisma } from '@/database/client'
-import { AssignmentSubmission } from '@/components/assignments/AssignmentSubmission'
+import { courseRepository } from '@/database/repositories'
+import { getSession } from '@/lib/auth'
 
 interface LeccionPageProps {
   params: Promise<{
@@ -67,16 +67,18 @@ export default async function Lession({ params }: LeccionPageProps) {
   const studentSubmission = assignment?.submissions?.[0] || null
 
   // Transform assignment to match component's expected interface
-  const transformedAssignment = assignment ? {
-    id: assignment.id,
-    title: assignment.title,
-    description: assignment.description,
-    instructions: assignment.instructions,
-    dueDate: assignment.dueDate || new Date(),
-    maxScore: assignment.maxPoints,
-    allowLateSubmission: assignment.allowLate,
-    latePenaltyPercent: null
-  } : null
+  const transformedAssignment = assignment
+    ? {
+        id: assignment.id,
+        title: assignment.title,
+        description: assignment.description,
+        instructions: assignment.instructions,
+        dueDate: assignment.dueDate || new Date(),
+        maxScore: assignment.maxPoints,
+        allowLateSubmission: assignment.allowLate,
+        latePenaltyPercent: null
+      }
+    : null
 
   const SLUG = curso.slug
   const TITLE = curso.title
@@ -100,11 +102,7 @@ export default async function Lession({ params }: LeccionPageProps) {
 
           {quizData && (
             <div className='mt-6'>
-              <QuizViewer
-                quiz={quizData.quiz}
-                questions={quizData.questions}
-                userId={userId}
-              />
+              <QuizViewer quiz={quizData.quiz} questions={quizData.questions} userId={userId} />
             </div>
           )}
 

@@ -2,33 +2,25 @@
  * Create Achievement Use Case
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { Achievement } from '../../domain/achievement.entity';
-import type { IAchievementRepository } from '../../domain/achievement.repository.interface';
-import type { CreateAchievementDTO } from '../dtos';
-import {
-  type AchievementDTO,
-  achievementMapper,
-} from '../../infrastructure/achievement.mapper';
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import { Achievement } from '../../domain/achievement.entity'
+import type { IAchievementRepository } from '../../domain/achievement.repository.interface'
+import { type AchievementDTO, achievementMapper } from '../../infrastructure/achievement.mapper'
+import type { CreateAchievementDTO } from '../dtos'
 
 interface CreateAchievementRequest {
-  dto: CreateAchievementDTO;
-  currentUserId: string;
+  dto: CreateAchievementDTO
+  currentUserId: string
 }
 
-export class CreateAchievementUseCase extends BaseUseCase<
-  CreateAchievementRequest,
-  AchievementDTO
-> {
+export class CreateAchievementUseCase extends BaseUseCase<CreateAchievementRequest, AchievementDTO> {
   constructor(private achievementRepository: IAchievementRepository) {
-    super();
+    super()
   }
 
-  async execute(
-    request: CreateAchievementRequest
-  ): Promise<Result<AchievementDTO>> {
-    const { dto } = request;
+  async execute(request: CreateAchievementRequest): Promise<Result<AchievementDTO>> {
+    const { dto } = request
 
     // Create achievement entity
     const achievementResult = Achievement.create({
@@ -38,25 +30,23 @@ export class CreateAchievementUseCase extends BaseUseCase<
       imageId: dto.imageId,
       xpReward: dto.xpReward,
       coinReward: dto.coinReward,
-      maxProgress: dto.maxProgress,
-    });
+      maxProgress: dto.maxProgress
+    })
 
     if (achievementResult.isFailure) {
-      return Result.fail(achievementResult.error);
+      return Result.fail(achievementResult.error)
     }
 
     // Save to repository
-    const savedResult = await this.achievementRepository.save(
-      achievementResult.value
-    );
+    const savedResult = await this.achievementRepository.save(achievementResult.value)
 
     if (savedResult.isFailure) {
-      return Result.fail(savedResult.error);
+      return Result.fail(savedResult.error)
     }
 
     // Map to DTO
-    const achievementDTO = achievementMapper.toDTO(savedResult.value);
+    const achievementDTO = achievementMapper.toDTO(savedResult.value)
 
-    return Result.ok(achievementDTO);
+    return Result.ok(achievementDTO)
   }
 }

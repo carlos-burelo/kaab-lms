@@ -3,30 +3,26 @@
  * Maps between different representations of data
  */
 
-import type { Entity, EntityProps } from './entity';
+import type { Entity, EntityProps } from './entity'
 
-export interface Mapper<
-  DomainEntity extends Entity<EntityProps>,
-  PersistenceModel,
-  DTO = unknown
-> {
+export interface Mapper<DomainEntity extends Entity<EntityProps>, PersistenceModel, DTO = unknown> {
   /**
    * Maps from persistence model to domain entity
    */
-  toDomain(raw: PersistenceModel): DomainEntity;
+  toDomain(raw: PersistenceModel): DomainEntity
 
   /**
    * Maps from domain entity to persistence model
    */
-  toPersistence(entity: DomainEntity): PersistenceModel;
+  toPersistence(entity: DomainEntity): PersistenceModel
 
   /**
    * Maps from domain entity to DTO (Data Transfer Object)
    */
-  toDTO?(entity: DomainEntity): DTO;
+  toDTO?(entity: DomainEntity): DTO
 
   /**
    * Maps from DTO to domain entity
    */
-  fromDTO?(dto: DTO): DomainEntity;
+  fromDTO?(dto: DTO): DomainEntity
 }

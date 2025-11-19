@@ -2,78 +2,75 @@
  * Update Assignment Use Case
  */
 
-import { BaseUseCase } from '@/core/shared/use-case.interface';
-import { Result } from '@/core/shared/result';
-import { EntityNotFoundError } from '@/core/shared/errors';
-import type { IAssignmentRepository } from '../../domain/assignment.repository.interface';
-import type { UpdateAssignmentDTO } from '../dtos';
-import { type AssignmentDTO, assignmentMapper } from '../../infrastructure/assignment.mapper';
+import { EntityNotFoundError } from '@/core/shared/errors'
+import { Result } from '@/core/shared/result'
+import { BaseUseCase } from '@/core/shared/use-case.interface'
+import type { IAssignmentRepository } from '../../domain/assignment.repository.interface'
+import { type AssignmentDTO, assignmentMapper } from '../../infrastructure/assignment.mapper'
+import type { UpdateAssignmentDTO } from '../dtos'
 
 interface UpdateAssignmentRequest {
-  dto: UpdateAssignmentDTO;
-  currentUserId: string;
+  dto: UpdateAssignmentDTO
+  currentUserId: string
 }
 
-export class UpdateAssignmentUseCase extends BaseUseCase<
-  UpdateAssignmentRequest,
-  AssignmentDTO
-> {
+export class UpdateAssignmentUseCase extends BaseUseCase<UpdateAssignmentRequest, AssignmentDTO> {
   constructor(private assignmentRepository: IAssignmentRepository) {
-    super();
+    super()
   }
 
   async execute(request: UpdateAssignmentRequest): Promise<Result<AssignmentDTO>> {
-    const { dto } = request;
+    const { dto } = request
 
     // Find assignment
-    const assignmentResult = await this.assignmentRepository.findById(dto.id);
+    const assignmentResult = await this.assignmentRepository.findById(dto.id)
 
     if (assignmentResult.isFailure) {
-      return Result.fail(assignmentResult.error);
+      return Result.fail(assignmentResult.error)
     }
 
     if (!assignmentResult.value) {
-      return Result.fail(new EntityNotFoundError('Assignment', dto.id));
+      return Result.fail(new EntityNotFoundError('Assignment', dto.id))
     }
 
-    const assignment = assignmentResult.value;
+    const assignment = assignmentResult.value
 
     // Update assignment properties
     if (dto.title) {
-      const titleResult = assignment.updateTitle(dto.title);
+      const titleResult = assignment.updateTitle(dto.title)
       if (titleResult.isFailure) {
-        return Result.fail(titleResult.error);
+        return Result.fail(titleResult.error)
       }
     }
 
     if (dto.description !== undefined) {
-      assignment.updateDescription(dto.description);
+      assignment.updateDescription(dto.description)
     }
 
     if (dto.dueDate !== undefined) {
-      const dueDateResult = assignment.updateDueDate(dto.dueDate);
+      const dueDateResult = assignment.updateDueDate(dto.dueDate)
       if (dueDateResult.isFailure) {
-        return Result.fail(dueDateResult.error);
+        return Result.fail(dueDateResult.error)
       }
     }
 
     if (dto.maxScore !== undefined) {
-      const maxScoreResult = assignment.updateMaxScore(dto.maxScore);
+      const maxScoreResult = assignment.updateMaxScore(dto.maxScore)
       if (maxScoreResult.isFailure) {
-        return Result.fail(maxScoreResult.error);
+        return Result.fail(maxScoreResult.error)
       }
     }
 
     // Save to repository
-    const savedResult = await this.assignmentRepository.save(assignment);
+    const savedResult = await this.assignmentRepository.save(assignment)
 
     if (savedResult.isFailure) {
-      return Result.fail(savedResult.error);
+      return Result.fail(savedResult.error)
     }
 
     // Map to DTO
-    const assignmentDTO = assignmentMapper.toDTO(savedResult.value);
+    const assignmentDTO = assignmentMapper.toDTO(savedResult.value)
 
-    return Result.ok(assignmentDTO);
+    return Result.ok(assignmentDTO)
   }
 }

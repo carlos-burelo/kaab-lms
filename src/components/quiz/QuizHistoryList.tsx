@@ -1,24 +1,15 @@
 'use client'
 
-import { useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
-import {
-  Brain,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  Trophy,
-  ChevronDown,
-  ChevronUp,
-  Target
-} from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Brain, CheckCircle2, ChevronDown, ChevronUp, Clock, Target, Trophy, XCircle } from 'lucide-react'
+import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { Progress } from '@/components/ui/progress'
+import { cn } from '@/lib/utils'
 
 type QuizAttempt = {
   id: string
@@ -70,9 +61,7 @@ export function QuizHistoryList({ attempts }: QuizHistoryListProps) {
         <CardContent className='flex flex-col items-center justify-center py-12'>
           <Brain className='h-16 w-16 text-muted-foreground mb-4' />
           <p className='text-muted-foreground text-center'>Aún no has realizado ninguna evaluación</p>
-          <p className='text-sm text-muted-foreground text-center mt-2'>
-            Inscríbete en un curso y comienza a aprender
-          </p>
+          <p className='text-sm text-muted-foreground text-center mt-2'>Inscríbete en un curso y comienza a aprender</p>
         </CardContent>
       </Card>
     )
@@ -136,7 +125,9 @@ export function QuizHistoryList({ attempts }: QuizHistoryListProps) {
 
           return (
             <Collapsible key={attempt.id} open={isExpanded} onOpenChange={() => toggleExpanded(attempt.id)}>
-              <Card className={cn('transition-all', attempt.passed ? 'border-l-4 border-l-green-500' : 'border-l-4 border-l-red-500')}>
+              <Card
+                className={cn('transition-all', attempt.passed ? 'border-l-4 border-l-green-500' : 'border-l-4 border-l-red-500')}
+              >
                 <CardHeader>
                   <div className='flex items-start justify-between gap-4'>
                     <div className='flex-1 space-y-2'>
@@ -191,10 +182,7 @@ export function QuizHistoryList({ attempts }: QuizHistoryListProps) {
                             fill='transparent'
                             strokeDasharray={`${2 * Math.PI * 36}`}
                             strokeDashoffset={`${2 * Math.PI * 36 * (1 - scorePercentage / 100)}`}
-                            className={cn(
-                              'transition-all',
-                              attempt.passed ? 'text-green-500' : 'text-red-500'
-                            )}
+                            className={cn('transition-all', attempt.passed ? 'text-green-500' : 'text-red-500')}
                           />
                         </svg>
                         <div className='absolute inset-0 flex items-center justify-center'>
@@ -238,12 +226,7 @@ export function QuizHistoryList({ attempts }: QuizHistoryListProps) {
                         </div>
                         <div className='space-y-1'>
                           <p className='text-sm text-muted-foreground'>Tu puntuación</p>
-                          <p
-                            className={cn(
-                              'text-lg font-semibold',
-                              attempt.passed ? 'text-green-500' : 'text-red-500'
-                            )}
-                          >
+                          <p className={cn('text-lg font-semibold', attempt.passed ? 'text-green-500' : 'text-red-500')}>
                             {scorePercentage.toFixed(1)}%
                           </p>
                         </div>

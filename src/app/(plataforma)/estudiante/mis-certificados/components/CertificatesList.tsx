@@ -1,11 +1,11 @@
 'use client'
 
 import type { Prisma } from '@prisma/client'
-import { BadgeCheckIcon, DownloadIcon, ExternalLinkIcon, CalendarIcon } from 'lucide-react'
+import { BadgeCheckIcon, CalendarIcon, DownloadIcon, ExternalLinkIcon } from 'lucide-react'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 
 type CertificateWithRelations = Prisma.CertificateGetPayload<{
   include: {
@@ -100,15 +100,9 @@ function CertificateCard({ certificate }: { certificate: CertificateWithRelation
           </div>
         </div>
 
-        <h3 className='font-bold text-lg mb-2 line-clamp-2'>
-          Certificado de Completación
-        </h3>
+        <h3 className='font-bold text-lg mb-2 line-clamp-2'>Certificado de Completación</h3>
 
-        {course && (
-          <p className='text-sm text-muted-foreground line-clamp-2'>
-            {course.title}
-          </p>
-        )}
+        {course && <p className='text-sm text-muted-foreground line-clamp-2'>{course.title}</p>}
       </div>
 
       <div className='p-4'>
@@ -127,32 +121,18 @@ function CertificateCard({ certificate }: { certificate: CertificateWithRelation
         </div>
 
         <div className='flex gap-2'>
-          <Button
-            size='sm'
-            className='flex-1'
-            onClick={handleDownload}
-          >
+          <Button size='sm' className='flex-1' onClick={handleDownload}>
             <DownloadIcon className='w-4 h-4 mr-1' />
             Descargar
           </Button>
 
-          <Button
-            size='sm'
-            variant='outline'
-            onClick={handleShare}
-            title='Compartir certificado'
-          >
+          <Button size='sm' variant='outline' onClick={handleShare} title='Compartir certificado'>
             <ExternalLinkIcon className='w-4 h-4' />
           </Button>
         </div>
 
         {certificate.code && (
-          <Button
-            asChild
-            size='sm'
-            variant='ghost'
-            className='w-full mt-2 text-xs'
-          >
+          <Button asChild size='sm' variant='ghost' className='w-full mt-2 text-xs'>
             <Link href={`/verify-certificate/${certificate.code}`} target='_blank'>
               Verificar autenticidad
               <ExternalLinkIcon className='w-3 h-3 ml-1' />

@@ -1,7 +1,7 @@
 import { UserRole } from '@prisma/client'
+import ADMIN_ROUTES from '@/app/(plataforma)/administrador/routes'
 import STUDENT_ROUTES from '@/app/(plataforma)/estudiante/routes'
 import INSTRUCTOR_ROUTES from '@/app/(plataforma)/instructor/routes'
-import ADMIN_ROUTES from '@/app/(plataforma)/administrador/routes'
 
 export function getNavigationByRole(role: UserRole) {
   switch (role) {

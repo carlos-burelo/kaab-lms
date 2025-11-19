@@ -2,9 +2,9 @@
  * Message Repository Interface
  */
 
-import type { Repository } from '@/core/shared/repository.interface';
-import type { Result } from '@/core/shared/result';
-import type { Message } from './message.entity';
+import type { Repository } from '@/core/shared/repository.interface'
+import type { Result } from '@/core/shared/result'
+import type { Message } from './message.entity'
 
 export interface IMessageRepository extends Repository<Message> {
   /**
@@ -13,29 +13,23 @@ export interface IMessageRepository extends Repository<Message> {
   findByConversation(
     conversationId: string,
     options?: {
-      limit?: number;
-      offset?: number;
+      limit?: number
+      offset?: number
     }
-  ): Promise<Result<Message[]>>;
+  ): Promise<Result<Message[]>>
 
   /**
    * Find unread messages in a conversation for a specific user
    */
-  findUnreadByConversationAndUser(
-    conversationId: string,
-    userId: string
-  ): Promise<Result<Message[]>>;
+  findUnreadByConversationAndUser(conversationId: string, userId: string): Promise<Result<Message[]>>
 
   /**
    * Mark multiple messages as read
    */
-  markManyAsRead(messageIds: string[]): Promise<Result<void>>;
+  markManyAsRead(messageIds: string[]): Promise<Result<void>>
 
   /**
    * Count unread messages in a conversation for a specific user
    */
-  countUnreadByConversationAndUser(
-    conversationId: string,
-    userId: string
-  ): Promise<Result<number>>;
+  countUnreadByConversationAndUser(conversationId: string, userId: string): Promise<Result<number>>
 }
