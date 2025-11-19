@@ -1,6 +1,5 @@
 'use server'
 
-import { error } from 'node:console'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
 import { instructorRepository, studentRepository } from '@/database/repositories'
@@ -194,7 +193,7 @@ export async function getAssignmentById(assignmentId: string) {
 
     return { success: true, data: result.value }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener asignación'
+    const message = _error instanceof Error ? _error.message : 'Error al obtener asignación'
     return { success: false, error: message }
   }
 }
@@ -231,7 +230,7 @@ export async function deleteAssignment(assignmentId: string, courseId: string) {
     revalidatePath(`/instructor/cursos/${courseId}`)
     return { success: true }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al eliminar asignación'
+    const message = _error instanceof Error ? _error.message : 'Error al eliminar asignación'
     return { success: false, error: message }
   }
 }
@@ -273,7 +272,7 @@ export async function submitAssignment(data: z.infer<typeof SubmitAssignmentSche
     revalidatePath(`/estudiante/cursos/${validated.courseId}`)
     return { success: true, data: result.value }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al enviar asignación'
+    const message = _error instanceof Error ? _error.message : 'Error al enviar asignación'
     return { success: false, error: message }
   }
 }
@@ -319,7 +318,7 @@ export async function gradeAssignment(submissionId: string, courseId: string, da
     revalidatePath(`/instructor/cursos/${courseId}`)
     return { success: true, data: result.value }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al calificar asignación'
+    const message = _error instanceof Error ? _error.message : 'Error al calificar asignación'
     return { success: false, error: message }
   }
 }
@@ -355,7 +354,7 @@ export async function getAssignmentSubmissions(assignmentId: string, courseId: s
 
     return { success: true, data: result.value }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener entregas'
+    const message = _error instanceof Error ? _error.message : 'Error al obtener entregas'
     return { success: false, error: message }
   }
 }
@@ -382,7 +381,7 @@ export async function getStudentAssignmentSubmissions(courseId: string) {
 
     return { success: true, data: result.value }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener entregas'
+    const message = _error instanceof Error ? _error.message : 'Error al obtener entregas'
     return { success: false, error: message }
   }
 }

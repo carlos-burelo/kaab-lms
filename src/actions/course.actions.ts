@@ -1,5 +1,4 @@
 'use server'
-import { error } from 'node:console'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { CourseLevel } from '@prisma/client'
@@ -151,7 +150,7 @@ export async function getLessonById(lessonId: string): Promise<ActionResponse> {
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error obteniendo lección'
+      error: _error instanceof Error ? _error.message : 'Error obteniendo lección'
     }
   }
 }
@@ -172,7 +171,7 @@ export async function getCategories(): Promise<ActionResponse> {
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error obteniendo categorías'
+      error: _error instanceof Error ? _error.message : 'Error obteniendo categorías'
     }
   }
 }
@@ -198,7 +197,7 @@ export async function getAvailableCourses(): Promise<ActionResponse> {
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error obteniendo cursos'
+      error: _error instanceof Error ? _error.message : 'Error obteniendo cursos'
     }
   }
 }
@@ -216,7 +215,7 @@ export async function getFeaturedCourses(): Promise<ActionResponse> {
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error obteniendo cursos destacados'
+      error: _error instanceof Error ? _error.message : 'Error obteniendo cursos destacados'
     }
   }
 }
@@ -234,7 +233,7 @@ export async function searchCourses(term: string, limit = 20, skip = 0): Promise
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error buscando cursos'
+      error: _error instanceof Error ? _error.message : 'Error buscando cursos'
     }
   }
 }
@@ -272,7 +271,7 @@ export async function getMyCourses(): Promise<ActionResponse> {
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error obteniendo cursos'
+      error: _error instanceof Error ? _error.message : 'Error obteniendo cursos'
     }
   }
 }
@@ -361,7 +360,7 @@ export async function createCourseBasicInfo(formData: FormData): Promise<ActionR
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error creando curso'
+      error: _error instanceof Error ? _error.message : 'Error creando curso'
     }
   }
 }
@@ -431,7 +430,7 @@ export async function updateCourseBasicInfo(formData: FormData): Promise<ActionR
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error actualizando curso'
+      error: _error instanceof Error ? _error.message : 'Error actualizando curso'
     }
   }
 }
@@ -496,7 +495,7 @@ export async function createModule(formData: FormData): Promise<ActionResponse> 
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error creando módulo'
+      error: _error instanceof Error ? _error.message : 'Error creando módulo'
     }
   }
 }
@@ -530,7 +529,7 @@ export async function updateModule(formData: FormData): Promise<ActionResponse> 
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error actualizando módulo'
+      error: _error instanceof Error ? _error.message : 'Error actualizando módulo'
     }
   }
 }
@@ -581,7 +580,7 @@ export async function deleteModule(formData: FormData): Promise<ActionResponse> 
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error eliminando módulo'
+      error: _error instanceof Error ? _error.message : 'Error eliminando módulo'
     }
   }
 }
@@ -646,7 +645,7 @@ export async function createLesson(formData: FormData): Promise<ActionResponse> 
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error creando lección'
+      error: _error instanceof Error ? _error.message : 'Error creando lección'
     }
   }
 }
@@ -680,7 +679,7 @@ export async function updateLesson(formData: FormData): Promise<ActionResponse> 
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error actualizando lección'
+      error: _error instanceof Error ? _error.message : 'Error actualizando lección'
     }
   }
 }
@@ -735,7 +734,7 @@ export async function deleteLesson(formData: FormData): Promise<ActionResponse> 
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error eliminando lección'
+      error: _error instanceof Error ? _error.message : 'Error eliminando lección'
     }
   }
 }
@@ -788,7 +787,7 @@ export async function createLessonContent(formData: FormData): Promise<ActionRes
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error creando contenido'
+      error: _error instanceof Error ? _error.message : 'Error creando contenido'
     }
   }
 }
@@ -828,7 +827,7 @@ export async function updateLessonContent(formData: FormData): Promise<ActionRes
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error actualizando contenido'
+      error: _error instanceof Error ? _error.message : 'Error actualizando contenido'
     }
   }
 }
@@ -870,7 +869,7 @@ export async function deleteLessonContent(formData: FormData): Promise<ActionRes
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error eliminando contenido'
+      error: _error instanceof Error ? _error.message : 'Error eliminando contenido'
     }
   }
 }
@@ -987,7 +986,7 @@ export async function publishCourse(formData: FormData): Promise<ActionResponse>
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error publicando curso'
+      error: _error instanceof Error ? _error.message : 'Error publicando curso'
     }
   }
 }
@@ -1033,7 +1032,7 @@ export async function unpublishCourse(formData: FormData): Promise<ActionRespons
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error despublicando curso'
+      error: _error instanceof Error ? _error.message : 'Error despublicando curso'
     }
   }
 }
@@ -1067,7 +1066,7 @@ export async function getUploadedFiles(userId: string, type?: string) {
       createdAt: file.createdAt
     }))
   } catch (_error) {
-    console.error('Error fetching files:', error)
+    console.error('Error fetching files:', _error)
     return []
   }
 }
@@ -1149,7 +1148,7 @@ export async function uploadFile(file: File, uploadedBy: string): Promise<Action
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error al subir archivo'
+      error: _error instanceof Error ? _error.message : 'Error al subir archivo'
     }
   }
 }
@@ -1176,7 +1175,7 @@ export async function updateContentPositions(
   } catch (_error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error actualizando posiciones'
+      error: _error instanceof Error ? _error.message : 'Error actualizando posiciones'
     }
   }
 }

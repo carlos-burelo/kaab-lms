@@ -1,6 +1,5 @@
 'use server'
 
-import { error } from 'console'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
 import { userRepository } from '@/database/repositories'
@@ -11,9 +10,9 @@ import { getSession } from '@/lib/auth'
 // ============================================================================
 
 const SendMessageSchema = z.object({
-  recipientId: z.string().min(1, 'El ID del destinatario es requerido'),
+  conversationId: z.string().min(1, 'El ID de la conversación es requerido'),
   message: z.string().min(1, 'El mensaje no puede estar vacío').max(5000, 'Máximo 5000 caracteres'),
-  fileIds: z.array(z.string()).optional().default([])
+  fileId: z.string().optional()
 })
 
 const GetConversationsSchema = z.object({
@@ -34,22 +33,11 @@ export async function sendMessage(data: z.infer<typeof SendMessageSchema>) {
 
     const validated = SendMessageSchema.parse(data)
 
-    // Verificar que el destinatario existe
-    const recipient = await userRepository.getUserById(validated.recipientId)
-    if (!recipient) {
-      throw new Error('Destinatario no encontrado')
-    }
-
-    // Impedir enviar mensajes a sí mismo
-    if (validated.recipientId === user.id) {
-      throw new Error('No puedes enviar mensajes a ti mismo')
-    }
-
     const message = await userRepository.createMessage({
+      conversationId: validated.conversationId,
       senderId: user.id,
-      recipientId: validated.recipientId,
       content: validated.message,
-      fileIds: validated.fileIds
+      fileId: validated.fileId
     })
 
     revalidatePath('/estudiante')
@@ -77,7 +65,7 @@ export async function getConversations(params?: z.infer<typeof GetConversationsS
     const conversations = await userRepository.getConversations(user.id, validated.limit, validated.skip)
     return { success: true, data: conversations }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener conversaciones'
+    const message = _error instanceof Error ? _error.message : 'Error al obtener conversaciones'
     return { success: false, error: message }
   }
 }
@@ -110,7 +98,7 @@ export async function getConversationMessages(conversationId: string, limit: num
 
     return { success: true, data: messages }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener mensajes'
+    const message = _error instanceof Error ? _error.message : 'Error al obtener mensajes'
     return { success: false, error: message }
   }
 }
@@ -146,7 +134,7 @@ export async function getOrCreateConversation(participantId: string) {
 
     return { success: true, data: conversation }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener conversación'
+    const message = _error instanceof Error ? _error.message : 'Error al obtener conversación'
     return { success: false, error: message }
   }
 }
@@ -176,7 +164,7 @@ export async function markConversationAsRead(conversationId: string) {
 
     return { success: true }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al actualizar conversación'
+    const message = _error instanceof Error ? _error.message : 'Error al actualizar conversación'
     return { success: false, error: message }
   }
 }
@@ -208,7 +196,7 @@ export async function deleteConversation(conversationId: string) {
     revalidatePath('/instructor')
     return { success: true }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al eliminar conversación'
+    const message = _error instanceof Error ? _error.message : 'Error al eliminar conversación'
     return { success: false, error: message }
   }
 }
@@ -231,7 +219,7 @@ export async function searchUsersForChat(query: string, limit: number = 10) {
 
     return { success: true, data: filtered }
   } catch (_error) {
-    const message = error instanceof Error ? error.message : 'Error al buscar usuarios'
+    const message = _error instanceof Error ? _error.message : 'Error al buscar usuarios'
     return { success: false, error: message }
   }
 }
