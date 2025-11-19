@@ -773,6 +773,104 @@ export class UserRepository extends BaseRepository {
       this.handleError(_error, 'UserRepository.deletePersonalTask')
     }
   }
+
+  /**
+   * Crea un registro de progreso en una ruta de aprendizaje
+   */
+  async createLearningPathProgress(data: {
+    userId: string
+    learningPathId: string
+    currentNodeId?: string | null
+    completedNodes?: string[]
+    status?: string
+  }) {
+    try {
+      return await this.client.userLearningPathProgress.create({
+        data: {
+          userId: data.userId,
+          learningPathId: data.learningPathId,
+          currentNodeId: data.currentNodeId || undefined,
+          completedNodes: data.completedNodes || [],
+          isCompleted: false
+        }
+      })
+    } catch (_error) {
+      this.handleError(_error, 'UserRepository.createLearningPathProgress')
+    }
+  }
+
+  /**
+   * Obtiene el progreso de un usuario en una ruta de aprendizaje
+   */
+  async getLearningPathProgress(learningPathId: string, userId: string) {
+    try {
+      return await this.client.userLearningPathProgress.findUnique({
+        where: {
+          userId_learningPathId: {
+            userId,
+            learningPathId
+          }
+        }
+      })
+    } catch (_error) {
+      this.handleError(_error, 'UserRepository.getLearningPathProgress')
+    }
+  }
+
+  /**
+   * Actualiza el progreso de un usuario en una ruta de aprendizaje
+   */
+  async updateLearningPathProgress(learningPathId: string, userId: string, data: any) {
+    try {
+      return await this.client.userLearningPathProgress.update({
+        where: {
+          userId_learningPathId: {
+            userId,
+            learningPathId
+          }
+        },
+        data
+      })
+    } catch (_error) {
+      this.handleError(_error, 'UserRepository.updateLearningPathProgress')
+    }
+  }
+
+  /**
+   * Obtiene las rutas de aprendizaje en progreso de un estudiante
+   */
+  async getStudentLearningPathsInProgress(userId: string) {
+    try {
+      return await this.client.userLearningPathProgress.findMany({
+        where: {
+          userId,
+          isCompleted: false
+        },
+        include: {
+          learningPath: {
+            include: {
+              instructor: {
+                include: {
+                  user: {
+                    include: {
+                      profile: true
+                    }
+                  }
+                }
+              },
+              nodes: true,
+              edges: true,
+              image: true
+            }
+          }
+        },
+        orderBy: { updatedAt: 'desc' }
+      })
+    } catch (_error) {
+      this.handleError(_error, 'UserRepository.getStudentLearningPathsInProgress')
+      return []
+    }
+  }
 }
 
 export const userRepository = new UserRepository()

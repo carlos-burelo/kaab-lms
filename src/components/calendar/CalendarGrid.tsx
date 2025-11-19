@@ -130,7 +130,7 @@ function MonthView({
   const getEventsForDay = (day: number) => {
     const dayDate = new Date(year, month, day, 0, 0, 0, 0)
     return events.filter(
-      (event) =>
+      (event: CalendarEventBase) =>
         isSameDay(new Date(event.startDate), dayDate) ||
         (new Date(event.startDate) <= dayDate && dayDate <= new Date(event.endDate))
     )
@@ -156,7 +156,7 @@ function MonthView({
       {/* Day names */}
       <div className='grid grid-cols-7 gap-2 mb-2'>
         {showWeekNumbers && <div className='text-xs font-semibold text-gray-500'>Week</div>}
-        {dayNames.map((day) => (
+        {dayNames.map((day: string) => (
           <div key={day} className='text-xs font-semibold text-center text-gray-600 py-2'>
             {day}
           </div>
@@ -184,7 +184,7 @@ function MonthView({
                   <div className='space-y-1'>
                     {getEventsForDay(day)
                       .slice(0, 2)
-                      .map((event) => (
+                      .map((event: CalendarEventBase) => (
                         <EventBadge key={event.id} event={event} onClick={() => onSelectEvent?.(event)} />
                       ))}
                     {getEventsForDay(day).length > 2 && (
@@ -204,7 +204,7 @@ function MonthView({
 /**
  * Vista de semana
  */
-function WeekView({ date, events, onSelectDate, onSelectEvent, onNextPeriod, onPreviousPeriod }: any) {
+function WeekView({ date, events, onSelectDate, onSelectEvent, onNextPeriod, onPreviousPeriod, highlightToday = true }: any) {
   const weekStart = getWeekStart(date)
   const days = Array.from({ length: 7 }, (_, i) => new Date(weekStart.getTime() + i * 24 * 60 * 60 * 1000))
 
@@ -227,7 +227,7 @@ function WeekView({ date, events, onSelectDate, onSelectEvent, onNextPeriod, onP
       <div className='grid grid-cols-7 gap-2'>
         {days.map((dayDate, idx) => {
           const dayEvents = events.filter(
-            (event) =>
+            (event: CalendarEventBase) =>
               isSameDay(new Date(event.startDate), dayDate) ||
               (new Date(event.startDate) <= dayDate && dayDate <= new Date(event.endDate))
           )
@@ -246,7 +246,7 @@ function WeekView({ date, events, onSelectDate, onSelectEvent, onNextPeriod, onP
                 {getDayName(dayDate).substring(0, 3)} {dayDate.getDate()}
               </div>
               <div className='space-y-2'>
-                {dayEvents.map((event) => (
+                {dayEvents.map((event: CalendarEventBase) => (
                   <EventCard key={event.id} event={event} onClick={() => onSelectEvent?.(event)} />
                 ))}
               </div>
@@ -262,7 +262,7 @@ function WeekView({ date, events, onSelectDate, onSelectEvent, onNextPeriod, onP
  * Vista de día
  */
 function DayView({ date, events, onSelectEvent, onNextPeriod, onPreviousPeriod }: any) {
-  const dayEvents = events.filter((event) => isSameDay(new Date(event.startDate), date))
+  const dayEvents = events.filter((event: CalendarEventBase) => isSameDay(new Date(event.startDate), date))
 
   const hours = Array.from({ length: 24 }, (_, i) => i)
 
@@ -288,11 +288,11 @@ function DayView({ date, events, onSelectEvent, onNextPeriod, onPreviousPeriod }
             <div className='w-16 text-sm font-semibold text-gray-600'>{String(hour).padStart(2, '0')}:00</div>
             <div className='flex-1 min-h-16 p-2 rounded-lg border border-gray-200 bg-white'>
               {dayEvents
-                .filter((event) => {
+                .filter((event: CalendarEventBase) => {
                   const eventHour = new Date(event.startDate).getHours()
                   return eventHour === hour
                 })
-                .map((event) => (
+                .map((event: CalendarEventBase) => (
                   <EventCard key={event.id} event={event} onClick={() => onSelectEvent?.(event)} />
                 ))}
             </div>
@@ -317,7 +317,7 @@ function AgendaView({ events, onSelectEvent }: any) {
         <Card className='p-8 text-center text-gray-500'>No events scheduled</Card>
       ) : (
         <div className='space-y-2'>
-          {sortedEvents.map((event) => (
+          {sortedEvents.map((event: CalendarEventBase) => (
             <div
               key={event.id}
               className='p-4 rounded-lg border border-gray-200 bg-white hover:shadow-md cursor-pointer transition-all'

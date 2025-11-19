@@ -26,7 +26,7 @@ export function MessageCenter() {
     setIsLoading(true)
     try {
       const result = await getConversations()
-      if (result.success) {
+      if (result.success && result.data) {
         setConversations(result.data)
       }
     } catch (_error) {
@@ -44,7 +44,7 @@ export function MessageCenter() {
     async (conversationId: string) => {
       try {
         const result = await getConversationMessages(conversationId)
-        if (result.success) {
+        if (result.success && result.data) {
           setMessages(result.data.reverse())
         }
       } catch (_error) {
@@ -73,7 +73,7 @@ export function MessageCenter() {
 
     try {
       const result = await sendMessage({
-        recipientId: selectedConversation.recipientId,
+        conversationId: selectedConversation.id,
         message: data.message
       })
 

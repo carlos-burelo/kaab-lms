@@ -31,7 +31,7 @@ export function RewardCard({
   onClaim,
   loading = false
 }: RewardCardProps) {
-  const isOutOfStock = stock !== null && stock <= 0
+  const isOutOfStock = stock !== null && stock !== undefined && stock <= 0
 
   return (
     <Card className={`p-4 transition-all ${claimed ? 'border-green-500 bg-green-50' : isOutOfStock ? 'opacity-50' : ''}`}>

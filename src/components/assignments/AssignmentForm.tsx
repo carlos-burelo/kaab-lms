@@ -20,7 +20,7 @@ const AssignmentSchema = z.object({
   instructions: z.string().optional(),
   dueDate: z.string().datetime('Fecha inválida'),
   maxScore: z.string().refine((val) => !Number.isNaN(parseFloat(val)), 'Debe ser un número'),
-  allowLateSubmission: z.boolean().default(false),
+  allowLateSubmission: z.boolean(),
   latePenaltyPercent: z
     .string()
     .optional()
@@ -60,6 +60,7 @@ export function AssignmentForm({ lessonId, courseId, assignmentId, initialData }
       const result = assignmentId
         ? await updateAssignment({
             assignmentId,
+            lessonId,
             courseId,
             ...data
           })

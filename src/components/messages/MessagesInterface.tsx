@@ -117,7 +117,7 @@ export function MessagesInterface({ initialConversations }: MessagesInterfacePro
         : selectedConversation.initiatorId
 
     const result = await sendMessage({
-      recipientId: otherUserId,
+      conversationId: selectedConversation.id,
       message: newMessage.trim()
     })
 

@@ -21,14 +21,14 @@ export function NotificationCenter() {
 
   const fetchNotifications = useCallback(async () => {
     const result = await getNotifications(20)
-    if (result.success) {
+    if (result.success && result.data) {
       setNotifications(result.data)
     }
   }, [])
 
   const fetchUnreadCount = useCallback(async () => {
     const result = await getUnreadNotificationCount()
-    if (result.success) {
+    if (result.success && result.data !== undefined) {
       setUnreadCount(result.data)
     }
   }, [])

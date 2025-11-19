@@ -32,7 +32,7 @@ export default function ReviewsPage() {
   const [loading, setLoading] = useState(true)
 
   const loadData = useCallback(async () => {
-    const [reviewsResult, coursesResult] = await Promise.all([getReviews(), getMyCourses()])
+    const [reviewsResult, coursesResult] = await Promise.all([getReviews(undefined as any), getMyCourses(undefined as any)])
 
     if (reviewsResult.success && reviewsResult.data) {
       setReviews(reviewsResult.data as any)
