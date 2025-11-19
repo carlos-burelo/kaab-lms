@@ -78,6 +78,8 @@ export function AssetsGallery({ initialFiles, initialTypes }: AssetsGalleryProps
       const result = await getUploadedFiles({
         offset: offset + limit,
         limit,
+        sortBy: 'createdAt',
+        sortOrder: 'desc',
         type: selectedType === 'all' ? undefined : selectedType,
         search: searchQuery || undefined
       })
@@ -101,6 +103,8 @@ export function AssetsGallery({ initialFiles, initialTypes }: AssetsGalleryProps
         const result = await getUploadedFiles({
           offset: 0,
           limit,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
           type: selectedType === 'all' ? undefined : selectedType
         })
 
@@ -134,6 +138,8 @@ export function AssetsGallery({ initialFiles, initialTypes }: AssetsGalleryProps
       const result = await getUploadedFiles({
         offset: 0,
         limit,
+        sortBy: 'createdAt',
+        sortOrder: 'desc',
         type: type === 'all' ? undefined : type
       })
 

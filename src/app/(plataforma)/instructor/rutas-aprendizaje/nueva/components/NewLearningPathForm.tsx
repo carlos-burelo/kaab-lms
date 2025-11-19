@@ -20,7 +20,7 @@ const formSchema = z.object({
   slug: z.string().min(3, 'El slug debe tener al menos 3 caracteres'),
   description: z.string().min(10, 'La descripción debe tener al menos 10 caracteres'),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT']),
-  estimatedDurationDays: z.coerce.number().optional()
+  estimatedDurationDays: z.number().optional()
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -51,11 +51,11 @@ export const NewLearningPathForm: React.FC<NewLearningPathFormProps> = ({ userId
           instructorId: userId
         })
 
-        if (result.success) {
+        if (result.success && 'id' in result) {
           toast.success('Ruta creada exitosamente')
           router.push(`/instructor/rutas-aprendizaje/${result.id}/diseñador`)
         } else {
-          toast.error(result.error || 'Error al crear la ruta')
+          toast.error('error' in result ? result.error : 'Error al crear la ruta')
         }
       } catch (_error) {
         toast.error('Error al crear la ruta')

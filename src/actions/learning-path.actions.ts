@@ -112,7 +112,7 @@ export async function completeNode(data: z.infer<typeof CompleteNodeSchema>) {
     }
 
     // Actualizar progreso - marcar nodo como completado
-    const completedNodes = progress.completedNodes || []
+    const completedNodes = (progress.completedNodes as string[]) || []
     if (!completedNodes.includes(validated.nodeId)) {
       completedNodes.push(validated.nodeId)
     }

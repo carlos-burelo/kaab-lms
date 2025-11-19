@@ -39,6 +39,7 @@ model User {
   quizAttempts          UserQuizAttempt[]
   assignmentSubmissions AssignmentSubmission[]
   lessonProgress        UserLessonProgress[]
+  learningPathProgress  UserLearningPathProgress[]
   threadsCreated        DiscussionThread[]
   discussionPosts       DiscussionPost[]
   conversationsStarted  Conversation[]         @relation("ConversationInitiator")
@@ -514,22 +515,23 @@ model LearningPathEdge {
 }
 
 model LearningPath {
-  id                    String               @id @default(nanoid())
+  id                    String                     @id @default(nanoid())
   title                 String
-  slug                  String               @unique
-  description           String               @db.Text
+  slug                  String                     @unique
+  description           String                     @db.Text
   imageId               String?
-  image                 File?                @relation("LearningPathImage", fields: [imageId], references: [id], onDelete: SetNull)
+  image                 File?                      @relation("LearningPathImage", fields: [imageId], references: [id], onDelete: SetNull)
   estimatedDurationDays Int?
   level                 CourseLevel?
-  isPublished           Boolean              @default(false)
+  isPublished           Boolean                    @default(false)
   instructorId          String
-  instructor            InstructorProfile    @relation("InstructorLearningPaths", fields: [instructorId], references: [userId], onDelete: Cascade)
+  instructor            InstructorProfile          @relation("InstructorLearningPaths", fields: [instructorId], references: [userId], onDelete: Cascade)
   courses               CourseLearningPath[]
   nodes                 LearningPathNode[]
   edges                 LearningPathEdge[]
-  createdAt             DateTime             @default(now())
-  updatedAt             DateTime             @updatedAt
+  userProgress          UserLearningPathProgress[]
+  createdAt             DateTime                   @default(now())
+  updatedAt             DateTime                   @updatedAt
 
   @@index([slug])
   @@index([instructorId])
@@ -546,6 +548,24 @@ model CourseLearningPath {
   @@id([learningPathId, courseId])
   @@index([learningPathId])
   @@index([courseId])
+}
+
+model UserLearningPathProgress {
+  id              String        @id @default(nanoid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  learningPathId  String
+  learningPath    LearningPath  @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+  currentNodeId   String?
+  completedNodes  Json          @default("[]")
+  isCompleted     Boolean       @default(false)
+  completedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([userId, learningPathId])
+  @@index([userId])
+  @@index([learningPathId])
 }
 
 model Purchase {

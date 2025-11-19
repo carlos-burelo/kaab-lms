@@ -53,7 +53,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <div>
               <Label>Etiqueta</Label>
               <Input
-                value={edge.label || ''}
+                value={typeof edge.label === 'string' ? edge.label : ''}
                 onChange={(e) => {
                   onEdgeDataChange({ label: e.target.value })
                 }}
@@ -140,7 +140,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     id='optional'
                     checked={node.data?.isOptional || false}
                     onCheckedChange={(checked) => {
-                      onNodeDataChange({ isOptional: checked })
+                      onNodeDataChange({ isOptional: checked === true })
                     }}
                   />
                   <Label htmlFor='optional'>Curso Opcional</Label>

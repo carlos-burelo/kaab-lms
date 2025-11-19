@@ -8,6 +8,7 @@ import ReactFlow, {
   type Connection,
   Controls,
   type Edge,
+  MarkerType,
   MiniMap,
   type Node,
   type NodeTypes,
@@ -75,7 +76,7 @@ export const LearningPathDesigner: React.FC<LearningPathDesignerProps> = ({ init
         id: `edge-${Date.now()}`,
         source: connection.source!,
         target: connection.target!,
-        markerEnd: { type: 'arrowclosed' }
+        markerEnd: { type: MarkerType.ArrowClosed }
       }
       setEdges((eds) => addEdge(newEdge, eds))
     },
@@ -160,7 +161,7 @@ export const LearningPathDesigner: React.FC<LearningPathDesignerProps> = ({ init
       id: e.id,
       source: e.source,
       target: e.target,
-      label: e.label,
+      label: typeof e.label === 'string' ? e.label : undefined,
       condition: e.data?.condition
     }))
 

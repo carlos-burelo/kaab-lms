@@ -38,7 +38,7 @@ export function InstructorProfileForm() {
   })
 
   const loadProfile = useCallback(async () => {
-    const result = await getInstructorProfile()
+    const result = await getInstructorProfile(undefined as any)
 
     if (result.success && result.data) {
       const profile = result.data as any

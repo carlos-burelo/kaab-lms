@@ -35,7 +35,7 @@ export function LearningPathViewer({ learningPath, onComplete }: LearningPathVie
     setIsLoading(true)
     try {
       const result = await getLearningPathProgress(learningPath.id)
-      if (result.success) {
+      if (result.success && result.data) {
         setProgress(result.data)
         setIsStarted(true)
         if (result.data.currentNodeId) {
@@ -100,7 +100,7 @@ export function LearningPathViewer({ learningPath, onComplete }: LearningPathVie
 
         if (nextResult.success) {
           if (nextResult.data?.nextNode) {
-            setCurrentNode(nextResult.data.nextNode)
+            setCurrentNode({ ...nextResult.data.nextNode, description: nextResult.data.nextNode.description || '' })
           } else if (nextResult?.data?.isCompleted) {
             setProgress({ ...result.data, status: 'COMPLETED' })
             toast.success('¡Felicidades! Has completado la ruta de aprendizaje')

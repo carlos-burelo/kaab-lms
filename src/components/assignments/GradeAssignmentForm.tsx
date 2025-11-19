@@ -14,11 +14,12 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { useToast } from '@/hooks/use-toast'
 
 const GradeSchema = z.object({
   score: z.string().refine((val) => !Number.isNaN(parseFloat(val)), 'Debe ser un número válido'),
   feedback: z.string().optional(),
-  status: z.enum(['GRADED', 'NEEDS_REVISION']).default('GRADED')
+  status: z.enum(['GRADED', 'NEEDS_REVISION'])
 })
 
 type GradeValues = z.infer<typeof GradeSchema>
@@ -62,7 +63,7 @@ export function GradeAssignmentForm({ submission, courseId }: GradeAssignmentFor
   async function onSubmit(data: GradeValues) {
     setIsSubmitting(true)
     try {
-      const result = await gradeAssignment(submission.id, courseId, data)
+      const result = await gradeAssignment(submission.id, courseId, { ...data, submissionId: submission.id })
 
       if (result.success) {
         toast({

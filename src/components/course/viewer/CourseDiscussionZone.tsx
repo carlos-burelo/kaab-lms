@@ -25,8 +25,8 @@ export function CourseDiscussionZone({ courseId }: CourseDiscussionZoneProps) {
   const loadThreads = useCallback(async () => {
     setLoading(true)
     const result = await getDiscussionThreads({ courseId })
-    if (result.success) {
-      setThreads(result.data || [])
+    if (result.success && result.data) {
+      setThreads(Array.isArray(result.data) ? result.data : [])
     }
     setLoading(false)
   }, [courseId])

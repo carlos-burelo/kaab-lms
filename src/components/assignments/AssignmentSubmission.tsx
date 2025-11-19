@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import z from 'zod'
 import { submitAssignment } from '@/actions/assignment.actions'
-import { uploadFile } from '@/actions/course.actions'
+import { uploadFile } from '@/actions/upload-actions'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -65,8 +65,8 @@ export function AssignmentSubmission({ assignment, courseId, studentSubmission }
         formData.append('file', file)
 
         const result = await uploadFile(formData)
-        if (result.success) {
-          setUploadedFiles((prev) => [...prev, result.data])
+        if (result.success && result.url) {
+          setUploadedFiles((prev) => [...prev, result.url as string])
         } else {
           toast.error(`No se pudo cargar ${file.name}`)
         }
@@ -145,7 +145,7 @@ export function AssignmentSubmission({ assignment, courseId, studentSubmission }
               <AlertCircle className='h-4 w-4' />
               <AlertDescription>
                 Esta asignación está vencida hace{' '}
-                {daysOverdue === 0 ? 'menos de 1 día' : `${daysOverdue} día${daysOverdue > 1 ? 's' : ''}`}
+                {(daysOverdue ?? 0) === 0 ? 'menos de 1 día' : `${daysOverdue ?? 0} día${(daysOverdue ?? 0) > 1 ? 's' : ''}`}
                 {assignment.allowLateSubmission && assignment.latePenaltyPercent
                   ? `. Se aplicará una penalización del ${assignment.latePenaltyPercent}%`
                   : '. No se aceptan entregas tardías'}
