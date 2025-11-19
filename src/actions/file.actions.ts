@@ -1,6 +1,5 @@
 'use server'
 
-import { error } from 'console'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
 import { fileRepository } from '@/database/repositories'

@@ -8,12 +8,6 @@ interface UseContentEditorProps {
   onUpdate: (contentId: string, data: Record<string, unknown>) => void
 }
 
-interface ContentEditorState {
-  isSaving: boolean
-  error: string | null
-  success: boolean
-}
-
 export function useContentEditor({ contentId, onUpdate }: UseContentEditorProps) {
   const [isPending, startTransition] = useTransition()
 
