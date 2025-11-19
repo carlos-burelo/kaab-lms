@@ -59,12 +59,24 @@ export default async function Lession({ params }: LeccionPageProps) {
     include: {
       submissions: {
         where: { userId },
-        include: { files: true }
+        include: { file: true }
       }
     }
   })
 
   const studentSubmission = assignment?.submissions?.[0] || null
+
+  // Transform assignment to match component's expected interface
+  const transformedAssignment = assignment ? {
+    id: assignment.id,
+    title: assignment.title,
+    description: assignment.description,
+    instructions: assignment.instructions,
+    dueDate: assignment.dueDate || new Date(),
+    maxScore: assignment.maxPoints,
+    allowLateSubmission: assignment.allowLate,
+    latePenaltyPercent: null
+  } : null
 
   const SLUG = curso.slug
   const TITLE = curso.title
@@ -96,10 +108,10 @@ export default async function Lession({ params }: LeccionPageProps) {
             </div>
           )}
 
-          {assignment && (
+          {transformedAssignment && (
             <div className='mt-6'>
               <AssignmentSubmission
-                assignment={assignment}
+                assignment={transformedAssignment}
                 courseId={curso.id}
                 studentSubmission={studentSubmission}
               />

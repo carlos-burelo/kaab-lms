@@ -81,7 +81,7 @@ export async function createPersonalTask(data: z.infer<typeof CreateTaskSchema>)
     return { success: true, data: task }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message }
+      return { success: false, error: error.issues[0].message }
     }
     const message = error instanceof Error ? error.message : 'Error al crear tarea'
     return { success: false, error: message }
@@ -128,7 +128,7 @@ export async function updatePersonalTask(data: z.infer<typeof UpdateTaskSchema>)
     return { success: true, data: updated }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message }
+      return { success: false, error: error.issues[0].message }
     }
     const message = error instanceof Error ? error.message : 'Error al actualizar tarea'
     return { success: false, error: message }

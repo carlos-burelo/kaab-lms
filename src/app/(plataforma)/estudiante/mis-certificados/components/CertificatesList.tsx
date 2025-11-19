@@ -114,10 +114,10 @@ function CertificateCard({ certificate }: { certificate: CertificateWithRelation
 
       <div className='p-4'>
         <div className='space-y-3 mb-4'>
-          {certificate.certificateNumber && (
+          {certificate.code && (
             <div className='text-xs'>
               <span className='text-muted-foreground'>N° Certificado: </span>
-              <span className='font-mono font-semibold'>{certificate.certificateNumber}</span>
+              <span className='font-mono font-semibold'>{certificate.code}</span>
             </div>
           )}
 
@@ -125,19 +125,6 @@ function CertificateCard({ certificate }: { certificate: CertificateWithRelation
             <CalendarIcon className='w-3 h-3' />
             <span>Emitido: {issuedDate}</span>
           </div>
-
-          {certificate.expiresAt && (
-            <div className='text-xs'>
-              <span className='text-muted-foreground'>Válido hasta: </span>
-              <span>
-                {new Date(certificate.expiresAt).toLocaleDateString('es-ES', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </span>
-            </div>
-          )}
         </div>
 
         <div className='flex gap-2'>
@@ -160,14 +147,14 @@ function CertificateCard({ certificate }: { certificate: CertificateWithRelation
           </Button>
         </div>
 
-        {certificate.verificationUrl && (
+        {certificate.code && (
           <Button
             asChild
             size='sm'
             variant='ghost'
             className='w-full mt-2 text-xs'
           >
-            <Link href={certificate.verificationUrl} target='_blank'>
+            <Link href={`/verify-certificate/${certificate.code}`} target='_blank'>
               Verificar autenticidad
               <ExternalLinkIcon className='w-3 h-3 ml-1' />
             </Link>

@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 }
 
 export default async function QuizHistoryPage() {
-  const attemptsResult = await getQuizAttempts()
-  const attempts = attemptsResult.success ? attemptsResult.data : []
+  const attemptsResult = await getQuizAttempts({})
+  const attempts = attemptsResult.success ? (attemptsResult.data as any) : []
 
   return (
     <div className='container mx-auto py-6 space-y-6'>

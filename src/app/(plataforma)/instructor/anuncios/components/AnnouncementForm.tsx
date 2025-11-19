@@ -51,7 +51,7 @@ export function AnnouncementForm() {
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       title: '',
       content: '',

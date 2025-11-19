@@ -96,7 +96,7 @@ export function EnrolledCoursesList({ enrollments }: EnrolledCoursesListProps) {
 function EnrolledCourseCard({ enrollment }: { enrollment: EnrollmentWithCourse }) {
   const { course } = enrollment
   const imageUrl = course.image?.url || '/fallback-course.svg'
-  const instructorName = course.instructor?.user?.profile?.name || 'Instructor'
+  const instructorName = (course.instructor?.user as any)?.profile?.name || course.instructor?.user?.email || 'Instructor'
   const categoryName = course.category?.name || 'Sin categoría'
 
   const formatDate = (date: Date | null) => {

@@ -303,7 +303,9 @@ export async function gradeAssignment(submissionId: string, courseId: string, da
     const result = await gradeAssignmentUseCase.execute({
       dto: {
         submissionId,
+        courseId,
         score: Number.parseFloat(validated.score),
+        status: validated.status,
         feedback: validated.feedback,
       },
       currentUserId: session.id,

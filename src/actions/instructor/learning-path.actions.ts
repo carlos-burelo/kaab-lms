@@ -118,6 +118,10 @@ export const saveLearningPathDesign = createAction({
   allowedRoles: ["INSTRUCTOR"],
   execute: async (input, context) => {
     try {
+      if (!context.session.user.email) {
+        return err(new Error("Email de usuario no disponible"))
+      }
+
       await instructorRepository.saveLearningPathDesign(
         input.learningPathId,
         input.nodes,
@@ -144,6 +148,10 @@ export const deleteLearningPath = createAction({
   allowedRoles: ["INSTRUCTOR"],
   execute: async (input, context) => {
     try {
+      if (!context.session.user.email) {
+        return err(new Error("Email de usuario no disponible"))
+      }
+
       await instructorRepository.deleteLearningPath(
         input.learningPathId,
         context.session.user.email

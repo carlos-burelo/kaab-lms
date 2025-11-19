@@ -17,11 +17,11 @@ export default async function CalendarPage() {
   const end = endOfMonth(now)
 
   const eventsResult = await getCalendarEvents({
-    startDate: start.toISOString(),
-    endDate: end.toISOString()
+    startDate: start,
+    endDate: end
   })
 
-  const events = eventsResult.success ? eventsResult.data : []
+  const events = eventsResult.success ? (eventsResult.data as any) : []
 
   return (
     <div className='container mx-auto py-6 space-y-6'>

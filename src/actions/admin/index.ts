@@ -10,3 +10,4 @@
  */
 
 // Placeholder - implementar según necesidades
+export {}

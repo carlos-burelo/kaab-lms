@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
-import { userRepository } from '@/database/repositories'
+import { userRepository, studentRepository } from '@/database/repositories'
 import { getSession } from '@/lib/auth'
 
 // ============================================================================
@@ -75,7 +75,7 @@ export async function updateProfile(data: z.infer<typeof UpdateProfileSchema>) {
     return { success: true, data: updated }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message }
+      return { success: false, error: error.issues[0].message }
     }
     const message = error instanceof Error ? error.message : 'Error al actualizar perfil'
     return { success: false, error: message }
@@ -104,7 +104,7 @@ export async function updateProfileImage(imageUrl: string) {
     return { success: true, data: updated }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message }
+      return { success: false, error: error.issues[0].message }
     }
     const message = error instanceof Error ? error.message : 'Error al actualizar imagen'
     return { success: false, error: message }
@@ -124,17 +124,17 @@ export async function getLearningStats() {
 
     const [
       enrolledCourses,
-      completedCourses,
       certificates,
       quizAttempts,
       gamificationProfile
     ] = await Promise.all([
-      userRepository.getEnrollments(user.id),
-      userRepository.getCompletedCourses(user.id),
-      userRepository.getCertificates(user.id),
-      userRepository.getQuizAttempts(user.id),
-      userRepository.getGamificationProfile(user.id)
+      studentRepository.getEnrolledCourses(user.id),
+      studentRepository.getCertificates(user.id),
+      studentRepository.getQuizAttempts(user.id),
+      studentRepository.getGamificationProfile(user.id)
     ])
+
+    const completedCourses = enrolledCourses?.filter((course: any) => course.progress === 100) || []
 
     const stats = {
       totalCourses: enrolledCourses?.length || 0,

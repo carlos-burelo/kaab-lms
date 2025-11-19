@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default async function MessagesPage() {
   const conversationsResult = await getConversations({ limit: 50, skip: 0 })
-  const conversations = conversationsResult.success ? conversationsResult.data : []
+  const conversations = conversationsResult.success ? (conversationsResult.data as any) : []
 
   return (
     <div className='container mx-auto py-6 h-[calc(100vh-8rem)]'>

@@ -21,10 +21,10 @@ export default async function Page() {
   }
 
   const data = {
-    enrollments: enrolledResult.data || [],
-    xp: gamificationResult.data?.xp || 0,
-    insigniasUsuario: achievementsResult.data || [],
-    certificados: certificatesResult.data || []
+    enrollments: (enrolledResult.data as any) || [],
+    xp: (gamificationResult.data as any)?.xp || 0,
+    insigniasUsuario: (achievementsResult.data as any) || [],
+    certificados: (certificatesResult.data as any) || []
   }
 
   return (

@@ -49,7 +49,7 @@ export function AnnouncementsDataTable() {
 
   const loadAnnouncements = async () => {
     setLoading(true)
-    const result = await getAnnouncements()
+    const result = await getAnnouncements({})
 
     if (result.success && result.data) {
       setAnnouncements(result.data as any)
