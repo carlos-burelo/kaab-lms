@@ -5,8 +5,8 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { Quiz } from '../domain/quiz.entity';
-import { IQuizRepository } from '../domain/quiz.repository.interface';
+import type { Quiz } from '../domain/quiz.entity';
+import type { IQuizRepository } from '../domain/quiz.repository.interface';
 import { quizMapper } from './quiz.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

@@ -2,9 +2,9 @@
  * PersonalTask Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { PersonalTask, PersonalTaskProps } from '../domain/personal-task.entity';
-import { TaskPriority, TaskStatus } from '../domain/value-objects';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { PersonalTask, type PersonalTaskProps } from '../domain/personal-task.entity';
+import type { TaskPriority, TaskStatus } from '../domain/value-objects';
 import type { PersonalTask as PrismaPersonalTask } from '@prisma/client';
 
 export interface PersonalTaskDTO {

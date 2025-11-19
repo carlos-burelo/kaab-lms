@@ -5,8 +5,8 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, ForbiddenError } from '@/core/shared/errors';
-import { IFileRepository } from '../../domain/file.repository.interface';
-import { FileDTO, fileMapper } from '../../infrastructure/file.mapper';
+import type { IFileRepository } from '../../domain/file.repository.interface';
+import { type FileDTO, fileMapper } from '../../infrastructure/file.mapper';
 
 interface GetFileRequest {
   fileId: string;

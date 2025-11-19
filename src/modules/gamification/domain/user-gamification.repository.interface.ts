@@ -2,9 +2,9 @@
  * UserGamification Repository Interface
  */
 
-import { Repository } from '@/core/shared/repository.interface';
-import { Result } from '@/core/shared/result';
-import { UserGamification } from './user-gamification.entity';
+import type { Repository } from '@/core/shared/repository.interface';
+import type { Result } from '@/core/shared/result';
+import type { UserGamification } from './user-gamification.entity';
 
 export interface IUserGamificationRepository
   extends Repository<UserGamification> {

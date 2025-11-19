@@ -3,7 +3,7 @@
  */
 
 import { DomainEvent } from '@/core/shared/domain-event';
-import { TaskStatus } from '../value-objects';
+import type { TaskStatus } from '../value-objects';
 
 export interface TaskStatusChangedEventPayload {
   taskId: string;

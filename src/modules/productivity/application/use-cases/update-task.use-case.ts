@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, ForbiddenError } from '@/core/shared/errors';
-import { IPersonalTaskRepository } from '../../domain/personal-task.repository.interface';
-import { UpdateTaskDTO } from '../dtos';
-import { PersonalTaskDTO, personalTaskMapper } from '../../infrastructure/personal-task.mapper';
+import type { IPersonalTaskRepository } from '../../domain/personal-task.repository.interface';
+import type { UpdateTaskDTO } from '../dtos';
+import { type PersonalTaskDTO, personalTaskMapper } from '../../infrastructure/personal-task.mapper';
 
 interface UpdateTaskRequest {
   taskId: string;

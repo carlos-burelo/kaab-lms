@@ -5,8 +5,8 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { Enrollment } from '../domain/enrollment.entity';
-import { IEnrollmentRepository } from '../domain/enrollment.repository.interface';
+import type { Enrollment } from '../domain/enrollment.entity';
+import type { IEnrollmentRepository } from '../domain/enrollment.repository.interface';
 import { enrollmentMapper } from './enrollment.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

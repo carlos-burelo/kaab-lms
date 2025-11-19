@@ -2,10 +2,10 @@
  * Achievement Repository Interface
  */
 
-import { Repository } from '@/core/shared/repository.interface';
-import { Result } from '@/core/shared/result';
-import { Achievement } from './achievement.entity';
-import { AchievementCategory } from './value-objects';
+import type { Repository } from '@/core/shared/repository.interface';
+import type { Result } from '@/core/shared/result';
+import type { Achievement } from './achievement.entity';
+import type { AchievementCategory } from './value-objects';
 
 export interface IAchievementRepository extends Repository<Achievement> {
   /**

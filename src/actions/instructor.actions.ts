@@ -6,10 +6,10 @@ import {
   GetCourseAnalyticsUseCase,
   GetEnrollmentTrendUseCase,
   GetRevenueDataUseCase,
-  InstructorStatsDTO,
-  CourseAnalyticsDTO,
-  EnrollmentTrendDTO,
-  RevenueDataDTO,
+  type InstructorStatsDTO,
+  type CourseAnalyticsDTO,
+  type EnrollmentTrendDTO,
+  type RevenueDataDTO,
 } from '@/modules/instructor/application/use-cases'
 
 /**

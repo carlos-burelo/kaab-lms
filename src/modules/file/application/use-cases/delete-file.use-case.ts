@@ -5,7 +5,7 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, ForbiddenError } from '@/core/shared/errors';
-import { IFileRepository } from '../../domain/file.repository.interface';
+import type { IFileRepository } from '../../domain/file.repository.interface';
 
 interface DeleteFileRequest {
   fileId: string;

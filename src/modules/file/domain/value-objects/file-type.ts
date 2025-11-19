@@ -92,7 +92,7 @@ export class FileType extends ValueObject<FileTypeProps> {
     }
 
     const normalizedMimeType = mimeType.toLowerCase().trim();
-    const category = this.MIME_TYPE_CATEGORIES[normalizedMimeType] || FileCategory.OTHER;
+    const category = FileType.MIME_TYPE_CATEGORIES[normalizedMimeType] || FileCategory.OTHER;
 
     return Result.ok(
       new FileType({

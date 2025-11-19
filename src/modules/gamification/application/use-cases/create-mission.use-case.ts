@@ -5,10 +5,10 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { Mission } from '../../domain/mission.entity';
-import { IMissionRepository } from '../../domain/mission.repository.interface';
-import { CreateMissionDTO } from '../dtos';
+import type { IMissionRepository } from '../../domain/mission.repository.interface';
+import type { CreateMissionDTO } from '../dtos';
 import {
-  MissionDTO,
+  type MissionDTO,
   missionMapper,
 } from '../../infrastructure/mission.mapper';
 

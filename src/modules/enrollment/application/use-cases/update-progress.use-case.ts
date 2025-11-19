@@ -5,10 +5,10 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError } from '@/core/shared/errors';
-import { IEnrollmentRepository } from '../../domain/enrollment.repository.interface';
-import { UpdateProgressDTO } from '../dtos';
+import type { IEnrollmentRepository } from '../../domain/enrollment.repository.interface';
+import type { UpdateProgressDTO } from '../dtos';
 import {
-  EnrollmentDTO,
+  type EnrollmentDTO,
   enrollmentMapper,
 } from '../../infrastructure/enrollment.mapper';
 

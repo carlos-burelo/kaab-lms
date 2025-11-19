@@ -2,10 +2,10 @@
  * Learning Path Repository Interface
  */
 
-import { Repository } from '@/core/shared/repository.interface';
-import { Result } from '@/core/shared/result';
-import { LearningPath } from './learning-path.entity';
-import { UserLearningPathProgress } from './user-learning-path-progress.entity';
+import type { Repository } from '@/core/shared/repository.interface';
+import type { Result } from '@/core/shared/result';
+import type { LearningPath } from './learning-path.entity';
+import type { UserLearningPathProgress } from './user-learning-path-progress.entity';
 
 export interface ILearningPathRepository extends Repository<LearningPath> {
   /**

@@ -9,11 +9,11 @@ import {
   ForbiddenError,
   DuplicateEntityError,
 } from '@/core/shared/errors';
-import { Course, CourseLevel } from '../../domain/course.entity';
+import { Course, type CourseLevel } from '../../domain/course.entity';
 import { CourseTitle, CoursePrice, CourseSlug } from '../../domain/value-objects';
-import { ICourseRepository } from '../../domain/course.repository.interface';
-import { CreateCourseDTO } from '../dtos';
-import { CourseDTO, courseMapper } from '../../infrastructure/course.mapper';
+import type { ICourseRepository } from '../../domain/course.repository.interface';
+import type { CreateCourseDTO } from '../dtos';
+import { type CourseDTO, courseMapper } from '../../infrastructure/course.mapper';
 
 interface CreateCourseRequest {
   dto: CreateCourseDTO;

@@ -2,10 +2,10 @@
  * Course Aggregate Root
  */
 
-import { AggregateRoot, EntityProps } from '@/core/shared/aggregate-root';
+import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root';
 import { Result } from '@/core/shared/result';
 import { BusinessRuleError, ValidationError } from '@/core/shared/errors';
-import { CourseTitle, CoursePrice, CourseSlug } from './value-objects';
+import type { CourseTitle, CoursePrice, CourseSlug } from './value-objects';
 import {
   CourseCreatedEvent,
   CoursePublishedEvent,

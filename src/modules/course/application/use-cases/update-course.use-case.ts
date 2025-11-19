@@ -8,11 +8,11 @@ import {
   EntityNotFoundError,
   ForbiddenError,
 } from '@/core/shared/errors';
-import { CourseLevel } from '../../domain/course.entity';
+import type { CourseLevel } from '../../domain/course.entity';
 import { CourseTitle, CoursePrice } from '../../domain/value-objects';
-import { ICourseRepository } from '../../domain/course.repository.interface';
-import { UpdateCourseDTO } from '../dtos';
-import { CourseDTO, courseMapper } from '../../infrastructure/course.mapper';
+import type { ICourseRepository } from '../../domain/course.repository.interface';
+import type { UpdateCourseDTO } from '../dtos';
+import { type CourseDTO, courseMapper } from '../../infrastructure/course.mapper';
 
 interface UpdateCourseRequest {
   dto: UpdateCourseDTO;

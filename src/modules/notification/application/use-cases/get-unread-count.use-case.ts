@@ -4,7 +4,7 @@
 
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
-import { INotificationRepository } from '../../domain/notification.repository.interface';
+import type { INotificationRepository } from '../../domain/notification.repository.interface';
 
 interface GetUnreadCountRequest {
   userId: string;

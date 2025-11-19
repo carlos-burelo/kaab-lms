@@ -129,7 +129,7 @@ export async function getCourseById(courseId: string): Promise<ActionResponse> {
       success: true,
       data: course
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error obteniendo curso'
@@ -147,7 +147,7 @@ export async function getLessonById(lessonId: string): Promise<ActionResponse> {
       success: true,
       data: lesson
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error obteniendo lección'
@@ -168,7 +168,7 @@ export async function getCategories(): Promise<ActionResponse> {
       success: true,
       data: categories
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error obteniendo categorías'
@@ -194,7 +194,7 @@ export async function getAvailableCourses(): Promise<ActionResponse> {
       success: true,
       data: courses
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error obteniendo cursos'
@@ -212,7 +212,7 @@ export async function getFeaturedCourses(): Promise<ActionResponse> {
       success: true,
       data: courses
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error obteniendo cursos destacados'
@@ -230,7 +230,7 @@ export async function searchCourses(term: string, limit = 20, skip = 0): Promise
       success: true,
       data: courses
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error buscando cursos'
@@ -268,7 +268,7 @@ export async function getMyCourses(): Promise<ActionResponse> {
       success: true,
       data: courses
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error obteniendo cursos'
@@ -357,7 +357,7 @@ export async function createCourseBasicInfo(formData: FormData): Promise<ActionR
       data: course,
       redirect: `/instructor/courses/${course.id}?step=content`
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error creando curso'
@@ -427,7 +427,7 @@ export async function updateCourseBasicInfo(formData: FormData): Promise<ActionR
       data: updated,
       redirect: `/instructor/courses/${data.id}?step=content`
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error actualizando curso'
@@ -492,7 +492,7 @@ export async function createModule(formData: FormData): Promise<ActionResponse> 
       success: true,
       data: module
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error creando módulo'
@@ -526,7 +526,7 @@ export async function updateModule(formData: FormData): Promise<ActionResponse> 
       success: true,
       data: module
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error actualizando módulo'
@@ -577,7 +577,7 @@ export async function deleteModule(formData: FormData): Promise<ActionResponse> 
       success: true,
       data: { id: moduleId }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error eliminando módulo'
@@ -642,7 +642,7 @@ export async function createLesson(formData: FormData): Promise<ActionResponse> 
       success: true,
       data: lesson
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error creando lección'
@@ -676,7 +676,7 @@ export async function updateLesson(formData: FormData): Promise<ActionResponse> 
       success: true,
       data: lesson
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error actualizando lección'
@@ -731,7 +731,7 @@ export async function deleteLesson(formData: FormData): Promise<ActionResponse> 
       success: true,
       data: { id: lessonId }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error eliminando lección'
@@ -784,7 +784,7 @@ export async function createLessonContent(formData: FormData): Promise<ActionRes
       success: true,
       data: lessonContent
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error creando contenido'
@@ -824,7 +824,7 @@ export async function updateLessonContent(formData: FormData): Promise<ActionRes
       success: true,
       data: updated
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error actualizando contenido'
@@ -866,7 +866,7 @@ export async function deleteLessonContent(formData: FormData): Promise<ActionRes
       success: true,
       data: { id: contentId }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error eliminando contenido'
@@ -983,7 +983,7 @@ export async function publishCourse(formData: FormData): Promise<ActionResponse>
       success: true,
       data: published
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error publicando curso'
@@ -1029,7 +1029,7 @@ export async function unpublishCourse(formData: FormData): Promise<ActionRespons
       success: true,
       data: unpublished
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error despublicando curso'
@@ -1065,7 +1065,7 @@ export async function getUploadedFiles(userId: string, type?: string) {
       sizeInBytes: file.sizeInBytes.toString(),
       createdAt: file.createdAt
     }))
-  } catch (error) {
+  } catch (_error) {
     console.error('Error fetching files:', error)
     return []
   }
@@ -1145,7 +1145,7 @@ export async function uploadFile(file: File, uploadedBy: string): Promise<Action
         name: file.name
       }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error al subir archivo'
@@ -1172,7 +1172,7 @@ export async function updateContentPositions(
     return {
       success: true
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error actualizando posiciones'

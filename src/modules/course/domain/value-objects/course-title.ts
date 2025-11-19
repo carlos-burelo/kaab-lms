@@ -26,22 +26,22 @@ export class CourseTitle extends ValueObject<CourseTitleProps> {
     // Trim and validate
     const trimmed = title.trim();
 
-    if (trimmed.length < this.MIN_LENGTH) {
+    if (trimmed.length < CourseTitle.MIN_LENGTH) {
       return Result.fail(
         new ValidationError(
-          `Title must be at least ${this.MIN_LENGTH} characters`,
+          `Title must be at least ${CourseTitle.MIN_LENGTH} characters`,
           'title',
-          { minLength: String(this.MIN_LENGTH) }
+          { minLength: String(CourseTitle.MIN_LENGTH) }
         )
       );
     }
 
-    if (trimmed.length > this.MAX_LENGTH) {
+    if (trimmed.length > CourseTitle.MAX_LENGTH) {
       return Result.fail(
         new ValidationError(
-          `Title must not exceed ${this.MAX_LENGTH} characters`,
+          `Title must not exceed ${CourseTitle.MAX_LENGTH} characters`,
           'title',
-          { maxLength: String(this.MAX_LENGTH) }
+          { maxLength: String(CourseTitle.MAX_LENGTH) }
         )
       );
     }

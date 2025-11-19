@@ -2,9 +2,9 @@
  * Badge Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { Badge, BadgeProps } from '../domain/badge.entity';
-import { BadgeRarity } from '../domain/value-objects';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { Badge, type BadgeProps } from '../domain/badge.entity';
+import type { BadgeRarity } from '../domain/value-objects';
 import type { Badge as PrismaBadge } from '@prisma/client';
 
 export interface BadgeDTO {

@@ -5,8 +5,8 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { EntityNotFoundError } from '@/core/shared/errors';
-import { IAssignmentRepository } from '../../domain/assignment.repository.interface';
-import { AssignmentDTO, assignmentMapper } from '../../infrastructure/assignment.mapper';
+import type { IAssignmentRepository } from '../../domain/assignment.repository.interface';
+import { type AssignmentDTO, assignmentMapper } from '../../infrastructure/assignment.mapper';
 
 interface GetAssignmentRequest {
   assignmentId: string;

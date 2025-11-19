@@ -5,10 +5,10 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { Conversation } from '../../domain/conversation.entity';
-import { IConversationRepository } from '../../domain/conversation.repository.interface';
-import { CreateConversationDTO } from '../dtos';
+import type { IConversationRepository } from '../../domain/conversation.repository.interface';
+import type { CreateConversationDTO } from '../dtos';
 import {
-  ConversationDTO,
+  type ConversationDTO,
   conversationMapper,
 } from '../../infrastructure/conversation.mapper';
 

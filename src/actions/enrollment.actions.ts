@@ -88,7 +88,7 @@ export async function getEnrollments(params: z.infer<typeof GetEnrollmentsSchema
       success: true,
       data: result
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting enrollments'
@@ -121,7 +121,7 @@ export async function getEnrollmentById(enrollmentId: string): Promise<ActionRes
       success: true,
       data: enrollment
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting enrollment'
@@ -158,7 +158,7 @@ export async function updateEnrollment(params: z.infer<typeof UpdateEnrollmentSc
       success: true,
       data: enrollment
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error updating enrollment'
@@ -187,7 +187,7 @@ export async function completeEnrollment(enrollmentId: string): Promise<ActionRe
       success: true,
       data: enrollment
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error completing enrollment'
@@ -214,7 +214,7 @@ export async function getCourseEnrollmentStats(courseId: string): Promise<Action
       success: true,
       data: stats
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting statistics'
@@ -241,7 +241,7 @@ export async function getTopPerformers(courseId: string, limit: number = 10): Pr
       success: true,
       data: performers
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting top performers'
@@ -268,7 +268,7 @@ export async function getAtRiskStudents(courseId: string): Promise<ActionRespons
       success: true,
       data: students
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting at-risk students'
@@ -295,7 +295,7 @@ export async function getRecentEnrollments(courseId: string, days: number = 7): 
       success: true,
       data: enrollments
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting recent enrollments'
@@ -329,7 +329,7 @@ export async function searchEnrollments(courseId: string, query: string): Promis
       success: true,
       data: results
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error searching enrollments'
@@ -356,7 +356,7 @@ export async function getEnrollmentStatusCounts(courseId: string): Promise<Actio
       success: true,
       data: counts
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting status counts'
@@ -383,7 +383,7 @@ export async function getAverageCompletionTime(courseId: string): Promise<Action
       success: true,
       data: { days }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting completion time'
@@ -424,7 +424,7 @@ export async function bulkUpdateEnrollments(enrollmentIds: string[], progress?: 
       success: true,
       data: { updatedCount: enrollmentIds.length }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error updating enrollments'

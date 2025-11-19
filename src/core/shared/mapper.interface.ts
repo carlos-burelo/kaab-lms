@@ -3,7 +3,7 @@
  * Maps between different representations of data
  */
 
-import { Entity, EntityProps } from './entity';
+import type { Entity, EntityProps } from './entity';
 
 export interface Mapper<
   DomainEntity extends Entity<EntityProps>,

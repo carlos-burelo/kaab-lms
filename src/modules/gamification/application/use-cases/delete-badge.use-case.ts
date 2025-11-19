@@ -5,7 +5,7 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError } from '@/core/shared/errors';
-import { IBadgeRepository } from '../../domain/badge.repository.interface';
+import type { IBadgeRepository } from '../../domain/badge.repository.interface';
 
 interface DeleteBadgeRequest {
   badgeId: string;

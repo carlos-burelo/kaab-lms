@@ -2,8 +2,8 @@
  * Quiz Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { Quiz, QuizProps } from '../domain/quiz.entity';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { Quiz, type QuizProps } from '../domain/quiz.entity';
 import type { Quiz as PrismaQuiz } from '@prisma/client';
 
 export interface QuizDTO {

@@ -5,9 +5,9 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { Notification } from '../domain/notification.entity';
-import { INotificationRepository } from '../domain/notification.repository.interface';
-import { NotificationTypeEnum } from '../domain/value-objects/notification-type';
+import type { Notification } from '../domain/notification.entity';
+import type { INotificationRepository } from '../domain/notification.repository.interface';
+import type { NotificationTypeEnum } from '../domain/value-objects/notification-type';
 import { notificationMapper } from './notification.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

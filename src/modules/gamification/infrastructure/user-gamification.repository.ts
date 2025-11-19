@@ -6,7 +6,7 @@ import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
 import { UserGamification } from '../domain/user-gamification.entity';
-import { IUserGamificationRepository } from '../domain/user-gamification.repository.interface';
+import type { IUserGamificationRepository } from '../domain/user-gamification.repository.interface';
 import { userGamificationMapper } from './user-gamification.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

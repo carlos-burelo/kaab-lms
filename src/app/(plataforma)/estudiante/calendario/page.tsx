@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getCalendarEvents } from '@/actions/student/calendar.actions'
 import { CalendarView } from '@/components/calendar/CalendarView'

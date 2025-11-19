@@ -3,7 +3,7 @@
  * Manages domain events and their handlers
  */
 
-import {
+import type {
   DomainEvent,
   EventHandler,
   EventBus as IEventBus,

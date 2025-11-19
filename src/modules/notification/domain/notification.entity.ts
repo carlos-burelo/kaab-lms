@@ -2,14 +2,14 @@
  * Notification Aggregate Root
  */
 
-import { AggregateRoot, EntityProps } from '@/core/shared/aggregate-root';
+import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root';
 import { Result } from '@/core/shared/result';
 import { BusinessRuleError, ValidationError } from '@/core/shared/errors';
 import {
   NotificationCreatedEvent,
   NotificationReadEvent,
 } from './events';
-import { NotificationType, NotificationTypeEnum } from './value-objects/notification-type';
+import { type NotificationType, NotificationTypeEnum } from './value-objects/notification-type';
 
 export interface NotificationProps extends EntityProps {
   userId: string;

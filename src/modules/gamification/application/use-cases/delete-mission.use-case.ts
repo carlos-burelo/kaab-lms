@@ -5,7 +5,7 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError } from '@/core/shared/errors';
-import { IMissionRepository } from '../../domain/mission.repository.interface';
+import type { IMissionRepository } from '../../domain/mission.repository.interface';
 
 interface DeleteMissionRequest {
   missionId: string;

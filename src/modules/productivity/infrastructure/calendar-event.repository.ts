@@ -5,9 +5,9 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { CalendarEvent } from '../domain/calendar-event.entity';
-import { ICalendarEventRepository } from '../domain/calendar-event.repository.interface';
-import { EventType } from '../domain/value-objects';
+import type { CalendarEvent } from '../domain/calendar-event.entity';
+import type { ICalendarEventRepository } from '../domain/calendar-event.repository.interface';
+import type { EventType } from '../domain/value-objects';
 import { calendarEventMapper } from './calendar-event.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

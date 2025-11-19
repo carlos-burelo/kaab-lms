@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, DuplicateEntityError } from '@/core/shared/errors';
-import { IBadgeRepository } from '../../domain/badge.repository.interface';
-import { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface';
-import { AwardBadgeDTO } from '../dtos';
+import type { IBadgeRepository } from '../../domain/badge.repository.interface';
+import type { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface';
+import type { AwardBadgeDTO } from '../dtos';
 
 interface AwardBadgeRequest {
   dto: AwardBadgeDTO;

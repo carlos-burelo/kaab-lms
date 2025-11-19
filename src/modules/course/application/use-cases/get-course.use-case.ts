@@ -5,8 +5,8 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { EntityNotFoundError } from '@/core/shared/errors';
-import { ICourseRepository } from '../../domain/course.repository.interface';
-import { CourseDTO, courseMapper } from '../../infrastructure/course.mapper';
+import type { ICourseRepository } from '../../domain/course.repository.interface';
+import { type CourseDTO, courseMapper } from '../../infrastructure/course.mapper';
 
 interface GetCourseRequest {
   courseId?: string;

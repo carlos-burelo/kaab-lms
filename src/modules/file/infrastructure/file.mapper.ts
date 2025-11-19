@@ -2,8 +2,8 @@
  * File Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { File, FileProps } from '../domain/file.entity';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { File, type FileProps } from '../domain/file.entity';
 import type { File as PrismaFile } from '@prisma/client';
 
 export interface FileDTO {

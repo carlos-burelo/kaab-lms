@@ -2,9 +2,9 @@
  * Assignment Repository Interface
  */
 
-import { Repository } from '@/core/shared/repository.interface';
-import { Result } from '@/core/shared/result';
-import { Assignment } from './assignment.entity';
+import type { Repository } from '@/core/shared/repository.interface';
+import type { Result } from '@/core/shared/result';
+import type { Assignment } from './assignment.entity';
 
 export interface IAssignmentRepository extends Repository<Assignment> {
   /**

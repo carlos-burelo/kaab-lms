@@ -4,8 +4,8 @@
 
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
-import { IFileRepository, SearchFilesOptions } from '../../domain/file.repository.interface';
-import { FileDTO, fileMapper } from '../../infrastructure/file.mapper';
+import type { IFileRepository, SearchFilesOptions } from '../../domain/file.repository.interface';
+import { type FileDTO, fileMapper } from '../../infrastructure/file.mapper';
 
 interface SearchFilesRequest {
   options: SearchFilesOptions;

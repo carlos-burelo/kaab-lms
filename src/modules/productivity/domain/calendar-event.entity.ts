@@ -2,10 +2,10 @@
  * CalendarEvent Aggregate Root
  */
 
-import { AggregateRoot, EntityProps } from '@/core/shared/aggregate-root';
+import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root';
 import { Result } from '@/core/shared/result';
 import { BusinessRuleError, ValidationError } from '@/core/shared/errors';
-import { EventType, getEventTypeColor } from './value-objects';
+import { type EventType, getEventTypeColor } from './value-objects';
 import {
   EventCreatedEvent,
   EventUpdatedEvent,

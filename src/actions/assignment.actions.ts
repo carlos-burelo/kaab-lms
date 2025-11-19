@@ -1,20 +1,21 @@
 'use server'
 
+import { error } from 'node:console'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
 import { instructorRepository, studentRepository } from '@/database/repositories'
 import { getSession } from '@/lib/auth'
-import { AssignmentRepository } from '@/modules/assignment/infrastructure/assignment.repository'
 import {
   CreateAssignmentUseCase,
-  UpdateAssignmentUseCase,
-  GetAssignmentUseCase,
   DeleteAssignmentUseCase,
-  SubmitAssignmentUseCase,
-  GradeAssignmentUseCase,
   GetAssignmentSubmissionsUseCase,
+  GetAssignmentUseCase,
   GetStudentAssignmentSubmissionsUseCase,
+  GradeAssignmentUseCase,
+  SubmitAssignmentUseCase,
+  UpdateAssignmentUseCase
 } from '@/modules/assignment/application/use-cases'
+import { AssignmentRepository } from '@/modules/assignment/infrastructure/assignment.repository'
 
 // ============================================================================
 // INITIALIZE USE CASES
@@ -111,9 +112,9 @@ export async function createAssignment(data: z.infer<typeof CreateAssignmentSche
         dueDate: new Date(validated.dueDate),
         maxScore: Number.parseFloat(validated.maxScore),
         allowLateSubmission: validated.allowLateSubmission,
-        latePenaltyPercent: validated.latePenaltyPercent ? Number.parseFloat(validated.latePenaltyPercent) : null,
+        latePenaltyPercent: validated.latePenaltyPercent ? Number.parseFloat(validated.latePenaltyPercent) : null
       },
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -122,8 +123,8 @@ export async function createAssignment(data: z.infer<typeof CreateAssignmentSche
 
     revalidatePath(`/instructor/cursos/${validated.courseId}`)
     return { success: true, data: result.value }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al crear asignación'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al crear asignación'
     return { success: false, error: message }
   }
 }
@@ -158,9 +159,9 @@ export async function updateAssignment(data: z.infer<typeof UpdateAssignmentSche
         title: validated.title,
         description: validated.description,
         dueDate: validated.dueDate ? new Date(validated.dueDate) : undefined,
-        maxScore: validated.maxScore ? Number.parseFloat(validated.maxScore) : undefined,
+        maxScore: validated.maxScore ? Number.parseFloat(validated.maxScore) : undefined
       },
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -169,8 +170,8 @@ export async function updateAssignment(data: z.infer<typeof UpdateAssignmentSche
 
     revalidatePath(`/instructor/cursos/${validated.courseId}`)
     return { success: true, data: result.value }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al actualizar asignación'
+  } catch (_error) {
+    const message = _error instanceof Error ? _error.message : 'Error al actualizar asignación'
     return { success: false, error: message }
   }
 }
@@ -184,7 +185,7 @@ export async function getAssignmentById(assignmentId: string) {
     const session = await getSession()
     const result = await getAssignmentUseCase.execute({
       assignmentId,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -192,7 +193,7 @@ export async function getAssignmentById(assignmentId: string) {
     }
 
     return { success: true, data: result.value }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al obtener asignación'
     return { success: false, error: message }
   }
@@ -220,7 +221,7 @@ export async function deleteAssignment(assignmentId: string, courseId: string) {
 
     const result = await deleteAssignmentUseCase.execute({
       assignmentId,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -229,7 +230,7 @@ export async function deleteAssignment(assignmentId: string, courseId: string) {
 
     revalidatePath(`/instructor/cursos/${courseId}`)
     return { success: true }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al eliminar asignación'
     return { success: false, error: message }
   }
@@ -260,9 +261,9 @@ export async function submitAssignment(data: z.infer<typeof SubmitAssignmentSche
         assignmentId: validated.assignmentId,
         courseId: validated.courseId,
         submissionText: validated.submissionText,
-        fileIds: validated.fileIds || [],
+        fileIds: validated.fileIds || []
       },
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -271,7 +272,7 @@ export async function submitAssignment(data: z.infer<typeof SubmitAssignmentSche
 
     revalidatePath(`/estudiante/cursos/${validated.courseId}`)
     return { success: true, data: result.value }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al enviar asignación'
     return { success: false, error: message }
   }
@@ -306,9 +307,9 @@ export async function gradeAssignment(submissionId: string, courseId: string, da
         courseId,
         score: Number.parseFloat(validated.score),
         status: validated.status,
-        feedback: validated.feedback,
+        feedback: validated.feedback
       },
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -317,7 +318,7 @@ export async function gradeAssignment(submissionId: string, courseId: string, da
 
     revalidatePath(`/instructor/cursos/${courseId}`)
     return { success: true, data: result.value }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al calificar asignación'
     return { success: false, error: message }
   }
@@ -345,7 +346,7 @@ export async function getAssignmentSubmissions(assignmentId: string, courseId: s
 
     const result = await getAssignmentSubmissionsUseCase.execute({
       assignmentId,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -353,7 +354,7 @@ export async function getAssignmentSubmissions(assignmentId: string, courseId: s
     }
 
     return { success: true, data: result.value }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al obtener entregas'
     return { success: false, error: message }
   }
@@ -372,7 +373,7 @@ export async function getStudentAssignmentSubmissions(courseId: string) {
 
     const result = await getStudentAssignmentSubmissionsUseCase.execute({
       courseId,
-      currentUserId: session.id,
+      currentUserId: session.id
     })
 
     if (result.isFailure) {
@@ -380,7 +381,7 @@ export async function getStudentAssignmentSubmissions(courseId: string) {
     }
 
     return { success: true, data: result.value }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al obtener entregas'
     return { success: false, error: message }
   }

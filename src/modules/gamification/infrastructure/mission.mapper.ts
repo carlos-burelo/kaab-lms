@@ -2,9 +2,9 @@
  * Mission Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { Mission, MissionProps } from '../domain/mission.entity';
-import { MissionType, MissionDifficulty } from '../domain/value-objects';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { Mission, type MissionProps } from '../domain/mission.entity';
+import type { MissionType, MissionDifficulty } from '../domain/value-objects';
 import type { Mission as PrismaMission } from '@prisma/client';
 
 export interface MissionDTO {

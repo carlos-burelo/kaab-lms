@@ -5,10 +5,10 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { LearningPath } from '../../domain/learning-path.entity';
-import { ILearningPathRepository } from '../../domain/learning-path.repository.interface';
-import { CreateLearningPathDTO } from '../dtos';
+import type { ILearningPathRepository } from '../../domain/learning-path.repository.interface';
+import type { CreateLearningPathDTO } from '../dtos';
 import {
-  LearningPathDTO,
+  type LearningPathDTO,
   learningPathMapper,
 } from '../../infrastructure/learning-path.mapper';
 

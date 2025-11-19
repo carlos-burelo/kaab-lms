@@ -2,7 +2,7 @@
  * User Learning Path Progress Entity
  */
 
-import { Entity, EntityProps } from '@/core/shared/entity';
+import { Entity, type EntityProps } from '@/core/shared/entity';
 import { Result } from '@/core/shared/result';
 import { ValidationError, BusinessRuleError } from '@/core/shared/errors';
 

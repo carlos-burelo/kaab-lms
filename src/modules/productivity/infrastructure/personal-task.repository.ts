@@ -5,9 +5,9 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { PersonalTask } from '../domain/personal-task.entity';
-import { IPersonalTaskRepository } from '../domain/personal-task.repository.interface';
-import { TaskPriority, TaskStatus } from '../domain/value-objects';
+import type { PersonalTask } from '../domain/personal-task.entity';
+import type { IPersonalTaskRepository } from '../domain/personal-task.repository.interface';
+import { type TaskPriority, TaskStatus } from '../domain/value-objects';
 import { personalTaskMapper } from './personal-task.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

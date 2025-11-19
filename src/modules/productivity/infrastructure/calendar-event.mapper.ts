@@ -2,9 +2,9 @@
  * CalendarEvent Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { CalendarEvent, CalendarEventProps } from '../domain/calendar-event.entity';
-import { EventType } from '../domain/value-objects';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { CalendarEvent, type CalendarEventProps } from '../domain/calendar-event.entity';
+import type { EventType } from '../domain/value-objects';
 import type { CalendarEvent as PrismaCalendarEvent } from '@prisma/client';
 
 export interface CalendarEventDTO {

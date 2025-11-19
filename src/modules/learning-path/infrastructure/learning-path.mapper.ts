@@ -2,24 +2,24 @@
  * Learning Path Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
+import type { Mapper } from '@/core/shared/mapper.interface';
 import {
   LearningPath,
-  LearningPathProps,
+  type LearningPathProps,
 } from '../domain/learning-path.entity';
 import {
   LearningPathNode,
-  LearningPathNodeProps,
+  type LearningPathNodeProps,
 } from '../domain/learning-path-node.entity';
 import {
   LearningPathEdge,
-  LearningPathEdgeProps,
+  type LearningPathEdgeProps,
 } from '../domain/learning-path-edge.entity';
 import {
   UserLearningPathProgress,
-  UserLearningPathProgressProps,
+  type UserLearningPathProgressProps,
 } from '../domain/user-learning-path-progress.entity';
-import { NodeType } from '../domain/value-objects/node-type';
+import type { NodeType } from '../domain/value-objects/node-type';
 import type {
   LearningPath as PrismaLearningPath,
   LearningPathNode as PrismaLearningPathNode,

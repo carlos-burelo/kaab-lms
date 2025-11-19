@@ -2,10 +2,10 @@
  * Notification Repository Interface
  */
 
-import { Repository } from '@/core/shared/repository.interface';
-import { Result } from '@/core/shared/result';
-import { Notification } from './notification.entity';
-import { NotificationTypeEnum } from './value-objects/notification-type';
+import type { Repository } from '@/core/shared/repository.interface';
+import type { Result } from '@/core/shared/result';
+import type { Notification } from './notification.entity';
+import type { NotificationTypeEnum } from './value-objects/notification-type';
 
 export interface INotificationRepository extends Repository<Notification> {
   /**

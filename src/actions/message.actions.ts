@@ -54,7 +54,7 @@ export async function sendMessage(data: z.infer<typeof SendMessageSchema>) {
     revalidatePath('/estudiante')
     revalidatePath('/instructor')
     return { success: true, data: message }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al enviar mensaje'
     return { success: false, error: message }
   }
@@ -75,7 +75,7 @@ export async function getConversations(params?: z.infer<typeof GetConversationsS
 
     const conversations = await userRepository.getConversations(user.id, validated.limit, validated.skip)
     return { success: true, data: conversations }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al obtener conversaciones'
     return { success: false, error: message }
   }
@@ -108,7 +108,7 @@ export async function getConversationMessages(conversationId: string, limit: num
     await userRepository.markConversationMessagesAsRead(conversationId, user.id)
 
     return { success: true, data: messages }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al obtener mensajes'
     return { success: false, error: message }
   }
@@ -144,7 +144,7 @@ export async function getOrCreateConversation(participantId: string) {
     }
 
     return { success: true, data: conversation }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al obtener conversación'
     return { success: false, error: message }
   }
@@ -174,7 +174,7 @@ export async function markConversationAsRead(conversationId: string) {
     await userRepository.markConversationMessagesAsRead(conversationId, user.id)
 
     return { success: true }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al actualizar conversación'
     return { success: false, error: message }
   }
@@ -206,7 +206,7 @@ export async function deleteConversation(conversationId: string) {
     revalidatePath('/estudiante')
     revalidatePath('/instructor')
     return { success: true }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al eliminar conversación'
     return { success: false, error: message }
   }
@@ -229,7 +229,7 @@ export async function searchUsersForChat(query: string, limit: number = 10) {
     const filtered = results.filter((u) => u.id !== user.id)
 
     return { success: true, data: filtered }
-  } catch (error) {
+  } catch (_error) {
     const message = error instanceof Error ? error.message : 'Error al buscar usuarios'
     return { success: false, error: message }
   }

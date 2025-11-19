@@ -5,9 +5,9 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { LearningPath } from '../domain/learning-path.entity';
-import { UserLearningPathProgress } from '../domain/user-learning-path-progress.entity';
-import { ILearningPathRepository } from '../domain/learning-path.repository.interface';
+import type { LearningPath } from '../domain/learning-path.entity';
+import type { UserLearningPathProgress } from '../domain/user-learning-path-progress.entity';
+import type { ILearningPathRepository } from '../domain/learning-path.repository.interface';
 import {
   learningPathMapper,
   learningPathNodeMapper,

@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { Assignment } from '../../domain/assignment.entity';
-import { IAssignmentRepository } from '../../domain/assignment.repository.interface';
-import { CreateAssignmentDTO } from '../dtos';
-import { AssignmentDTO, assignmentMapper } from '../../infrastructure/assignment.mapper';
+import type { IAssignmentRepository } from '../../domain/assignment.repository.interface';
+import type { CreateAssignmentDTO } from '../dtos';
+import { type AssignmentDTO, assignmentMapper } from '../../infrastructure/assignment.mapper';
 
 interface CreateAssignmentRequest {
   dto: CreateAssignmentDTO;

@@ -4,9 +4,9 @@
 
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
-import { IConversationRepository } from '../../domain/conversation.repository.interface';
+import type { IConversationRepository } from '../../domain/conversation.repository.interface';
 import {
-  ConversationDTO,
+  type ConversationDTO,
   conversationMapper,
 } from '../../infrastructure/conversation.mapper';
 

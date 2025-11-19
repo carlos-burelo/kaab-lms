@@ -5,8 +5,8 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { EntityNotFoundError } from '@/core/shared/errors';
-import { IQuizRepository } from '../../domain/quiz.repository.interface';
-import { QuizDTO, quizMapper } from '../../infrastructure/quiz.mapper';
+import type { IQuizRepository } from '../../domain/quiz.repository.interface';
+import { type QuizDTO, quizMapper } from '../../infrastructure/quiz.mapper';
 
 interface GetQuizRequest {
   quizId: string;

@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { PersonalTask } from '../../domain/personal-task.entity';
-import { IPersonalTaskRepository } from '../../domain/personal-task.repository.interface';
-import { CreateTaskDTO } from '../dtos';
-import { PersonalTaskDTO, personalTaskMapper } from '../../infrastructure/personal-task.mapper';
+import type { IPersonalTaskRepository } from '../../domain/personal-task.repository.interface';
+import type { CreateTaskDTO } from '../dtos';
+import { type PersonalTaskDTO, personalTaskMapper } from '../../infrastructure/personal-task.mapper';
 
 interface CreateTaskRequest {
   dto: CreateTaskDTO;

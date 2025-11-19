@@ -6,7 +6,7 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { prisma } from '@/lib/prisma';
-import { QuestionType } from '@prisma/client';
+import type { QuestionType } from '@prisma/client';
 
 interface CreateQuestionRequest {
   quizId: string;

@@ -6,10 +6,10 @@ import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, ForbiddenError } from '@/core/shared/errors';
 import { Message } from '../../domain/message.entity';
-import { IMessageRepository } from '../../domain/message.repository.interface';
-import { IConversationRepository } from '../../domain/conversation.repository.interface';
-import { SendMessageDTO } from '../dtos';
-import { MessageDTO, messageMapper } from '../../infrastructure/message.mapper';
+import type { IMessageRepository } from '../../domain/message.repository.interface';
+import type { IConversationRepository } from '../../domain/conversation.repository.interface';
+import type { SendMessageDTO } from '../dtos';
+import { type MessageDTO, messageMapper } from '../../infrastructure/message.mapper';
 
 interface SendMessageRequest {
   dto: SendMessageDTO;

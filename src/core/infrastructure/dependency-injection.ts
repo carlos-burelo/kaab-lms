@@ -285,9 +285,9 @@ export const TOKENS = {
  * Decorator for dependency injection
  */
 export function injectable(token: string | symbol) {
-  return function <T extends { new (...args: unknown[]): unknown }>(
+  return <T extends { new (...args: unknown[]): unknown }>(
     constructor: T
-  ) {
+  ) => {
     container.register(token, constructor);
     return constructor;
   };
@@ -297,11 +297,11 @@ export function injectable(token: string | symbol) {
  * Decorator for injecting dependencies
  */
 export function inject(token: string | symbol) {
-  return function (
+  return (
     target: unknown,
     propertyKey: string,
     parameterIndex: number
-  ) {
+  ) => {
     // Store metadata for later injection
     const existingInjections =
       Reflect.getMetadata('injections', target) || {};

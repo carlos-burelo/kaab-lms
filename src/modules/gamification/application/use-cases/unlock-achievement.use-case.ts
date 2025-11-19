@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, DuplicateEntityError } from '@/core/shared/errors';
-import { IAchievementRepository } from '../../domain/achievement.repository.interface';
-import { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface';
-import { UnlockAchievementDTO } from '../dtos';
+import type { IAchievementRepository } from '../../domain/achievement.repository.interface';
+import type { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface';
+import type { UnlockAchievementDTO } from '../dtos';
 
 interface UnlockAchievementRequest {
   dto: UnlockAchievementDTO;

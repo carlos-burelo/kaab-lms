@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { CalendarEvent } from '../../domain/calendar-event.entity';
-import { ICalendarEventRepository } from '../../domain/calendar-event.repository.interface';
-import { CreateEventDTO } from '../dtos';
-import { CalendarEventDTO, calendarEventMapper } from '../../infrastructure/calendar-event.mapper';
+import type { ICalendarEventRepository } from '../../domain/calendar-event.repository.interface';
+import type { CreateEventDTO } from '../dtos';
+import { type CalendarEventDTO, calendarEventMapper } from '../../infrastructure/calendar-event.mapper';
 
 interface CreateEventRequest {
   dto: CreateEventDTO;

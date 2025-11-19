@@ -76,7 +76,7 @@ export async function getUploadedFiles(params: z.infer<typeof GetUploadedFilesSc
       success: true,
       data: result
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting files'
@@ -117,7 +117,7 @@ export async function getFileById(fileId: string): Promise<ActionResponse> {
       success: true,
       data: file
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting file'
@@ -162,7 +162,7 @@ export async function deleteFile(fileId: string): Promise<ActionResponse> {
       success: true,
       data: { id: fileId }
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error deleting file'
@@ -207,7 +207,7 @@ export async function toggleFilePublic(fileId: string, isPublic: boolean): Promi
       success: true,
       data: updated
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error updating file'
@@ -234,7 +234,7 @@ export async function getUserFileStats(): Promise<ActionResponse> {
       success: true,
       data: stats
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting statistics'
@@ -261,7 +261,7 @@ export async function getAvailableFileTypes(): Promise<ActionResponse> {
       success: true,
       data: types
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error getting file types'
@@ -295,7 +295,7 @@ export async function searchFiles(query: string): Promise<ActionResponse> {
       success: true,
       data: results
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Error searching files'

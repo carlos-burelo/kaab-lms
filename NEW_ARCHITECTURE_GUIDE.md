@@ -192,7 +192,7 @@ export class QuizRepository implements IQuizRepository {
       if (!quiz) return Result.ok(null);
 
       return Result.ok(quizMapper.toDomain(quiz));
-    } catch (error) {
+    } catch (_error)  {
       return Result.fail(
         new DatabaseError('Failed to find quiz', error as Error)
       );
@@ -216,7 +216,7 @@ export class QuizRepository implements IQuizRepository {
       entity.clearEvents();
 
       return Result.ok(quizMapper.toDomain(saved));
-    } catch (error) {
+    } catch (_error)  {
       return Result.fail(
         new DatabaseError('Failed to save quiz', error as Error)
       );
@@ -227,7 +227,7 @@ export class QuizRepository implements IQuizRepository {
     try {
       await prisma.quiz.delete({ where: { id } });
       return Result.ok(undefined);
-    } catch (error) {
+    } catch (_error)  {
       return Result.fail(
         new DatabaseError('Failed to delete quiz', error as Error)
       );
@@ -238,7 +238,7 @@ export class QuizRepository implements IQuizRepository {
     try {
       const count = await prisma.quiz.count({ where: { id } });
       return Result.ok(count > 0);
-    } catch (error) {
+    } catch (_error)  {
       return Result.fail(
         new DatabaseError('Failed to check quiz existence', error as Error)
       );
@@ -251,7 +251,7 @@ export class QuizRepository implements IQuizRepository {
       if (!quiz) return Result.ok(null);
 
       return Result.ok(quizMapper.toDomain(quiz));
-    } catch (error) {
+    } catch (_error)  {
       return Result.fail(
         new DatabaseError('Failed to find quiz by lesson', error as Error)
       );

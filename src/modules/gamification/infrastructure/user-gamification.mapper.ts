@@ -2,10 +2,10 @@
  * UserGamification Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
+import type { Mapper } from '@/core/shared/mapper.interface';
 import {
   UserGamification,
-  UserGamificationProps,
+  type UserGamificationProps,
 } from '../domain/user-gamification.entity';
 import type { UserGamification as PrismaUserGamification } from '@prisma/client';
 

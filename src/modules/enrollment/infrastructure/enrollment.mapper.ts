@@ -2,8 +2,8 @@
  * Enrollment Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { Enrollment, EnrollmentProps } from '../domain/enrollment.entity';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { Enrollment, type EnrollmentProps } from '../domain/enrollment.entity';
 import type { Enrollment as PrismaEnrollment } from '@prisma/client';
 
 export interface EnrollmentDTO {

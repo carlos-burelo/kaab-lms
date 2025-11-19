@@ -2,10 +2,10 @@
  * Badge Aggregate Root
  */
 
-import { AggregateRoot, EntityProps } from '@/core/shared/aggregate-root';
+import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root';
 import { Result } from '@/core/shared/result';
 import { ValidationError, BusinessRuleError } from '@/core/shared/errors';
-import { BadgeRarity } from './value-objects';
+import type { BadgeRarity } from './value-objects';
 import { BadgeAwardedEvent } from './events';
 
 export interface BadgeProps extends EntityProps {

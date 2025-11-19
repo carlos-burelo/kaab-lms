@@ -4,9 +4,9 @@
 
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
-import { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface';
+import type { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface';
 import {
-  UserGamificationDTO,
+  type UserGamificationDTO,
   userGamificationMapper,
 } from '../../infrastructure/user-gamification.mapper';
 

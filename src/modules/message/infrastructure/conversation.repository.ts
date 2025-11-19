@@ -5,8 +5,8 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { Conversation } from '../domain/conversation.entity';
-import { IConversationRepository } from '../domain/conversation.repository.interface';
+import type { Conversation } from '../domain/conversation.entity';
+import type { IConversationRepository } from '../domain/conversation.repository.interface';
 import { conversationMapper } from './conversation.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

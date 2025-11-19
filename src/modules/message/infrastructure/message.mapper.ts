@@ -2,8 +2,8 @@
  * Message Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { Message, MessageProps } from '../domain/message.entity';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { Message, type MessageProps } from '../domain/message.entity';
 import type { Message as PrismaMessage } from '@prisma/client';
 
 export interface MessageDTO {

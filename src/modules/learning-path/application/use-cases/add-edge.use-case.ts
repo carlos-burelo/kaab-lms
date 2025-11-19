@@ -5,11 +5,11 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError } from '@/core/shared/errors';
-import { ILearningPathRepository } from '../../domain/learning-path.repository.interface';
+import type { ILearningPathRepository } from '../../domain/learning-path.repository.interface';
 import { LearningPathEdge } from '../../domain/learning-path-edge.entity';
-import { AddEdgeDTO } from '../dtos';
+import type { AddEdgeDTO } from '../dtos';
 import {
-  LearningPathEdgeDTO,
+  type LearningPathEdgeDTO,
   learningPathEdgeMapper,
 } from '../../infrastructure/learning-path.mapper';
 

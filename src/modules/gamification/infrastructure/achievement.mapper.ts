@@ -2,9 +2,9 @@
  * Achievement Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { Achievement, AchievementProps } from '../domain/achievement.entity';
-import { AchievementCategory } from '../domain/value-objects';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { Achievement, type AchievementProps } from '../domain/achievement.entity';
+import type { AchievementCategory } from '../domain/value-objects';
 import type { Achievement as PrismaAchievement } from '@prisma/client';
 
 export interface AchievementDTO {

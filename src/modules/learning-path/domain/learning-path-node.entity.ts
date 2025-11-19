@@ -2,7 +2,7 @@
  * Learning Path Node Entity
  */
 
-import { Entity, EntityProps } from '@/core/shared/entity';
+import { Entity, type EntityProps } from '@/core/shared/entity';
 import { Result } from '@/core/shared/result';
 import { ValidationError } from '@/core/shared/errors';
 import { NodeType } from './value-objects/node-type';

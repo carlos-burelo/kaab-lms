@@ -4,8 +4,8 @@
 
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
-import { IBadgeRepository } from '../../domain/badge.repository.interface';
-import { BadgeDTO, badgeMapper } from '../../infrastructure/badge.mapper';
+import type { IBadgeRepository } from '../../domain/badge.repository.interface';
+import { type BadgeDTO, badgeMapper } from '../../infrastructure/badge.mapper';
 
 interface GetUserBadgesRequest {
   userId: string;

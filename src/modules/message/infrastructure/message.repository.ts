@@ -5,8 +5,8 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { Message } from '../domain/message.entity';
-import { IMessageRepository } from '../domain/message.repository.interface';
+import type { Message } from '../domain/message.entity';
+import type { IMessageRepository } from '../domain/message.repository.interface';
 import { messageMapper } from './message.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

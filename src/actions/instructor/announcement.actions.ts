@@ -1,9 +1,9 @@
-"use server"
+'use server'
 
-import { createAction } from "@/actions/_shared/action-builder"
-import { instructorRepository } from "@/database/repositories/instructor.repository"
-import { ok, err } from "@/core/shared/result"
-import { z } from "zod"
+import { z } from 'zod'
+import { createAction } from '@/actions/_shared/action-builder'
+import { err, ok } from '@/core/shared/result'
+import { instructorRepository } from '@/database/repositories/instructor.repository'
 
 // ============ GET ANNOUNCEMENTS ============
 
@@ -11,17 +11,15 @@ import { z } from "zod"
  * Obtiene todos los anuncios de los cursos del instructor
  */
 export const getAnnouncements = createAction({
-  name: "instructor.getAnnouncements",
+  name: 'instructor.getAnnouncements',
   requireAuth: true,
-  allowedRoles: ["INSTRUCTOR"],
+  allowedRoles: ['INSTRUCTOR'],
   execute: async (_, context) => {
     try {
-      const announcements = await instructorRepository.getAnnouncements(
-        context.userId
-      )
+      const announcements = await instructorRepository.getAnnouncements(context.userId)
       return ok(announcements || [])
-    } catch (error) {
-      return err(new Error("Error al obtener anuncios"))
+    } catch (_error) {
+      return err(new Error('Error al obtener anuncios'))
     }
   }
 })
@@ -29,25 +27,23 @@ export const getAnnouncements = createAction({
 // ============ GET ANNOUNCEMENT BY ID ============
 
 export const getAnnouncementById = createAction({
-  name: "instructor.getAnnouncementById",
+  name: 'instructor.getAnnouncementById',
   requireAuth: true,
-  allowedRoles: ["INSTRUCTOR"],
+  allowedRoles: ['INSTRUCTOR'],
   schema: z.object({
     announcementId: z.string()
   }),
   execute: async (input, _context) => {
     try {
-      const announcement = await instructorRepository.getAnnouncementById(
-        input.announcementId
-      )
+      const announcement = await instructorRepository.getAnnouncementById(input.announcementId)
 
       if (!announcement) {
-        return err(new Error("Anuncio no encontrado"))
+        return err(new Error('Anuncio no encontrado'))
       }
 
       return ok(announcement)
-    } catch (error) {
-      return err(new Error("Error al obtener anuncio"))
+    } catch (_error) {
+      return err(new Error('Error al obtener anuncio'))
     }
   }
 })
@@ -55,29 +51,23 @@ export const getAnnouncementById = createAction({
 // ============ CREATE ANNOUNCEMENT ============
 
 const createAnnouncementSchema = z.object({
-  title: z.string().min(1, "El título es requerido"),
-  content: z.string().min(1, "El contenido es requerido"),
+  title: z.string().min(1, 'El título es requerido'),
+  content: z.string().min(1, 'El contenido es requerido'),
   ctaLink: z.string().optional().nullable(),
   ctaText: z.string().optional().nullable(),
   imageId: z.string().optional().nullable(),
-  placement: z.enum([
-    "DASHBOARD_BANNER",
-    "COURSE_BANNER",
-    "GLOBAL_MODAL",
-    "INLINE_FEED",
-    "LOGIN_PAGE"
-  ]),
+  placement: z.enum(['DASHBOARD_BANNER', 'COURSE_BANNER', 'GLOBAL_MODAL', 'INLINE_FEED', 'LOGIN_PAGE']),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   priority: z.number().default(0),
-  targetRole: z.enum(["STUDENT", "INSTRUCTOR", "ADMIN"]).optional().nullable(),
+  targetRole: z.enum(['STUDENT', 'INSTRUCTOR', 'ADMIN']).optional().nullable(),
   targetCourseId: z.string().optional().nullable()
 })
 
 export const createAnnouncement = createAction({
-  name: "instructor.createAnnouncement",
+  name: 'instructor.createAnnouncement',
   requireAuth: true,
-  allowedRoles: ["INSTRUCTOR", "ADMIN"],
+  allowedRoles: ['INSTRUCTOR', 'ADMIN'],
   schema: createAnnouncementSchema,
   execute: async (input, _context) => {
     try {
@@ -96,8 +86,8 @@ export const createAnnouncement = createAction({
       })
 
       return ok(announcement)
-    } catch (error) {
-      return err(new Error("Error al crear anuncio"))
+    } catch (_error) {
+      return err(new Error('Error al crear anuncio'))
     }
   }
 })
@@ -111,40 +101,29 @@ const updateAnnouncementSchema = z.object({
   ctaLink: z.string().optional().nullable(),
   ctaText: z.string().optional().nullable(),
   imageId: z.string().optional().nullable(),
-  placement: z
-    .enum([
-      "DASHBOARD_BANNER",
-      "COURSE_BANNER",
-      "GLOBAL_MODAL",
-      "INLINE_FEED",
-      "LOGIN_PAGE"
-    ])
-    .optional(),
+  placement: z.enum(['DASHBOARD_BANNER', 'COURSE_BANNER', 'GLOBAL_MODAL', 'INLINE_FEED', 'LOGIN_PAGE']).optional(),
   startDate: z.coerce.date().optional(),
   endDate: z.coerce.date().optional(),
   priority: z.number().optional(),
   isActive: z.boolean().optional(),
-  targetRole: z.enum(["STUDENT", "INSTRUCTOR", "ADMIN"]).optional().nullable(),
+  targetRole: z.enum(['STUDENT', 'INSTRUCTOR', 'ADMIN']).optional().nullable(),
   targetCourseId: z.string().optional().nullable()
 })
 
 export const updateAnnouncement = createAction({
-  name: "instructor.updateAnnouncement",
+  name: 'instructor.updateAnnouncement',
   requireAuth: true,
-  allowedRoles: ["INSTRUCTOR", "ADMIN"],
+  allowedRoles: ['INSTRUCTOR', 'ADMIN'],
   schema: updateAnnouncementSchema,
   execute: async (input, _context) => {
     try {
       const { announcementId, ...data } = input
 
-      const announcement = await instructorRepository.updateAnnouncement(
-        announcementId,
-        data
-      )
+      const announcement = await instructorRepository.updateAnnouncement(announcementId, data)
 
       return ok(announcement)
-    } catch (error) {
-      return err(new Error("Error al actualizar anuncio"))
+    } catch (_error) {
+      return err(new Error('Error al actualizar anuncio'))
     }
   }
 })
@@ -152,9 +131,9 @@ export const updateAnnouncement = createAction({
 // ============ DELETE ANNOUNCEMENT ============
 
 export const deleteAnnouncement = createAction({
-  name: "instructor.deleteAnnouncement",
+  name: 'instructor.deleteAnnouncement',
   requireAuth: true,
-  allowedRoles: ["INSTRUCTOR", "ADMIN"],
+  allowedRoles: ['INSTRUCTOR', 'ADMIN'],
   schema: z.object({
     announcementId: z.string()
   }),
@@ -162,8 +141,8 @@ export const deleteAnnouncement = createAction({
     try {
       await instructorRepository.deleteAnnouncement(input.announcementId)
       return ok({ success: true })
-    } catch (error) {
-      return err(new Error("Error al eliminar anuncio"))
+    } catch (_error) {
+      return err(new Error('Error al eliminar anuncio'))
     }
   }
 })

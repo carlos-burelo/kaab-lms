@@ -5,13 +5,13 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, ForbiddenError } from '@/core/shared/errors';
-import { IConversationRepository } from '../../domain/conversation.repository.interface';
-import { IMessageRepository } from '../../domain/message.repository.interface';
+import type { IConversationRepository } from '../../domain/conversation.repository.interface';
+import type { IMessageRepository } from '../../domain/message.repository.interface';
 import {
-  ConversationDTO,
+  type ConversationDTO,
   conversationMapper,
 } from '../../infrastructure/conversation.mapper';
-import { MessageDTO, messageMapper } from '../../infrastructure/message.mapper';
+import { type MessageDTO, messageMapper } from '../../infrastructure/message.mapper';
 
 interface GetConversationRequest {
   conversationId: string;

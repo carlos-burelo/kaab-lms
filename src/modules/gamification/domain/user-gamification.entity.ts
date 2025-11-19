@@ -2,7 +2,7 @@
  * UserGamification Aggregate Root
  */
 
-import { AggregateRoot, EntityProps } from '@/core/shared/aggregate-root';
+import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root';
 import { Result } from '@/core/shared/result';
 import { ValidationError, BusinessRuleError } from '@/core/shared/errors';
 import { LevelUpEvent, XpAddedEvent, CoinsAddedEvent } from './events';
@@ -93,7 +93,7 @@ export class UserGamification extends AggregateRoot<UserGamificationProps> {
 
     return Math.floor(
       UserGamification.XP_PER_LEVEL_BASE *
-        Math.pow(UserGamification.XP_GROWTH_FACTOR, level - 1)
+        UserGamification.XP_GROWTH_FACTOR ** (level - 1)
     );
   }
 

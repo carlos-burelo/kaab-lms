@@ -2,10 +2,10 @@
  * Mission Repository Interface
  */
 
-import { Repository } from '@/core/shared/repository.interface';
-import { Result } from '@/core/shared/result';
-import { Mission } from './mission.entity';
-import { MissionType, MissionDifficulty } from './value-objects';
+import type { Repository } from '@/core/shared/repository.interface';
+import type { Result } from '@/core/shared/result';
+import type { Mission } from './mission.entity';
+import type { MissionType, MissionDifficulty } from './value-objects';
 
 export interface IMissionRepository extends Repository<Mission> {
   /**

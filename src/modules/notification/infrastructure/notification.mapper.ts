@@ -2,9 +2,9 @@
  * Notification Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { Notification, NotificationProps } from '../domain/notification.entity';
-import { NotificationType, NotificationTypeEnum } from '../domain/value-objects/notification-type';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { Notification, type NotificationProps } from '../domain/notification.entity';
+import { NotificationType, type NotificationTypeEnum } from '../domain/value-objects/notification-type';
 import type { Notification as PrismaNotification } from '@prisma/client';
 
 export interface NotificationDTO {

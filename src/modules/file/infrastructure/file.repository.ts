@@ -5,8 +5,8 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { File } from '../domain/file.entity';
-import { IFileRepository, SearchFilesOptions } from '../domain/file.repository.interface';
+import type { File } from '../domain/file.entity';
+import type { IFileRepository, SearchFilesOptions } from '../domain/file.repository.interface';
 import { fileMapper } from './file.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

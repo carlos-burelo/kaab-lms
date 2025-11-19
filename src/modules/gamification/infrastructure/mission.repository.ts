@@ -5,9 +5,9 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { Mission } from '../domain/mission.entity';
-import { IMissionRepository } from '../domain/mission.repository.interface';
-import { MissionType, MissionDifficulty } from '../domain/value-objects';
+import type { Mission } from '../domain/mission.entity';
+import type { IMissionRepository } from '../domain/mission.repository.interface';
+import type { MissionType, MissionDifficulty } from '../domain/value-objects';
 import { missionMapper } from './mission.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

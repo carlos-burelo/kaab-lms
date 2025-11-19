@@ -3,7 +3,7 @@
  */
 
 import { DomainEvent } from '@/core/shared/domain-event';
-import { TaskPriority } from '../value-objects';
+import type { TaskPriority } from '../value-objects';
 
 export interface TaskCreatedEventPayload {
   taskId: string;

@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError } from '@/core/shared/errors';
-import { IBadgeRepository } from '../../domain/badge.repository.interface';
-import { UpdateBadgeDTO } from '../dtos';
-import { BadgeDTO, badgeMapper } from '../../infrastructure/badge.mapper';
+import type { IBadgeRepository } from '../../domain/badge.repository.interface';
+import type { UpdateBadgeDTO } from '../dtos';
+import { type BadgeDTO, badgeMapper } from '../../infrastructure/badge.mapper';
 
 interface UpdateBadgeRequest {
   badgeId: string;

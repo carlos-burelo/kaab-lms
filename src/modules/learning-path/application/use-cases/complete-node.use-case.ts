@@ -5,11 +5,11 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError } from '@/core/shared/errors';
-import { ILearningPathRepository } from '../../domain/learning-path.repository.interface';
+import type { ILearningPathRepository } from '../../domain/learning-path.repository.interface';
 import { NodeType } from '../../domain/value-objects/node-type';
 import { NodeCompletedEvent, LearningPathCompletedEvent } from '../../domain/events';
 import {
-  UserLearningPathProgressDTO,
+  type UserLearningPathProgressDTO,
   userLearningPathProgressMapper,
 } from '../../infrastructure/learning-path.mapper';
 

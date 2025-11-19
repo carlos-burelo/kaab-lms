@@ -5,8 +5,8 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { EntityNotFoundError } from '@/core/shared/errors';
-import { IAssignmentRepository } from '../../domain/assignment.repository.interface';
-import { GradeAssignmentDTO } from '../dtos';
+import type { IAssignmentRepository } from '../../domain/assignment.repository.interface';
+import type { GradeAssignmentDTO } from '../dtos';
 import { prisma } from '@/lib/prisma';
 
 interface GradeAssignmentRequest {

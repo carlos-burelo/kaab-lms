@@ -9,9 +9,9 @@ import {
   ForbiddenError,
 } from '@/core/shared/errors';
 import { Quiz } from '../../domain/quiz.entity';
-import { IQuizRepository } from '../../domain/quiz.repository.interface';
-import { CreateQuizDTO } from '../dtos';
-import { QuizDTO, quizMapper } from '../../infrastructure/quiz.mapper';
+import type { IQuizRepository } from '../../domain/quiz.repository.interface';
+import type { CreateQuizDTO } from '../dtos';
+import { type QuizDTO, quizMapper } from '../../infrastructure/quiz.mapper';
 
 interface CreateQuizRequest {
   dto: CreateQuizDTO;

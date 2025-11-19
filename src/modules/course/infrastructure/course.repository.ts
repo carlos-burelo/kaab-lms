@@ -6,13 +6,13 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError, EntityNotFoundError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { Course } from '../domain/course.entity';
-import {
+import type { Course } from '../domain/course.entity';
+import type {
   ICourseRepository,
   CourseListOptions,
   CourseListResult,
 } from '../domain/course.repository.interface';
-import { CourseMapper, courseMapper } from './course.mapper';
+import { type CourseMapper, courseMapper } from './course.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 
 export class CourseRepository implements ICourseRepository {

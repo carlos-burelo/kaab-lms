@@ -3,9 +3,9 @@
  * Defines the contract for course persistence
  */
 
-import { Repository } from '@/core/shared/repository.interface';
-import { Result } from '@/core/shared/result';
-import { Course } from './course.entity';
+import type { Repository } from '@/core/shared/repository.interface';
+import type { Result } from '@/core/shared/result';
+import type { Course } from './course.entity';
 
 export interface CourseFilters {
   instructorId?: string;

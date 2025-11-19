@@ -5,9 +5,9 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { Achievement } from '../domain/achievement.entity';
-import { IAchievementRepository } from '../domain/achievement.repository.interface';
-import { AchievementCategory } from '../domain/value-objects';
+import type { Achievement } from '../domain/achievement.entity';
+import type { IAchievementRepository } from '../domain/achievement.repository.interface';
+import type { AchievementCategory } from '../domain/value-objects';
 import { achievementMapper } from './achievement.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { EntityNotFoundError, ForbiddenError } from '@/core/shared/errors';
-import { IQuizRepository } from '../../domain/quiz.repository.interface';
-import { UpdateQuizDTO } from '../dtos';
-import { QuizDTO, quizMapper } from '../../infrastructure/quiz.mapper';
+import type { IQuizRepository } from '../../domain/quiz.repository.interface';
+import type { UpdateQuizDTO } from '../dtos';
+import { type QuizDTO, quizMapper } from '../../infrastructure/quiz.mapper';
 
 interface UpdateQuizRequest {
   dto: UpdateQuizDTO;

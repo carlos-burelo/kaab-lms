@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getNotifications, getUnreadNotificationCount } from '@/actions/notification.actions'
 import { NotificationsList } from '@/components/notifications/NotificationsList'

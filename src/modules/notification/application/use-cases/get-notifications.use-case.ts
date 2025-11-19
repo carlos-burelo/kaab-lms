@@ -4,10 +4,10 @@
 
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
-import { INotificationRepository } from '../../domain/notification.repository.interface';
-import { GetNotificationsDTO } from '../dtos';
+import type { INotificationRepository } from '../../domain/notification.repository.interface';
+import type { GetNotificationsDTO } from '../dtos';
 import {
-  NotificationDTO,
+  type NotificationDTO,
   notificationMapper,
 } from '../../infrastructure/notification.mapper';
 

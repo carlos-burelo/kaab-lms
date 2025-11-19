@@ -5,8 +5,8 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, ForbiddenError } from '@/core/shared/errors';
-import { IMessageRepository } from '../../domain/message.repository.interface';
-import { IConversationRepository } from '../../domain/conversation.repository.interface';
+import type { IMessageRepository } from '../../domain/message.repository.interface';
+import type { IConversationRepository } from '../../domain/conversation.repository.interface';
 
 interface MarkMessagesAsReadRequest {
   conversationId: string;

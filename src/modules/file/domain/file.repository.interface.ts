@@ -2,9 +2,9 @@
  * File Repository Interface
  */
 
-import { Repository } from '@/core/shared/repository.interface';
-import { Result } from '@/core/shared/result';
-import { File } from './file.entity';
+import type { Repository } from '@/core/shared/repository.interface';
+import type { Result } from '@/core/shared/result';
+import type { File } from './file.entity';
 
 export interface SearchFilesOptions {
   uploadedBy?: string;

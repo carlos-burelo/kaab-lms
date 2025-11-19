@@ -2,7 +2,7 @@
  * Course Published Domain Event
  */
 
-import { DomainEvent, DomainEventProps } from '@/core/shared/domain-event';
+import { DomainEvent, type DomainEventProps } from '@/core/shared/domain-event';
 
 interface CoursePublishedProps extends DomainEventProps {
   courseId: string;

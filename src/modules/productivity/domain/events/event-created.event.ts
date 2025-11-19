@@ -3,7 +3,7 @@
  */
 
 import { DomainEvent } from '@/core/shared/domain-event';
-import { EventType } from '../value-objects';
+import type { EventType } from '../value-objects';
 
 export interface EventCreatedEventPayload {
   eventId: string;

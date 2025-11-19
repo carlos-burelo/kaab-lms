@@ -6,10 +6,10 @@ import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { DuplicateEntityError } from '@/core/shared/errors';
 import { Enrollment } from '../../domain/enrollment.entity';
-import { IEnrollmentRepository } from '../../domain/enrollment.repository.interface';
-import { EnrollStudentDTO } from '../dtos';
+import type { IEnrollmentRepository } from '../../domain/enrollment.repository.interface';
+import type { EnrollStudentDTO } from '../dtos';
 import {
-  EnrollmentDTO,
+  type EnrollmentDTO,
   enrollmentMapper,
 } from '../../infrastructure/enrollment.mapper';
 

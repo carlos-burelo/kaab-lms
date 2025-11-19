@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getQuizAttempts } from '@/actions/student/quiz.actions'
 import { QuizHistoryList } from '@/components/quiz/QuizHistoryList'

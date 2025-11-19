@@ -2,8 +2,8 @@
  * Conversation Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { Conversation, ConversationProps } from '../domain/conversation.entity';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { Conversation, type ConversationProps } from '../domain/conversation.entity';
 import type { Conversation as PrismaConversation } from '@prisma/client';
 
 export interface ConversationDTO {

@@ -2,15 +2,15 @@
  * Learning Path Aggregate Root
  */
 
-import { AggregateRoot, EntityProps } from '@/core/shared/aggregate-root';
+import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root';
 import { Result } from '@/core/shared/result';
 import { BusinessRuleError, ValidationError } from '@/core/shared/errors';
 import {
   LearningPathCreatedEvent,
   LearningPathPublishedEvent,
 } from './events';
-import { LearningPathNode } from './learning-path-node.entity';
-import { LearningPathEdge } from './learning-path-edge.entity';
+import type { LearningPathNode } from './learning-path-node.entity';
+import type { LearningPathEdge } from './learning-path-edge.entity';
 
 export interface LearningPathProps extends EntityProps {
   title: string;

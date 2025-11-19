@@ -25,22 +25,22 @@ export class CourseSlug extends ValueObject<CourseSlugProps> {
   static create(slug: string): Result<CourseSlug, ValidationError> {
     const normalized = slug.toLowerCase().trim();
 
-    if (!this.SLUG_REGEX.test(normalized)) {
+    if (!CourseSlug.SLUG_REGEX.test(normalized)) {
       return Result.fail(
         new ValidationError(
           'Slug must contain only lowercase letters, numbers, and hyphens',
           'slug',
-          { pattern: this.SLUG_REGEX.source }
+          { pattern: CourseSlug.SLUG_REGEX.source }
         )
       );
     }
 
-    if (normalized.length > this.MAX_LENGTH) {
+    if (normalized.length > CourseSlug.MAX_LENGTH) {
       return Result.fail(
         new ValidationError(
-          `Slug must not exceed ${this.MAX_LENGTH} characters`,
+          `Slug must not exceed ${CourseSlug.MAX_LENGTH} characters`,
           'slug',
-          { maxLength: String(this.MAX_LENGTH) }
+          { maxLength: String(CourseSlug.MAX_LENGTH) }
         )
       );
     }
@@ -62,7 +62,7 @@ export class CourseSlug extends ValueObject<CourseSlugProps> {
       .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
 
     // If slug creation fails, use fallback
-    const result = this.create(slug);
+    const result = CourseSlug.create(slug);
     if (result.isSuccess) {
       return result.value;
     }

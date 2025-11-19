@@ -5,10 +5,10 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { Achievement } from '../../domain/achievement.entity';
-import { IAchievementRepository } from '../../domain/achievement.repository.interface';
-import { CreateAchievementDTO } from '../dtos';
+import type { IAchievementRepository } from '../../domain/achievement.repository.interface';
+import type { CreateAchievementDTO } from '../dtos';
 import {
-  AchievementDTO,
+  type AchievementDTO,
   achievementMapper,
 } from '../../infrastructure/achievement.mapper';
 

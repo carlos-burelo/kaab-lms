@@ -5,9 +5,9 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { Badge } from '../domain/badge.entity';
-import { IBadgeRepository } from '../domain/badge.repository.interface';
-import { BadgeRarity } from '../domain/value-objects';
+import type { Badge } from '../domain/badge.entity';
+import type { IBadgeRepository } from '../domain/badge.repository.interface';
+import type { BadgeRarity } from '../domain/value-objects';
 import { badgeMapper } from './badge.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

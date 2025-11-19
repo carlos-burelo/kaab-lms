@@ -1,6 +1,6 @@
-import { z } from "zod"
+import type { z } from "zod"
 import { getServerSession } from "@/lib/auth"
-import { Result } from "@/core/shared/result"
+import type { Result } from "@/core/shared/result"
 import type { Session } from "next-auth"
 
 /**

@@ -3,8 +3,8 @@
  * Maps between domain entity and persistence model
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { Course, CourseLevel } from '../domain/course.entity';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { Course, type CourseLevel } from '../domain/course.entity';
 import { CourseTitle, CoursePrice, CourseSlug } from '../domain/value-objects';
 import type { Course as PrismaCourse } from '@prisma/client';
 

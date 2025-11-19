@@ -5,7 +5,7 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, ForbiddenError } from '@/core/shared/errors';
-import { IPersonalTaskRepository } from '../../domain/personal-task.repository.interface';
+import type { IPersonalTaskRepository } from '../../domain/personal-task.repository.interface';
 
 interface DeleteTaskRequest {
   taskId: string;

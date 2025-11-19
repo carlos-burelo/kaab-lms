@@ -4,8 +4,8 @@
  * They ensure consistency and encapsulate business rules
  */
 
-import { Entity, EntityProps } from './entity';
-import { DomainEvent } from './domain-event';
+import { Entity, type EntityProps } from './entity';
+import type { DomainEvent } from './domain-event';
 
 export abstract class AggregateRoot<T extends EntityProps> extends Entity<T> {
   private _domainEvents: DomainEvent[] = [];

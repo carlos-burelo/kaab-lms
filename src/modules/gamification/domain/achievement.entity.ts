@@ -2,10 +2,10 @@
  * Achievement Aggregate Root
  */
 
-import { AggregateRoot, EntityProps } from '@/core/shared/aggregate-root';
+import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root';
 import { Result } from '@/core/shared/result';
 import { ValidationError, BusinessRuleError } from '@/core/shared/errors';
-import { AchievementCategory } from './value-objects';
+import type { AchievementCategory } from './value-objects';
 import { AchievementUnlockedEvent } from './events';
 
 export interface AchievementProps extends EntityProps {

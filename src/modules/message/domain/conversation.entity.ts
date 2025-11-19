@@ -2,11 +2,11 @@
  * Conversation Aggregate Root
  */
 
-import { AggregateRoot, EntityProps } from '@/core/shared/aggregate-root';
+import { AggregateRoot, type EntityProps } from '@/core/shared/aggregate-root';
 import { Result } from '@/core/shared/result';
 import { ValidationError, BusinessRuleError } from '@/core/shared/errors';
 import { ConversationCreatedEvent } from './events';
-import { Message } from './message.entity';
+import type { Message } from './message.entity';
 
 export interface ConversationProps extends EntityProps {
   participant1Id: string;

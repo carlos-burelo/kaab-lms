@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, ForbiddenError } from '@/core/shared/errors';
-import { INotificationRepository } from '../../domain/notification.repository.interface';
+import type { INotificationRepository } from '../../domain/notification.repository.interface';
 import {
-  NotificationDTO,
+  type NotificationDTO,
   notificationMapper,
 } from '../../infrastructure/notification.mapper';
 

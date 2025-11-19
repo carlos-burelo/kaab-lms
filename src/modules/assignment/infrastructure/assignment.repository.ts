@@ -5,8 +5,8 @@
 import { Result } from '@/core/shared/result';
 import { DatabaseError } from '@/core/shared/errors';
 import { prisma } from '@/lib/prisma';
-import { Assignment } from '../domain/assignment.entity';
-import { IAssignmentRepository } from '../domain/assignment.repository.interface';
+import type { Assignment } from '../domain/assignment.entity';
+import type { IAssignmentRepository } from '../domain/assignment.repository.interface';
 import { assignmentMapper } from './assignment.mapper';
 import { eventBus } from '@/core/infrastructure/event-bus';
 

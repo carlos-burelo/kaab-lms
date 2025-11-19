@@ -2,6 +2,7 @@
  * User Repository
  * Centraliza todas las consultas relacionadas con usuarios
  */
+import { error } from 'console'
 import { BaseRepository } from './base.repository'
 
 export class UserRepository extends BaseRepository {
@@ -21,7 +22,7 @@ export class UserRepository extends BaseRepository {
           certificates: { include: { course: true } }
         }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getById')
     }
   }
@@ -40,7 +41,7 @@ export class UserRepository extends BaseRepository {
           instructorProfile: true
         }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getByEmail')
     }
   }
@@ -53,7 +54,7 @@ export class UserRepository extends BaseRepository {
       return await this.client.userProfile.findUnique({
         where: { userId }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getProfile')
     }
   }
@@ -71,7 +72,7 @@ export class UserRepository extends BaseRepository {
         },
         update: data
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.updateProfile')
     }
   }
@@ -84,7 +85,7 @@ export class UserRepository extends BaseRepository {
       return await this.client.userPreferences.findUnique({
         where: { userId }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getPreferences')
     }
   }
@@ -102,62 +103,8 @@ export class UserRepository extends BaseRepository {
         },
         update: { preferences }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.updatePreferences')
-    }
-  }
-
-  /**
-   * Obtiene notificaciones del usuario
-   */
-  async getNotifications(userId: string, limit = 20, skip = 0) {
-    try {
-      return await this.client.notification.findMany({
-        where: { userId },
-        take: limit,
-        skip,
-        orderBy: { createdAt: 'desc' }
-      })
-    } catch (error) {
-      this.handleError(error, 'UserRepository.getNotifications')
-    }
-  }
-
-  /**
-   * Marca una notificación como leída
-   */
-  async markNotificationAsRead(notificationId: string) {
-    try {
-      return await this.client.notification.update({
-        where: { id: notificationId },
-        data: { isRead: true, readAt: new Date() }
-      })
-    } catch (error) {
-      this.handleError(error, 'UserRepository.markNotificationAsRead')
-    }
-  }
-
-  /**
-   * Obtiene conversaciones del usuario
-   */
-  async getConversations(userId: string) {
-    try {
-      return await this.client.conversation.findMany({
-        where: {
-          OR: [{ initiatorId: userId }, { receiverId: userId }]
-        },
-        include: {
-          initiator: { include: { profile: true } },
-          receiver: { include: { profile: true } },
-          messages: {
-            take: 1,
-            orderBy: { createdAt: 'desc' }
-          }
-        },
-        orderBy: { lastMessageAt: 'desc' }
-      })
-    } catch (error) {
-      this.handleError(error, 'UserRepository.getConversations')
     }
   }
 
@@ -176,7 +123,7 @@ export class UserRepository extends BaseRepository {
         skip,
         orderBy: { createdAt: 'asc' }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getMessages')
     }
   }
@@ -197,7 +144,7 @@ export class UserRepository extends BaseRepository {
         skip,
         orderBy: { createdAt: 'desc' }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getPaymentHistory')
     }
   }
@@ -216,7 +163,7 @@ export class UserRepository extends BaseRepository {
         },
         orderBy: { createdAt: 'desc' }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getSubscriptions')
     }
   }
@@ -230,7 +177,7 @@ export class UserRepository extends BaseRepository {
         where: { userId },
         orderBy: { createdAt: 'desc' }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getPaymentMethods')
     }
   }
@@ -251,7 +198,7 @@ export class UserRepository extends BaseRepository {
         skip,
         orderBy: { createdAt: 'desc' }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getInvoices')
     }
   }
@@ -281,7 +228,7 @@ export class UserRepository extends BaseRepository {
       })
 
       return user
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.create')
     }
   }
@@ -300,7 +247,7 @@ export class UserRepository extends BaseRepository {
           preferences: true
         }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.update')
     }
   }
@@ -314,7 +261,7 @@ export class UserRepository extends BaseRepository {
         where: { id: userId },
         data: { isActive: false }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.deactivate')
     }
   }
@@ -328,7 +275,7 @@ export class UserRepository extends BaseRepository {
         where: { id: userId },
         data: { isActive: true }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.activate')
     }
   }
@@ -342,7 +289,7 @@ export class UserRepository extends BaseRepository {
         where: { id: userId },
         data: { emailVerified: new Date() }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.verifyEmail')
     }
   }
@@ -368,7 +315,7 @@ export class UserRepository extends BaseRepository {
         skip,
         orderBy: { createdAt: 'desc' }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getByRole')
     }
   }
@@ -390,7 +337,7 @@ export class UserRepository extends BaseRepository {
         skip,
         orderBy: { createdAt: 'desc' }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.search')
     }
   }
@@ -420,7 +367,7 @@ export class UserRepository extends BaseRepository {
           isRead: false
         }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.createNotification')
     }
   }
@@ -435,7 +382,7 @@ export class UserRepository extends BaseRepository {
         take: limit,
         orderBy: { createdAt: 'desc' }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getNotifications')
       return []
     }
@@ -450,7 +397,7 @@ export class UserRepository extends BaseRepository {
         where: { userId, isRead: false },
         orderBy: { createdAt: 'desc' }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getUnreadNotifications')
       return []
     }
@@ -464,7 +411,7 @@ export class UserRepository extends BaseRepository {
       return await this.client.notification.count({
         where: { userId, isRead: false }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getUnreadNotificationCount')
       return 0
     }
@@ -478,7 +425,7 @@ export class UserRepository extends BaseRepository {
       return await this.client.notification.findUnique({
         where: { id: notificationId }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getNotificationById')
       return null
     }
@@ -493,7 +440,7 @@ export class UserRepository extends BaseRepository {
         where: { id: notificationId },
         data: { isRead: true }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.markNotificationAsRead')
     }
   }
@@ -507,7 +454,7 @@ export class UserRepository extends BaseRepository {
         where: { userId, isRead: false },
         data: { isRead: true }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.markAllNotificationsAsRead')
     }
   }
@@ -520,7 +467,7 @@ export class UserRepository extends BaseRepository {
       return await this.client.notification.delete({
         where: { id: notificationId }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.deleteNotification')
     }
   }
@@ -534,7 +481,7 @@ export class UserRepository extends BaseRepository {
         where: { id: userId },
         include: { profile: true }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getUserById')
       return null
     }
@@ -543,12 +490,7 @@ export class UserRepository extends BaseRepository {
   /**
    * Crea un mensaje
    */
-  async createMessage(data: {
-    senderId: string
-    recipientId: string
-    content: string
-    fileIds?: string[]
-  }) {
+  async createMessage(data: { senderId: string; recipientId: string; content: string; fileIds?: string[] }) {
     try {
       const message = await this.client.message.create({
         data: {
@@ -572,7 +514,7 @@ export class UserRepository extends BaseRepository {
       }
 
       return message
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.createMessage')
     }
   }
@@ -598,7 +540,7 @@ export class UserRepository extends BaseRepository {
         take: limit,
         skip
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getConversations')
       return []
     }
@@ -616,7 +558,7 @@ export class UserRepository extends BaseRepository {
           recipient: { include: { profile: true } }
         }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getConversationById')
       return null
     }
@@ -637,7 +579,7 @@ export class UserRepository extends BaseRepository {
         take: limit,
         skip
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getConversationMessages')
       return []
     }
@@ -656,7 +598,7 @@ export class UserRepository extends BaseRepository {
         },
         data: { isRead: true }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.markConversationMessagesAsRead')
     }
   }
@@ -674,7 +616,7 @@ export class UserRepository extends BaseRepository {
           ]
         }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.findConversation')
       return null
     }
@@ -691,7 +633,7 @@ export class UserRepository extends BaseRepository {
           recipientId: userId2
         }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.createConversation')
     }
   }
@@ -704,7 +646,7 @@ export class UserRepository extends BaseRepository {
       return await this.client.conversation.delete({
         where: { id: conversationId }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.deleteConversation')
     }
   }
@@ -716,15 +658,12 @@ export class UserRepository extends BaseRepository {
     try {
       return await this.client.user.findMany({
         where: {
-          OR: [
-            { email: { contains: query } },
-            { profile: { name: { contains: query } } }
-          ]
+          OR: [{ email: { contains: query } }, { profile: { name: { contains: query } } }]
         },
         include: { profile: true },
         take: limit
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.searchUsers')
       return []
     }
@@ -754,7 +693,7 @@ export class UserRepository extends BaseRepository {
           learningPath: true
         }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.createLearningPathProgress')
     }
   }
@@ -778,7 +717,7 @@ export class UserRepository extends BaseRepository {
           }
         }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getLearningPathProgress')
       return null
     }
@@ -812,7 +751,7 @@ export class UserRepository extends BaseRepository {
           ...(data.status && { status: data.status })
         }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.updateLearningPathProgress')
     }
   }
@@ -838,7 +777,7 @@ export class UserRepository extends BaseRepository {
         },
         orderBy: { createdAt: 'desc' }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getAvailableLearningPaths')
       return []
     }
@@ -865,7 +804,7 @@ export class UserRepository extends BaseRepository {
         },
         orderBy: { startedAt: 'desc' }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getStudentLearningPathsInProgress')
       return []
     }
@@ -884,7 +823,7 @@ export class UserRepository extends BaseRepository {
         where: { userId },
         orderBy: [{ priority: 'desc' }, { dueDate: 'asc' }]
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getPersonalTasks')
       return []
     }
@@ -898,7 +837,7 @@ export class UserRepository extends BaseRepository {
       return await this.client.personalTask.findUnique({
         where: { id: taskId }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.getPersonalTaskById')
     }
   }
@@ -925,7 +864,7 @@ export class UserRepository extends BaseRepository {
           tags: data.tags
         }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.createPersonalTask')
     }
   }
@@ -939,7 +878,7 @@ export class UserRepository extends BaseRepository {
         where: { id: taskId },
         data
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.updatePersonalTask')
     }
   }
@@ -952,7 +891,7 @@ export class UserRepository extends BaseRepository {
       return await this.client.personalTask.delete({
         where: { id: taskId }
       })
-    } catch (error) {
+    } catch (_error) {
       this.handleError(error, 'UserRepository.deletePersonalTask')
     }
   }

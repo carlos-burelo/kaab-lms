@@ -37,33 +37,33 @@ export class CoursePrice extends ValueObject<CoursePriceProps> {
     currency: string = 'MXN'
   ): Result<CoursePrice, ValidationError> {
     // Validate amount
-    if (amount < this.MIN_PRICE) {
+    if (amount < CoursePrice.MIN_PRICE) {
       return Result.fail(
         new ValidationError(
           `Price cannot be negative`,
           'price',
-          { min: String(this.MIN_PRICE) }
+          { min: String(CoursePrice.MIN_PRICE) }
         )
       );
     }
 
-    if (amount > this.MAX_PRICE) {
+    if (amount > CoursePrice.MAX_PRICE) {
       return Result.fail(
         new ValidationError(
-          `Price cannot exceed ${this.MAX_PRICE}`,
+          `Price cannot exceed ${CoursePrice.MAX_PRICE}`,
           'price',
-          { max: String(this.MAX_PRICE) }
+          { max: String(CoursePrice.MAX_PRICE) }
         )
       );
     }
 
     // Validate currency
-    if (!this.ALLOWED_CURRENCIES.includes(currency)) {
+    if (!CoursePrice.ALLOWED_CURRENCIES.includes(currency)) {
       return Result.fail(
         new ValidationError(
-          `Invalid currency. Allowed: ${this.ALLOWED_CURRENCIES.join(', ')}`,
+          `Invalid currency. Allowed: ${CoursePrice.ALLOWED_CURRENCIES.join(', ')}`,
           'currency',
-          { allowedCurrencies: this.ALLOWED_CURRENCIES.join(', ') }
+          { allowedCurrencies: CoursePrice.ALLOWED_CURRENCIES.join(', ') }
         )
       );
     }

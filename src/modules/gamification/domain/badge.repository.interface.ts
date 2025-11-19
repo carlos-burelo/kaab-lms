@@ -2,10 +2,10 @@
  * Badge Repository Interface
  */
 
-import { Repository } from '@/core/shared/repository.interface';
-import { Result } from '@/core/shared/result';
-import { Badge } from './badge.entity';
-import { BadgeRarity } from './value-objects';
+import type { Repository } from '@/core/shared/repository.interface';
+import type { Result } from '@/core/shared/result';
+import type { Badge } from './badge.entity';
+import type { BadgeRarity } from './value-objects';
 
 export interface IBadgeRepository extends Repository<Badge> {
   /**

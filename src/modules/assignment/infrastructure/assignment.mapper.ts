@@ -2,8 +2,8 @@
  * Assignment Mapper
  */
 
-import { Mapper } from '@/core/shared/mapper.interface';
-import { Assignment, AssignmentProps } from '../domain/assignment.entity';
+import type { Mapper } from '@/core/shared/mapper.interface';
+import { Assignment, type AssignmentProps } from '../domain/assignment.entity';
 import type { Assignment as PrismaAssignment } from '@prisma/client';
 
 export interface AssignmentDTO {

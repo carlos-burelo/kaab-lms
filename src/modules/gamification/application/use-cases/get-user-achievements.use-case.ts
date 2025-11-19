@@ -4,9 +4,9 @@
 
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
-import { IAchievementRepository } from '../../domain/achievement.repository.interface';
+import type { IAchievementRepository } from '../../domain/achievement.repository.interface';
 import {
-  AchievementDTO,
+  type AchievementDTO,
   achievementMapper,
 } from '../../infrastructure/achievement.mapper';
 

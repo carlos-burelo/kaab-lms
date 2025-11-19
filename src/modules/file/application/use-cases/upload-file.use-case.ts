@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { File } from '../../domain/file.entity';
-import { IFileRepository } from '../../domain/file.repository.interface';
-import { UploadFileDTO } from '../dtos';
-import { FileDTO, fileMapper } from '../../infrastructure/file.mapper';
+import type { IFileRepository } from '../../domain/file.repository.interface';
+import type { UploadFileDTO } from '../dtos';
+import { type FileDTO, fileMapper } from '../../infrastructure/file.mapper';
 
 interface UploadFileRequest {
   dto: UploadFileDTO;

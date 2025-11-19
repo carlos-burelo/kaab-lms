@@ -3,8 +3,8 @@
  * Defines common operations for all repositories
  */
 
-import { Result } from './result';
-import { AggregateRoot, EntityProps } from './';
+import type { Result } from './result';
+import type { AggregateRoot, EntityProps } from './';
 
 export interface Repository<T extends AggregateRoot<EntityProps>> {
   findById(id: string): Promise<Result<T | null>>;

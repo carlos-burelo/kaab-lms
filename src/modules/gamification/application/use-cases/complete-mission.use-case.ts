@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, DuplicateEntityError } from '@/core/shared/errors';
-import { IMissionRepository } from '../../domain/mission.repository.interface';
-import { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface';
-import { CompleteMissionDTO } from '../dtos';
+import type { IMissionRepository } from '../../domain/mission.repository.interface';
+import type { IUserGamificationRepository } from '../../domain/user-gamification.repository.interface';
+import type { CompleteMissionDTO } from '../dtos';
 
 interface CompleteMissionRequest {
   dto: CompleteMissionDTO;

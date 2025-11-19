@@ -8,8 +8,8 @@ import {
   EntityNotFoundError,
   ForbiddenError,
 } from '@/core/shared/errors';
-import { ICourseRepository } from '../../domain/course.repository.interface';
-import { CourseDTO, courseMapper } from '../../infrastructure/course.mapper';
+import type { ICourseRepository } from '../../domain/course.repository.interface';
+import { type CourseDTO, courseMapper } from '../../infrastructure/course.mapper';
 
 interface PublishCourseRequest {
   courseId: string;

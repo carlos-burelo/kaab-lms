@@ -5,9 +5,9 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { NotFoundError, ForbiddenError } from '@/core/shared/errors';
-import { ICalendarEventRepository } from '../../domain/calendar-event.repository.interface';
-import { UpdateEventDTO } from '../dtos';
-import { CalendarEventDTO, calendarEventMapper } from '../../infrastructure/calendar-event.mapper';
+import type { ICalendarEventRepository } from '../../domain/calendar-event.repository.interface';
+import type { UpdateEventDTO } from '../dtos';
+import { type CalendarEventDTO, calendarEventMapper } from '../../infrastructure/calendar-event.mapper';
 
 interface UpdateEventRequest {
   eventId: string;

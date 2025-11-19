@@ -138,7 +138,7 @@ export const createAction = <TInput, TOutput>(config: {
         (error) => ({ success: false, error: error.message })
       )
 
-    } catch (error) {
+    } catch (_error)  {
       console.error(`[Action: ${config.name}]`, error)
       return {
         success: false,
@@ -825,7 +825,7 @@ return { success: true, data: result.value }
 try {
   const data = await useCase.execute(request)
   return { success: true, data }
-} catch (error) {
+} catch (_error)  {
   return { success: false, error }
 }
 ```

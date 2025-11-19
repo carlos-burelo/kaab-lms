@@ -5,7 +5,7 @@
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
 import { EntityNotFoundError, ForbiddenError } from '@/core/shared/errors';
-import { IQuizRepository } from '../../domain/quiz.repository.interface';
+import type { IQuizRepository } from '../../domain/quiz.repository.interface';
 
 interface DeleteQuizRequest {
   quizId: string;

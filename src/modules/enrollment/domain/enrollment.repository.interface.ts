@@ -2,9 +2,9 @@
  * Enrollment Repository Interface
  */
 
-import { Repository } from '@/core/shared/repository.interface';
-import { Result } from '@/core/shared/result';
-import { Enrollment } from './enrollment.entity';
+import type { Repository } from '@/core/shared/repository.interface';
+import type { Result } from '@/core/shared/result';
+import type { Enrollment } from './enrollment.entity';
 
 export interface IEnrollmentRepository extends Repository<Enrollment> {
   /**

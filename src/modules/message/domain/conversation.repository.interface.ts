@@ -2,9 +2,9 @@
  * Conversation Repository Interface
  */
 
-import { Repository } from '@/core/shared/repository.interface';
-import { Result } from '@/core/shared/result';
-import { Conversation } from './conversation.entity';
+import type { Repository } from '@/core/shared/repository.interface';
+import type { Result } from '@/core/shared/result';
+import type { Conversation } from './conversation.entity';
 
 export interface IConversationRepository extends Repository<Conversation> {
   /**

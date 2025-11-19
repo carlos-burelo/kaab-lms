@@ -4,9 +4,9 @@
 
 import { BaseUseCase } from '@/core/shared/use-case.interface';
 import { Result } from '@/core/shared/result';
-import { IPersonalTaskRepository } from '../../domain/personal-task.repository.interface';
-import { PersonalTaskDTO, personalTaskMapper } from '../../infrastructure/personal-task.mapper';
-import { TaskStatus } from '../../domain/value-objects';
+import type { IPersonalTaskRepository } from '../../domain/personal-task.repository.interface';
+import { type PersonalTaskDTO, personalTaskMapper } from '../../infrastructure/personal-task.mapper';
+import type { TaskStatus } from '../../domain/value-objects';
 
 interface GetUserTasksRequest {
   userId: string;
